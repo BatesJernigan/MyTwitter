@@ -11,44 +11,38 @@ import java.io.Serializable;
  * @javabean for User Entity
  */
 public class User implements Serializable {
-    private String firstName, lastName, email, password;
-
-    public User(String firstName, String lastName, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-    }
-
+    private String fullName, emailAddress, password, birthdate, nickname;
+    
     public User() {
-        this.firstName = "";
-        this.lastName = "";
-        this.email = "";
+        this.fullName = "";
+        this.emailAddress = "";
         this.password = "";
+        this.birthdate = "";
+        this.nickname = "";
     }
 
-    public String getFirstName() {
-        return firstName;
+    public User(String fullName, String emailAddress, String password, String birthdate, String nickname) {
+        this.fullName = fullName;
+        this.emailAddress = emailAddress;
+        this.password = password;
+        this.birthdate = birthdate;
+        this.nickname = nickname;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public String getFullName() {
+        return fullName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
     public String getPassword() {
@@ -58,6 +52,23 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+    
     
     
 }
