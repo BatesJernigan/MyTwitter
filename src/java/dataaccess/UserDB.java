@@ -6,14 +6,36 @@
 package dataaccess;
 import business.User;
 import java.io.*;
+
 /**
  *
  * @author xl
  */
 public class UserDB {
-    public static long insert(User user) {
-       //implement insert into file "database.txt"
-         return 0;
+    public static long insert(User user) throws IOException {
+        System.out.println("Working Directory = " +
+            System.getProperty("user.dir"));
+        
+        // PASTE ABSOLUTE PATH HERE
+        File file = new File("/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/web/database.txt");
+        System.out.println(user.getFullName() + "|"
+                + user.getEmail() + "|"
+                + user.getPassword() + "|"
+                + user.getNickname() + "|"
+                + user.getBirthdate());
+        try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
+            out.println(user.getFullName() + "|"
+                + user.getEmail() + "|"
+                + user.getPassword() + "|"
+                + user.getNickname() + "|"
+                + user.getBirthdate());
+            out.close();
+            return 0;
+        } catch(IOException e) {
+            System.out.println("ERROR: " + e);
+            System.out.println("there was an error");
+            return 1;
+        }
     }
     public static User select(String emailAddress)
     {
