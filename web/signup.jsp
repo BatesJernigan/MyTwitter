@@ -14,39 +14,38 @@
 <form action="signup" method="post">
     <input type="hidden" name="action" value="add">
     <label class="pad_top">Full Name:</label>
-    <input type="text" name="user" value="${user.fullName}"><br>
+    <input type="text" name="fullName" value="${user.fullName}"><br>
     <label class="pad_top">Email:</label>
-    <input type="email" name="user" value="${user.emailAddress}"><br>
+    <input type="email" name="email" value="${user.email}"><br>
     <label class="pad_top">Nickname:</label>
-    <input type="text" name="user" value="${user.nickname}"><br>
+    <input type="text" name="nickname" value="${user.nickname}"><br>
     <label class="pad_top">Password:</label>
-    <input type="text" name="user" value="${user.password}"><br>
-    <select>
+    <input type="text" name="password" value="${user.password}"><br>
+    <select type='number' name='month'>
         <option>Month</option>
         <%
             for(int i = 1; i <= 12; i++) {
         %>
-        <option value=${i}><%= i+"" %></option>
+        <option><%= i %></option>
         <% } %>
     </select>
-    <select>
+    <select type='number' name='day'>
         <option>Day</option>
         <%
             for(int i = 1; i <= 31; i++) {
         %>
-        <option value=${i}><%= i+"" %></option>
+        <option><%= i %></option>
         <% } %>
     </select>
-    <select>
+    <select type='number' name='year'>
         <option>Year</option>
         <%
             for(int i = 1980; i <= 2016; i++) {
         %>
-        <option value=${i}><%= i+"" %></option>
+        <option><%= i %></option>
         <% } %>
     </select>
-
-    </option>
+    
     <label>&nbsp;</label>
     <p>
         <input type="submit" value="Click Me!" class="margin_left">

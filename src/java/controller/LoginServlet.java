@@ -80,18 +80,16 @@ public class LoginServlet extends HttpServlet {
         // get current action
         String action = request.getParameter("action");
         if (action == null) {
-            action = "join";  // default action
+            action = "autheticate";  // default action
         }
 
-        // perform action and set URL to appropriate page
-        if (action.equals("join")) {
-            url = "/login.jsp";    // the "join" page
-        } 
-        else if (action.equals("add")) {
+        if (action.equals("authenticate")) {
+            System.out.println("in authenticate action");
             // get parameters from the request
             String password = request.getParameter("password");
             String emailAddress = request.getParameter("emailAddress");
-            
+            System.out.println("password " + password);
+            System.out.println("emailAddress " + emailAddress);
 
             // store data in User object
             User user = new User();
@@ -101,7 +99,7 @@ public class LoginServlet extends HttpServlet {
             String message;
             if (emailAddress == null || emailAddress.isEmpty() ||
                     password == null || password.isEmpty()) {
-                message = "Please fill out all three text boxes.";
+                message = "Please fill out both boxes.";
                 url = "/login.jsp";
             } 
             else {

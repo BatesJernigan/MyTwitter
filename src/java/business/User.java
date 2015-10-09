@@ -5,28 +5,30 @@
  */
 package business;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
  * @javabean for User Entity
  */
 public class User implements Serializable {
-    private String fullName, emailAddress, password, birthdate, nickname;
+    private String fullName, email, password, nickname;
+    private Date birthdate;
     
     public User() {
         this.fullName = "";
-        this.emailAddress = "";
+        this.email = "";
         this.password = "";
-        this.birthdate = "";
         this.nickname = "";
+        this.birthdate = new Date();
     }
 
-    public User(String fullName, String emailAddress, String password, String birthdate, String nickname) {
+    public User(String fullName, String email, String password, String nickname, Date birthdate) {
         this.fullName = fullName;
-        this.emailAddress = emailAddress;
+        this.email = email;
         this.password = password;
-        this.birthdate = birthdate;
         this.nickname = nickname;
+        this.birthdate = birthdate;
     }
 
     public String getFullName() {
@@ -37,12 +39,12 @@ public class User implements Serializable {
         this.fullName = fullName;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -53,14 +55,6 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getBirthdate() {
-        return birthdate;
-    }
-
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
-    }
-
     public String getNickname() {
         return nickname;
     }
@@ -68,4 +62,22 @@ public class User implements Serializable {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public Date getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(Date birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" + "fullName=" + fullName + ", email=" + email + 
+                ", password=" + password + ", nickname=" + nickname + 
+                ", birthdate=" + birthdate + '}';
+    }
+    
+    
+    
 }

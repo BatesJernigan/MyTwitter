@@ -7,15 +7,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:import url="/includes/header.jsp" />
 
+<h1>Welcome!</h1>
+<h2>Log in below</h2>
+
 <form action="login" method="post">
-    <input type="hidden" name="action" value="add">
+    <input type="hidden" name="action" value="authenticate">
     <label class="pad_top">Email:</label>
-    <input type="email" name="user" value="${user.emailAddress}"><br>
+    <input type="email" name="user" value="${user.email}"><br>
     <label class="pad_top">Password:</label>
     <input type="text" name="user" value="${user.password}"><br>
 
     <input type="submit" value="Log in" class="margin_left">
     <a href='./forgotpassword.jsp'>Forgot password?</a>
+    
+    <p>
+        New? <a href='./signup.jsp'>Sign up now!</a>
+    </p>
 </form>
     </body>
 <c:import url="/includes/footer.jsp" />
