@@ -93,7 +93,6 @@ public class LoginServlet extends HttpServlet {
 
             // store data in User object
             User user = new User();
-            //User user = new User(firstName, lastName, email);
 
             // validate the parameters
             String message;
@@ -109,10 +108,9 @@ public class LoginServlet extends HttpServlet {
             }
             request.setAttribute("user", user);
             request.setAttribute("message", message);
+        } else if (action.equals("cancel")) {
+
         }
-        getServletContext()
-                .getRequestDispatcher(url)
-                .forward(request, response);
     }
 
     /**

@@ -16,17 +16,17 @@ public class User implements Serializable {
     private Date birthdate;
     
     public User() {
-        this.fullName = "";
         this.email = "";
         this.password = "";
+        this.fullName = "";
         this.nickname = "";
         this.birthdate = new Date();
     }
 
-    public User(String fullName, String email, String password, String nickname, Date birthdate) {
-        this.fullName = fullName;
+    public User(String email, String password, String fullName, String nickname, Date birthdate) {
         this.email = email;
         this.password = password;
+        this.fullName = fullName;
         this.nickname = nickname;
         this.birthdate = birthdate;
     }

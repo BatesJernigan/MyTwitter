@@ -81,9 +81,15 @@ public class SignupServlet extends HttpServlet {
         
         System.out.println(!fullName.isEmpty());
         
+        User me = UserDB.search(email);
+        User me2 = UserDB.select(email, password);
+        
+        System.out.println("result of search " + me + "after me");
+        System.out.println("result of select " + me2 + "after me2");
+        
         if(!fullName.isEmpty() && !email.isEmpty() && !nickname.isEmpty() &&
                 !password.isEmpty() && birthdate != null) {
-            user = new User(fullName, email, password, nickname, birthdate);
+            user = new User(email, password, fullName, nickname, birthdate);
             insertResultCode = UserDB.insert(user);
         } else {
             System.out.println("insert result code: " + insertResultCode);
