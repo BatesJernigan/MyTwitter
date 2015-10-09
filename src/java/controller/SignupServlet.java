@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import business.User;
+import dataaccess.UserDB;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,42 +49,45 @@ public class SignupServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        System.out.println("inside of do post in signup servlet");
-        // get parameters from the request
-        String fullName = request.getParameter("fullName");
-        String email = request.getParameter("email");
-        String nickname = request.getParameter("nickname");
-        String password = request.getParameter("password");
-        String month = request.getParameter("month");
-        String day = request.getParameter("day");
-        String year = request.getParameter("year");
-        Date birthdate = parseDate(month + "-" + day + "-"  + year);
+        @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        // can be removed, just a good sanity  check to make sure the
-        // right values are coming in
-        System.out.println("date " + birthdate);
-        System.out.println("full name " + fullName);
-        System.out.println("nickname " + nickname);
-        System.out.println("email address " + email);
-        System.out.println("password " + password);
-        System.out.println("month " + month);
-        System.out.println("day " + day);
-        System.out.println("year " + year);
+        String url = "/signup.html";
+        
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "join";
+        }
+        System.out.println("\nWorking Directory = " + System.getProperty("user.dir") +"\n");
+      
+        if (action.equals("add")) {                
+            
+            // get parameters from the request
+            String fullName = request.getParameter("fullName");
+            String email = request.getParameter("email");
+            String nickname = request.getParameter("nickname");
+            String password = request.getParameter("password");
+            String month = request.getParameter("month");
+            String day = request.getParameter("day");
+            String year = request.getParameter("year");
+            Date birthdate = parseDate(month + "-" + day + "-"  + year);
 
-        // store data in User object
-        User user = new User(fullName, email, password, nickname, birthdate);
 
-        // store User object in request
-        request.setAttribute("user", user);
+            // use regular Java classes
+            User user = new User(fullName, email, password, nickname, birthdate);
+            UserDB.insert(user);
 
-        // forward request to JSP
-        String url = "/signup.jsp";
+            // store the User object in request and set URL
+            request.setAttribute("user", user);
+            url = "/home.jsp";
+        }
+        else if (action.equals("join")) {
+            // set URL to index page
+            url = "/signup.html";            
+        }
         getServletContext()
-                .getRequestDispatcher(url)
-                .forward(request, response);
+            .getRequestDispatcher(url)
+            .forward(request, response);
     }
 
     /**
