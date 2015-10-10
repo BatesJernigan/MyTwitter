@@ -22,34 +22,34 @@
     <label class="pad_top">Password:</label>
     <input type="text" name="password" value="${user.password}" required><br>
     <select type='number' name='month' required>
-        <option value ="">>Month</option>
+        <option>Month</option>
         <%
             for(int i = 1; i <= 12; i++) {
         %>
-        <option value =<%= i %>>><%= i %></option>
+        <option><%= i %></option>
         <% } %>
     </select>
     <select type='number' name='day' required>
-        <option value ="">Day</option>
+        <option>Day</option>
         <%
             for(int i = 1; i <= 31; i++) {
         %>
-        <option value =<%= i %>>><%= i %></option>
+        <option><%= i %></option>
         <% } %>
     </select>
     <select type='number' name='year' required>
-        <option value ="">Year</option>
+        <option>Year</option>
         <%
             for(int i = 1980; i <= 2016; i++) {
         %>
-        <option value =<%= i %>>><%= i %></option>
+        <option><%= i %></option>
         <% } %>
     </select>
     
     <label>&nbsp;</label>
     <p>
-        <input type="submit" value="Click Me!" class="margin_left">
-        <input type="reset" value="No don't Go!" class="margin_left">
+        <input type="submit" value="Submit" class="margin_left">
+        <input type="reset" value="Clear Fields" class="margin_left">
     </p>
 </form>
 <c:import url="/includes/footer.jsp" />
