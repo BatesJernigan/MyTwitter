@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import business.User;
+import dataaccess.UserDB;
 
 /**
  *
@@ -20,34 +21,6 @@ import business.User;
 */
 @WebServlet(name="LoginServlet", urlPatterns={"/login"})
 public class LoginServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet loginServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet loginServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -59,7 +32,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        doPost(request, response);
     }
 
     /**
@@ -87,30 +60,47 @@ public class LoginServlet extends HttpServlet {
             System.out.println("in authenticate action");
             // get parameters from the request
             String password = request.getParameter("password");
-            String emailAddress = request.getParameter("emailAddress");
+            String email = request.getParameter("email");
             System.out.println("password " + password);
-            System.out.println("emailAddress " + emailAddress);
+            System.out.println("email " + email);
 
             // store data in User object
             User user = new User();
 
             // validate the parameters
             String message;
-            if (emailAddress == null || emailAddress.isEmpty() ||
+            if (email == null || email.isEmpty() ||
                     password == null || password.isEmpty()) {
                 message = "Please fill out both boxes.";
                 url = "/login.jsp";
+                request.setAttribute("message", message);
             } 
-            else {
+            else if (userIsAuthenticated(email, password)){
+                System.out.println("user is authenticated!");
                 message = null;
-                url = "./home.jsp";
-                //UserDB.insert(user);
+                url = "/home.jsp";
+                
+                request.setAttribute("user", user);
+                request.setAttribute("message", message);
+            } else {
+                message = "Wrong Email / Password Combo";
+                url = "/login.jsp";
+                request.setAttribute("user", user);
+                request.setAttribute("message", message);
             }
-            request.setAttribute("user", user);
-            request.setAttribute("message", message);
+            
         } else if (action.equals("cancel")) {
-
+            url = "/login.jsp";
+            request.setAttribute("message", null);
         }
+        getServletContext()
+            .getRequestDispatcher(url)
+            .forward(request, response);
+    }
+    
+    public static boolean userIsAuthenticated(String email, String password) {
+        System.out.println("in user is authenticated " + UserDB.select(email, password) != null);
+        return UserDB.select(email, password) != null;
     }
 
     /**

@@ -10,12 +10,15 @@
 <h1>Welcome!</h1>
 <h2>Log in below</h2>
 
+<c:if test="${message != null}">
+    <span>${message}</span>
+</c:if>
 <form action="login" method="post">
     <input type="hidden" name="action" value="authenticate">
     <label class="pad_top">Email:</label>
-    <input type="email" name="user" value="${user.email}"><br>
+    <input type="email" name="email" value="${user.email}"><br>
     <label class="pad_top">Password:</label>
-    <input type="text" name="user" value="${user.password}"><br>
+    <input type="text" name="password" value="${user.password}"><br>
 
     <input type="submit" value="Log in" class="margin_left">
     <a href='./forgotpassword.jsp'>Forgot password?</a>
