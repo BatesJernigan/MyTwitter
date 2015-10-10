@@ -52,65 +52,69 @@ public class SignupServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("inside of do post in signup servlet");
-        String url ="";
-        User user = new User();
-        // get parameters from the request
-        long insertResultCode = 2; // 1 means error from user db, 2 means never run
-        String fullName = request.getParameter("fullName");
-        String email = request.getParameter("email");
-        String nickname = request.getParameter("nickname");
-        String password = request.getParameter("password");
-        String month = request.getParameter("month");
-        String day = request.getParameter("day");
-        String year = request.getParameter("year");
-        String birthdate = null;
         
-        if (dateIsValid(month + "/" + day + "/"  + year)) {
-            birthdate = month + "/" + day + "/"  + year;
-        }
-        
+        String action = request.getParameter("action");
+        System.out.println("action= " + action);
+        if(action.equals("add")) {
+            String url;
+            User user = new User();
+            // get parameters from the request
+            long insertResultCode = 2; // 1 means error from user db, 2 means never run
+            String fullName = request.getParameter("fullName");
+            String email = request.getParameter("email");
+            String nickname = request.getParameter("nickname");
+            String password = request.getParameter("password");
+            String month = request.getParameter("month");
+            String day = request.getParameter("day");
+            String year = request.getParameter("year");
+            String birthdate = null;
 
-        // can be removed, just a good sanity  check to make sure the
-        // right values are coming in
-        System.out.println("date " + birthdate);
-        System.out.println("full name " + fullName);
-        System.out.println("nickname " + nickname);
-        System.out.println("email address " + email);
-        System.out.println("password " + password);
-        System.out.println("month " + month);
-        System.out.println("day " + day);
-        System.out.println("year " + year);
+            if (dateIsValid(month + "/" + day + "/"  + year)) {
+                birthdate = month + "/" + day + "/"  + year;
+            }
 
-        if(!fullName.isEmpty() && !email.isEmpty() && !nickname.isEmpty() &&
-                !password.isEmpty() && birthdate != null && isUniqueEmail(email)) {
-            System.out.println("all of the stuff is not null");
-            user = new User(email, password, fullName, nickname, birthdate);
-            insertResultCode = UserDB.insert(user);
-        } else {
-            System.out.println("insert result code: " + insertResultCode);
-            url = "/signup.jsp";
-            getServletContext()
-                .getRequestDispatcher(url)
-                .forward(request, response);
+
+            // can be removed, just a good sanity  check to make sure the
+            // right values are coming in
+            System.out.println("date " + birthdate);
+            System.out.println("full name " + fullName);
+            System.out.println("nickname " + nickname);
+            System.out.println("email address " + email);
+            System.out.println("password " + password);
+            System.out.println("month " + month);
+            System.out.println("day " + day);
+            System.out.println("year " + year);
+
+            if(!fullName.isEmpty() && !email.isEmpty() && !nickname.isEmpty() &&
+                    !password.isEmpty() && birthdate != null && isUniqueEmail(email)) {
+                System.out.println("all of the stuff is not null");
+                user = new User(email, password, fullName, nickname, birthdate);
+                insertResultCode = UserDB.insert(user);
+            } else {
+                System.out.println("insert result code: " + insertResultCode);
+                url = "/signup.jsp";
+                System.out.println("display signup");
+                getServletContext()
+                    .getRequestDispatcher(url)
+                    .forward(request, response);
+            }
+            System.out.println("insert result code before if statements " + insertResultCode);
+            if(insertResultCode == 0) {
+                System.out.println("display home");
+                request.setAttribute("user", user);
+                url = "/home.jsp";
+                getServletContext()
+                    .getRequestDispatcher(url)
+                    .forward(request, response);
+            } else {
+                System.out.println("insert result code else: " + insertResultCode);
+                System.out.println("display signup");
+                url = "/signup.jsp";
+                getServletContext()
+                    .getRequestDispatcher(url)
+                    .forward(request, response);
+            }
         }
-        System.out.println("insert result code before if statements " + insertResultCode);
-        if(insertResultCode == 0) {
-            request.setAttribute("user", user);
-            url = "/home.jsp";
-            getServletContext()
-                .getRequestDispatcher(url)
-                .forward(request, response);
-        } else {
-            System.out.println("insert result code else: " + insertResultCode);
-            url = "/signup.jsp";
-            getServletContext()
-                .getRequestDispatcher(url)
-                .forward(request, response);
-        }
-        
-         
-        System.out.println("\nWorking Directory = " +
-              System.getProperty("user.dir") + "\n");
     }
 
     /**
@@ -139,7 +143,7 @@ public class SignupServlet extends HttpServlet {
     
     public static boolean isUniqueEmail(String email) {
         if(UserDB.search(email) == null) {
-            return false;
+            return true;
         };
         return false;
     }
