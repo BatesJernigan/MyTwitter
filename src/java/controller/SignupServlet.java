@@ -12,10 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import business.User;
-import dataaccess.UserDB;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import dataaccess.UserDB;
 
 /**
@@ -25,7 +23,7 @@ import dataaccess.UserDB;
 @WebServlet(name="SignupServlet", urlPatterns={"/signup"})
 public class SignupServlet extends HttpServlet {
     
-    final static String DATE_FORMAT = "M-d-yyyy";
+    final static String DATE_FORMAT = "M/d/yyyy";
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -65,30 +63,27 @@ public class SignupServlet extends HttpServlet {
         String month = request.getParameter("month");
         String day = request.getParameter("day");
         String year = request.getParameter("year");
-        Date birthdate = parseDate(month + "-" + day + "-"  + year);
+        String birthdate = null;
+        
+        if (dateIsValid(month + "/" + day + "/"  + year)) {
+            birthdate = month + "/" + day + "/"  + year;
+        }
+        
 
         // can be removed, just a good sanity  check to make sure the
         // right values are coming in
-        System.out.println(fullName);
         System.out.println("date " + birthdate);
-        System.out.println("full name" + fullName + "end of full name");
+        System.out.println("full name " + fullName);
         System.out.println("nickname " + nickname);
         System.out.println("email address " + email);
         System.out.println("password " + password);
         System.out.println("month " + month);
         System.out.println("day " + day);
         System.out.println("year " + year);
-        
-        System.out.println(!fullName.isEmpty());
-        
-        User me = UserDB.search(email);
-        User me2 = UserDB.select(email, password);
-        
-        System.out.println("result of search " + me + "after me");
-        System.out.println("result of select " + me2 + "after me2");
-        
+
         if(!fullName.isEmpty() && !email.isEmpty() && !nickname.isEmpty() &&
-                !password.isEmpty() && birthdate != null) {
+                !password.isEmpty() && birthdate != null && isUniqueEmail(email)) {
+            System.out.println("all of the stuff is not null");
             user = new User(email, password, fullName, nickname, birthdate);
             insertResultCode = UserDB.insert(user);
         } else {
@@ -128,14 +123,25 @@ public class SignupServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
     
-    public static Date parseDate(String date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-        dateFormat.setLenient(false);
+    public static boolean dateIsValid(String date) {
         try {
-            return dateFormat.parse(date);
+            SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+            dateFormat.setLenient(false);
+            dateFormat.parse(date);
+            System.out.println("date is valid");
         } catch (ParseException | IllegalArgumentException e) {
-            return null;
+            System.out.println("date is not valid " + e);
+            return false;
         }
+        
+        return true;
+    }
+    
+    public static boolean isUniqueEmail(String email) {
+        if(UserDB.search(email) == null) {
+            return false;
+        };
+        return false;
     }
     
     

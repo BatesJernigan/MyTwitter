@@ -2,6 +2,13 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/business/User.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/web/login.jsp</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/web/signup.jsp</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/UserDB.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/controller/SignupServlet.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/web/WEB-INF/web.xml</file>
+        </group>
     </open-files>
 </project-private>
