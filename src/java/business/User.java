@@ -5,25 +5,23 @@
  */
 package business;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  *
  * @javabean for User Entity
  */
 public class User implements Serializable {
-    private String fullName, email, password, nickname;
-    private Date birthdate;
+    private String fullName, email, password, nickname, birthdate;
     
     public User() {
+        this.fullName = "";
         this.email = "";
         this.password = "";
-        this.fullName = "";
         this.nickname = "";
-        this.birthdate = new Date();
+        this.birthdate = "";
     }
 
-    public User(String email, String password, String fullName, String nickname, Date birthdate) {
+    public User(String email, String password, String fullName, String nickname, String birthdate) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
@@ -63,21 +61,16 @@ public class User implements Serializable {
         this.nickname = nickname;
     }
 
-    public Date getBirthdate() {
+    public String getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate) {
+    public void setBirthdate(String birthdate) {
         this.birthdate = birthdate;
     }
 
     @Override
     public String toString() {
-        return "User{" + "fullName=" + fullName + ", email=" + email + 
-                ", password=" + password + ", nickname=" + nickname + 
-                ", birthdate=" + birthdate + '}';
+        return "User{" + "fullName=" + fullName + ", email=" + email + ", password=" + password + ", nickname=" + nickname + ", birthdate=" + birthdate + '}';
     }
-    
-    
-    
 }
