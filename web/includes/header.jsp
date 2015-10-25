@@ -8,11 +8,23 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <html>
+
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>MyTwitter</title>
         <link rel="stylesheet" href="styles/main.css" type="text/css"/>
     </head> 
+    
+    <!-- code to display menu dependent on what page user is currently on -->
+    <c:if test="${true}">
+        <div id="header">
+                <ul>
+                    <li><a href="home.jsp">Home</a></li>
+                    <li><a href="#news">Notifications</a></li>
+                    <li><a href="#contact">Profile</a></li>
+                </ul>
+        </div>
+    </c:if>
 
     <c:if test="${user.nickname != null}">
         <span>${user.nickname}</span>
