@@ -21,7 +21,7 @@
                 <ul>
                     <li><a href="home.jsp">Home</a></li>
                     <li><a href="#news">Notifications</a></li>
-                    <li><a href="#contact">Profile</a></li>
+                    <li><a href="profile.jsp">Profile</a></li>
                 </ul>
         </div>
     </c:if>

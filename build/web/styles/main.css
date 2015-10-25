@@ -42,22 +42,15 @@ a:hover, a:active {
     background-color: #7A991A;
 }
 
-#nav {
+// style for the tweet input eventulally
+#tweet{
     line-height:30px;
     background-color:#FFFFFF;
-    height:500px;
-    width:200px;
-    float:left;
-    padding:5px;	      
+    height:300px;
+    width:700px;
+    padding:5px;
 }
-# {
-    line-height:30px;
-    background-color:#FFFFFF;
-    height:500px;
-    width:200px;
-    float:left;
-    padding:5px;	      
-}
+
 label {
     float: left;
     width: 7em;
