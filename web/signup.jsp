@@ -25,7 +25,7 @@
     <label class="pad_top">Nickname:</label>
     <input type="text" name="nickname" value="${user.nickname}" required><br>
     <label class="pad_top">Password:</label>
-    <input type="text" name="password" value="${user.password}" required><br>
+    <input type="password" name="password" value="${user.password}" required><br>
     <select type='number' name='month' required>
         <option>Month</option>
         <%

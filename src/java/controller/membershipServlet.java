@@ -37,6 +37,9 @@ public class membershipServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("in do get of membership servlet");
+        System.out.println(request);
+        
+        
         doPost(request, response);
     }
 
