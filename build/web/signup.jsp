@@ -10,8 +10,13 @@
 <p>
     Please sign up and then feel free to look around that site! :)
 </p>
+<p>
+    <c:if test="${message != null}">
+        <span>${message}</span>
+    </c:if>
+</p>
 <jsp:useBean id="user" scope="session" class="business.User"/>    
-<form action="signup" method="post">
+<form action="membership" method="post">
     <input type="hidden" name="action" value="add">
     <label class="pad_top">Full Name:</label>
     <input type="text" name="fullName" value="${user.fullName}" required><br>
@@ -20,7 +25,7 @@
     <label class="pad_top">Nickname:</label>
     <input type="text" name="nickname" value="${user.nickname}" required><br>
     <label class="pad_top">Password:</label>
-    <input type="text" name="password" value="${user.password}" required><br>
+    <input type="password" name="password" value="${user.password}" required><br>
     <select type='number' name='month' required>
         <option>Month</option>
         <%
