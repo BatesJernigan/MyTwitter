@@ -10,8 +10,13 @@
 <p>
     Please sign up and then feel free to look around that site! :)
 </p>
+<p>
+    <c:if test="${message != null}">
+        <span>${message}</span>
+    </c:if>
+</p>
 <jsp:useBean id="user" scope="session" class="business.User"/>    
-<form action="signup" method="post">
+<form action="membership" method="post">
     <input type="hidden" name="action" value="add">
     <label class="pad_top">Full Name:</label>
     <input type="text" name="fullName" value="${user.fullName}" required><br>
