@@ -9,6 +9,19 @@
 <c:import url="/includes/header.jsp" />
 <c:import url="/includes/sidebar.jsp" />
 
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Value</th>
+    </tr>
+    <c:forEach var="c" items="${cookie}">
+    <tr>
+        <td>${c.value.name}</td>
+        <td>${c.value.value}</td>
+    </tr>
+    </c:forEach>
+</table>
+
 <!-- box for inputing tweets into the system. needs servlet to utilize this form-->
 <div id ="tweet">
     <form action = "tweet" method="post">

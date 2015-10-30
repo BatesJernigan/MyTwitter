@@ -8,6 +8,7 @@ import business.User;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -19,6 +20,7 @@ import java.util.regex.Pattern;
 public class UserDB {
     
     static final String FILE_PATH = "/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/web/database.txt";
+    static final String TEMP_FILE_PATH = "/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/web/tempdb.txt";
     static final String DATE_FORMAT = "M/d/yyyy";
     public static long insert(User user) throws IOException {
         // PASTE ABSOLUTE PATH HERE
@@ -43,7 +45,6 @@ public class UserDB {
     
     // BROKEN
     public static User select(String emailAddress, String password) {
-        DateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
         BufferedReader reader;
         try {
             String line;
@@ -82,6 +83,70 @@ public class UserDB {
                             userAttribute[4]);
                 }
             }
+        } catch (FileNotFoundException e) {
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, null, e);
+        } catch (IOException e) {
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
+    
+    public static long update(User updatedUser) {
+        
+        BufferedReader reader;
+        String line;
+        
+        File originalFile = new File(FILE_PATH);
+        File tempFile = new File(TEMP_FILE_PATH);
+        try {
+            PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(tempFile, true)));
+            reader = new BufferedReader(new FileReader(FILE_PATH));
+            while ((line = reader.readLine()) != null) {
+                if(line.contains(updatedUser.getEmail())) {
+                    line = updatedUser.getEmail() + "|"
+                        + updatedUser.getPassword() + "|"
+                        + updatedUser.getFullName() + "|"
+                        + updatedUser.getNickname() + "|"
+                        + updatedUser.getBirthdate();
+                }
+
+                out.println(line);
+                out.flush();
+            }
+            reader.close();
+            out.close();
+
+            if(!originalFile.delete()) {
+                    System.out.println("Could not delete file");
+                    return 0;
+            }
+            if (!tempFile.renameTo(originalFile)) {
+                System.out.println("Could not rename file");
+                return 0;
+            }
+            return 1;
+        } catch (FileNotFoundException e) {
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, null, e);
+        } catch (IOException e) {
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return 0;
+    }
+    
+    public static ArrayList<User> selectAll() {
+        String line;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH));
+            ArrayList<User> userList = new ArrayList<>();
+            while ((line = reader.readLine()) != null) {
+                System.out.println("first line: " + line);
+                String[] userAttribute = line.split(Pattern.quote("|"));
+                userList.add(new User(userAttribute[0], userAttribute[1], 
+                        userAttribute[2], userAttribute[3],
+                        userAttribute[4]));
+            }
+            
+            return userList;
         } catch (FileNotFoundException e) {
             Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, null, e);
         } catch (IOException e) {
