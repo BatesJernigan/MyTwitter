@@ -22,6 +22,18 @@
             margin-left: auto;
             margin-right: auto;
         }
+        #tweets{
+            line-height:30px;
+            background-color:#FFFFFF;
+            height:100px;
+            width:700px;
+            padding:5px;
+            top: 220px;
+            border-radius: 1em;
+            left: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
         textArea {
             margin-left: auto;
             margin-right: auto;
