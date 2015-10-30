@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -117,6 +118,8 @@ public class membershipServlet extends HttpServlet {
             message = null;
             url = "/home.jsp";
             user = UserDB.search(email);
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
             request.setAttribute("user", user);
             request.setAttribute("message", message);
         } else {
