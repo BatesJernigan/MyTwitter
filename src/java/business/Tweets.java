@@ -6,6 +6,8 @@
 package business;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
@@ -13,21 +15,32 @@ import java.io.Serializable;
  */
 
 public class Tweets implements Serializable {
-    private String email, date, text;
+    private String email, text, date;
     
     public Tweets() {
         this.email = "";
-        this.date ="";
+        this.date = null;
         this.text ="";
     }
 
-    public Tweets(String email, String date, String text) {
+    public Tweets(String email, String text) {
         this.email = email;
-        this.date = date;
         this.text = text;
+        
+        String DATE_FORMAT_NOW = "yyyy-MM-dd";
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+        this.date = sdf.format(date);
 
     }
 
+    public Tweets(String email, String date, String text){
+        this.email = email;
+        this.date = date;
+        this.text = text;
+        
+    }
+    
     public String getEmail() {
         return email;
     }
