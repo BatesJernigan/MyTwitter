@@ -65,9 +65,9 @@ public class Tweets implements Serializable {
         this.date = date;
     }
 
-
     @Override
     public String toString() {
-        return "User{" + "text=" + text + ", email=" + email + ", date=" + date + "}";
+        return "Tweets{" + "email=" + email + ", text=" + text + ", date=" + date + '}';
     }
+    
 }

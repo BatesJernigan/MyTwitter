@@ -1,0 +1,4 @@
+bates1012@aol.com|2015-10-29|this is a new tweet
+bates1012@aol.com|2015-10-29|this is another new tweet
+bates1012@aol.com|2015-10-29|blueberry
+bates1012@aol.com|2015-10-29|hello

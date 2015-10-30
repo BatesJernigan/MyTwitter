@@ -34,8 +34,8 @@
     <div id ="nav">
         <div id="user">
             <h1>user is here</h1>
-            <h1>${session.getAttribute(user.fullName)}</h1>
-            <p>${session.getAttribute(user.nickname)}</p>
+            <h1>${session.getAttribute(user)}</h1>
+            <!--<p>${session.getAttribute(user.nickname)}</p>-->
             <p>Twits: twitCount()</p>
         </div>
             <p> </p>

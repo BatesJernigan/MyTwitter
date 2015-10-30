@@ -19,9 +19,9 @@
     </style>
     <div id="follow">
         <h1>Who to follow</h1>
-        <c:forEach var = "i" items="${tweets}">
-        <div id="viewTweets">
-            <h1${i.email} ${i.date}</h1>
+        <c:forEach var = "i" items="${users}">
+        <div id="influencers">
+            <h1${i.fullName} @${nickname}</h1>
             <p>${i.text}</p>
         </div>
         </c:forEach>

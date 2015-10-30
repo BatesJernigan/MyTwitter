@@ -32,20 +32,39 @@ public class TwitServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        String url = "/home.jsp";
-        String text = request.getParameter("text");
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        String email = user.getEmail();
-
-        if(text == null || email == null){
-            Tweets tweet = new Tweets(email, text);
-            TweetDB.addRecord(tweet);
-            url = "/home.jsp";
-        }else{
-            url = "/home.jsp";
-            
-        }
+        String action = request.getParameter("action");
         
+        if(action.equals("tweet")) {
+            String url = "/home.jsp";
+            String text = request.getParameter("text");
+
+            System.out.println("url from request" + url);
+            System.out.println("text from request" + text);
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+            String email = user.getEmail();
+
+            System.out.println("email: "+ email);
+
+            if(text != null && email != null){
+                Tweets tweet = new Tweets(email, text);
+
+                System.out.println("tweet: "+ tweet.toString());
+                TweetDB.addRecord(tweet);
+
+
+
+                url = "/home.jsp";
+            } else {
+                url = "/home.jsp";    
+            }
+            ArrayList<Tweets> tweetList = TweetDB.all();
+
+            session.setAttribute("tweets", tweetList);
+
+            getServletContext()
+                    .getRequestDispatcher(url)
+                    .forward(request, response);
+        }
     }
 }
