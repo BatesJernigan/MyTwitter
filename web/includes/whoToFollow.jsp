@@ -7,11 +7,24 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-    </body>
+    <style>
+        #follow {
+            line-height:30px;
+            background-color:#FFFFFF;
+            height:500px;
+            width:200px;
+            float:right;
+            padding:5px;	      
+        }        
+    </style>
+    <div id="follow">
+        <h1>Who to follow</h1>
+        <c:forEach var = "i" items="${tweets}">
+        <div id="viewTweets">
+            <h1${i.email} ${i.date}</h1>
+            <p>${i.text}</p>
+        </div>
+        </c:forEach>
+
+    </div>
 </html>
