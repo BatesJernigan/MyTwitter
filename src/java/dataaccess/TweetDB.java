@@ -41,7 +41,7 @@ public class TweetDB {
     //    return tweet;
     //} 
 
-    public static ArrayList<Tweets> getEntrys(String filename) throws IOException, ParseException {
+    public static ArrayList<Tweets> getEntrys() throws IOException {
         ArrayList<Tweets> tweets = new ArrayList<>();
         BufferedReader in = new BufferedReader(
                 new FileReader(filename));
