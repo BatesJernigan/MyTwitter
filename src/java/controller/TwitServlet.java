@@ -32,38 +32,35 @@ public class TwitServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
+        String url = "/home.jsp";
+        String text = request.getParameter("text");
+        HttpSession session = request.getSession();
         
-        if(action.equals("tweet")) {
-            String url = "/home.jsp";
-            String text = request.getParameter("text");
-
-            System.out.println("url from request" + url);
-            System.out.println("text from request" + text);
-            HttpSession session = request.getSession();
+        if (action == "tweet"){
+            
             User user = (User) session.getAttribute("user");
             String email = user.getEmail();
 
-            System.out.println("email: "+ email);
-
-            if(text != null && email != null){
+            if(text == null || email == null){
                 Tweets tweet = new Tweets(email, text);
-
-                System.out.println("tweet: "+ tweet.toString());
                 TweetDB.addRecord(tweet);
-
-
-
                 url = "/home.jsp";
-            } else {
-                url = "/home.jsp";    
+            }else{
+                url = "/home.jsp";
+
             }
-            ArrayList<Tweets> tweetList = TweetDB.all();
-
-            session.setAttribute("tweets", tweetList);
-
-            getServletContext()
-                    .getRequestDispatcher(url)
-                    .forward(request, response);
         }
+        ArrayList<Tweets> tweets = TweetDB.all();
+        session.setAttribute("tweets", tweets);
+    }
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        System.out.println("in do get of tweet servlet");
+        
+        HttpSession session = request.getSession();
+        ArrayList<Tweets> tweets = TweetDB.all();
+        session.setAttribute("tweets", tweets);
+        //doPost(request, response);
     }
 }
