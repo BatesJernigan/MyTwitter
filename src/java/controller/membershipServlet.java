@@ -136,6 +136,11 @@ public class membershipServlet extends HttpServlet {
             cookie.setPath("/");
             response.addCookie(cookie);
             url = "/home.jsp";
+            user = UserDB.search(email);
+
+            System.out.println("user from user db search");
+            System.out.println(user.toString());
+
             request.setAttribute("user", user);
             request.setAttribute("message", message);
         } else {

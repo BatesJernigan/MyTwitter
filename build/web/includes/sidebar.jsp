@@ -20,6 +20,9 @@
     </style>
     <p></p>
     <div id="nav">
+        <h1>${session.getAttribute(user.fullName)}</h1>
+        <p>${session.getAttribute(user.nickname)}</p>
+        
         <h1>Trending</h1>
         <p>some interesting information will eventually go here.</p>
     </div>
