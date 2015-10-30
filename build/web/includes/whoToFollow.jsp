@@ -21,6 +21,7 @@
         <h1>Who to follow</h1>
         <c:forEach var = "user" items="${users}">
         <div id="usersToFollow">
+            <p>for each</p>
             <h1>${user.fullName} @${user.nickname}</h1>
         </div>
     </c:forEach>

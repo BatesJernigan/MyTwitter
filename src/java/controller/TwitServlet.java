@@ -36,7 +36,7 @@ public class TwitServlet extends HttpServlet {
         String text = request.getParameter("text");
         HttpSession session = request.getSession();
         
-        if (action == "tweet"){
+        if (action.equals("tweet")) {
             
             User user = (User) session.getAttribute("user");
             String email = user.getEmail();

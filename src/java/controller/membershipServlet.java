@@ -146,6 +146,10 @@ public class membershipServlet extends HttpServlet {
             ArrayList<User> users = UserDB.selectAll();
             session.setAttribute("users", users);
             
+            for(User cUser : users) {
+                System.out.println("cUser: " + cUser.toString());
+            }
+            
             ArrayList<Tweets> tweetList = TweetDB.all();
             session.setAttribute("tweets", tweetList);
 

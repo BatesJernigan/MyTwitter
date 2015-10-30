@@ -13,7 +13,6 @@
         <title>Twitter</title>
         <link rel="stylesheet" href="styles/main.css" type="text/css"/>
         <script src="includes/main.js" type="javascript"></script>
-        <script src='includes/main.js'></script>
     </head>
     
     <!-- code to display menu dependent on what page user is currently on -->
