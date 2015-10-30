@@ -1,1 +1,2 @@
-bates1012@aol.com|1234|bates|bates|2/1/1980
+bates1012@aol.com|1234|Phil Jernigan|TJ|2/7/1986
+bates1012@gmail.com|1234|Frank|TJ|6/13/1994

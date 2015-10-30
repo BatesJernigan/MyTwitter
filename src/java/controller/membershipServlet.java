@@ -8,11 +8,12 @@ package controller;
 import business.User;
 import dataaccess.UserDB;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,10 +39,8 @@ public class membershipServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("in do get of membership servlet");
-        System.out.println(request);
-        
-        
-        doPost(request, response);
+
+        //doPost(request, response);
     }
 
     /**
@@ -55,7 +54,20 @@ public class membershipServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println("in do post of membership servlet");
         String action = request.getParameter("action");
+        
+        Cookie[] cookies = request.getCookies();
+        
+        for(Cookie cookie: cookies) {
+            if(cookie.getName().equals("emailCookie")) {
+                System.out.println("email cookie, value: " + cookie.getValue());
+                getServletContext()
+                    .getRequestDispatcher("/home.jsp")
+                    .forward(request, response);
+            }
+        }
+        
         
         if (action == null) {
             action = "autheticate";  // default action
@@ -75,7 +87,7 @@ public class membershipServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
+
     public static boolean dateIsValid(String date) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -90,9 +102,14 @@ public class membershipServlet extends HttpServlet {
     }
     
     public static boolean isUniqueEmail(String email) {
-        if(UserDB.search(email) == null) {
+        User user;
+        if((user = UserDB.search(email)) == null) {
+            System.out.println("email is unique");
+            System.out.println(user.toString());
             return true;
         };
+        System.out.println("email is not unique");
+        System.out.println(user.toString());
         return false;
     }
     
@@ -105,7 +122,7 @@ public class membershipServlet extends HttpServlet {
         String url = "/login.jsp";
         String password = request.getParameter("password");
         String email = request.getParameter("email");
-        String message;
+        String message = null;
         User user = new User();
         // validate the parameters
         if (email == null || email.isEmpty() ||
@@ -115,7 +132,10 @@ public class membershipServlet extends HttpServlet {
             request.setAttribute("message", message);
         } 
         else if (userIsAuthenticated(email, password)){
-            message = null;
+            Cookie cookie = new Cookie("emailCookie", email);
+            cookie.setMaxAge(60*60*24);
+            cookie.setPath("/");
+            response.addCookie(cookie);
             url = "/home.jsp";
             user = UserDB.search(email);
             HttpSession session = request.getSession();
@@ -157,13 +177,22 @@ public class membershipServlet extends HttpServlet {
                 !password.isEmpty() && birthdate != null && isUniqueEmail(email)) {
             user = new User(email, password, fullName, nickname, birthdate);
             insertResultCode = UserDB.insert(user);
+            System.out.println("Insert result code");
+            System.out.println(insertResultCode);
         } else {
             if(!isUniqueEmail(email)) {
                 message = "Please use a unique Email";
             } else {
                 message = "Please fill out all fields using valid information";
             }
+            url = "/signup.jsp";
         }
+        
+        ArrayList<User> userList = UserDB.selectAll();
+        for(User currentUser : userList) {
+            System.out.println(currentUser.toString());
+        }
+        
 
         if(insertResultCode == 0) {
             message = "Awesome! You're all signed up!";
@@ -174,6 +203,8 @@ public class membershipServlet extends HttpServlet {
             url = "/signup.jsp";
         }
         request.setAttribute("message", message);
+        
+        System.out.println("Sending to: " + url);
         getServletContext()
                 .getRequestDispatcher(url)
                 .forward(request, response);
