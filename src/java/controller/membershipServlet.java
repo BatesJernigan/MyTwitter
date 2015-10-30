@@ -17,6 +17,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -86,7 +87,7 @@ public class membershipServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
+
     public static boolean dateIsValid(String date) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -137,10 +138,8 @@ public class membershipServlet extends HttpServlet {
             response.addCookie(cookie);
             url = "/home.jsp";
             user = UserDB.search(email);
-
-            System.out.println("user from user db search");
-            System.out.println(user.toString());
-
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
             request.setAttribute("user", user);
             request.setAttribute("message", message);
         } else {

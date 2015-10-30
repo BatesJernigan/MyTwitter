@@ -1,13 +1,15 @@
-package controller;
+package dataaccess;
 
 import java.io.*;
 import java.util.*;
-import java.util.Date;
 import business.Tweets;
+import java.text.ParseException;
 
-public class TweetIO {
-
-    public static void addRecord(Tweets tweet, String filename) throws IOException {
+public class TweetDB {
+    
+    static String filename = "/Web Pages/tweets.txt";
+    
+    public static void addRecord(Tweets tweet) throws IOException {
         File file = new File(filename);
         PrintWriter out = new PrintWriter(
                 new FileWriter(file, true));
@@ -39,19 +41,24 @@ public class TweetIO {
     //    return tweet;
     //} 
 
-    public static ArrayList<Tweets> getEntrys(String filename) throws IOException {
-        ArrayList<Tweets> tweets = new ArrayList<Tweets>();
+    public static ArrayList<Tweets> getEntrys(String filename) throws IOException, ParseException {
+        ArrayList<Tweets> tweets = new ArrayList<>();
         BufferedReader in = new BufferedReader(
                 new FileReader(filename));
         String line = in.readLine();
         while (line != null) {
             try {
+                //reads in the string for tweets
                 StringTokenizer t = new StringTokenizer(line, "|");
                 String email = t.nextToken();
                 String text = t.nextToken();
                 String date = t.nextToken();
+                
+
+                //creates tweets for display and adds them to array for return
                 Tweets tweet = new Tweets(email, date, text);
                 tweets.add(tweet);
+                
                 line = in.readLine();
             } catch (NoSuchElementException e) {
                 line = in.readLine();
