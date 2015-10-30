@@ -5,7 +5,9 @@
  */
 package controller;
 
+import business.Tweets;
 import business.User;
+import dataaccess.TweetDB;
 import dataaccess.UserDB;
 import java.io.IOException;
 import java.text.ParseException;
@@ -140,7 +142,10 @@ public class membershipServlet extends HttpServlet {
             user = UserDB.search(email);
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-            request.setAttribute("user", user);
+            
+            ArrayList<Tweets> tweetList = TweetDB.all();
+            session.setAttribute("tweets", tweetList);
+
             request.setAttribute("message", message);
         } else {
             message = "Wrong Email / Password Combo";

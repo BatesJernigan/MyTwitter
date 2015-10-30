@@ -37,17 +37,15 @@
         <!-- box for inputing tweets into the system. needs servlet to utilize this form-->
         <div>
             <div id ="tweet">
-                <form action = "tweet" method="post">
+                <form action="twit" method="post">
                     <input type="hidden" name="action" value="tweet">
-                    <textarea rows="4" cols="70" value="text" required></textarea>
+                    <textarea rows="4" cols="70" name="text" required></textarea>
                     <p></p>
-                    <input type="submit" value="Tweet" class="margin_left" align="right">
+                    <input type="submit" name="Tweet" class="margin_left" align="right">
                 </form>
             </div>
-            <p> </p>
 
             <c:forEach var = "i" items="${tweets}">
-                <p>I MADE A SPACE</p>
                 <div id="viewTweets">
                     <h1${i.email} ${i.date}</h1>
                     <p>${i.text}</p>
