@@ -116,7 +116,7 @@ public class membershipServlet extends HttpServlet {
         else if (userIsAuthenticated(email, password)){
             message = null;
             url = "/home.jsp";
-
+            user = UserDB.search(email);
             request.setAttribute("user", user);
             request.setAttribute("message", message);
         } else {
