@@ -1,11 +1,11 @@
-package controller;
+package dataaccess;
 
 import java.io.*;
 import java.util.*;
 import business.Tweets;
 import java.text.ParseException;
 
-public class TweetIO {
+public class TweetDB {
     
     static String filename = "/Web Pages/tweets.txt";
     

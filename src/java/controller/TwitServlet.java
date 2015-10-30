@@ -6,7 +6,7 @@
 package controller;
 
 import business.User;
-import controller.TweetIO;
+import dataaccess.TweetDB;
 import business.Tweets;
 import dataaccess.UserDB;
 import java.io.IOException;
@@ -26,8 +26,10 @@ import javax.servlet.http.HttpSession;
  *
  * @author Garrick
  */
-public class TwitServlet {
-    public void twitPost(HttpServletRequest request, HttpServletResponse response)
+@WebServlet(name = "twitServlet", urlPatterns = {"/twit"})
+public class TwitServlet extends HttpServlet {
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         String url = "/home.jsp";
@@ -38,7 +40,7 @@ public class TwitServlet {
 
         if(text == null || email == null){
             Tweets tweet = new Tweets(email, text);
-            TweetIO.addRecord(tweet);
+            TweetDB.addRecord(tweet);
             url = "/home.jsp";
         }else{
             url = "/home.jsp";
