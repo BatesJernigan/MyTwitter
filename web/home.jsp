@@ -10,7 +10,7 @@
 <html>
     
     <style>
-        #tweet{
+        #twit{
             line-height:30px;
             background-color:#FFFFFF;
             height:150px;
@@ -22,7 +22,7 @@
             margin-left: auto;
             margin-right: auto;
         }
-        #tweets{
+        #twits{
             line-height:30px;
             background-color:#FFFFFF;
             height:100px;
@@ -46,19 +46,19 @@
         <c:import url="/includes/sidebar.jsp" />
         <c:import url="/includes/whoToFollow.jsp" />
 
-        <!-- box for inputing tweets into the system. needs servlet to utilize this form-->
+        <!-- box for inputing twits into the system. needs servlet to utilize this form-->
         <div>
-            <div id ="tweet">
+            <div id ="twit">
                 <form action="twit" method="post">
-                    <input type="hidden" name="action" value="tweet">
+                    <input type="hidden" name="action" value="twit">
                     <textarea rows="4" cols="70" name="text" required></textarea>
                     <p></p>
-                    <input type="submit" name="Tweet" class="margin_left" align="right">
+                    <input type="submit" name="Twit" class="margin_left" align="right">
                 </form>
             </div>
 
-            <c:forEach var = "i" items="${tweets}">
-                <div id="viewTweets">
+            <c:forEach var = "i" items="${twits}">
+                <div id="viewTwits">
                     <h1${i.email} ${i.date}</h1>
                     <p>${i.text}</p>
                 </div>

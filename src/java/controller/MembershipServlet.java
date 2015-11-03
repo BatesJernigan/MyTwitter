@@ -5,9 +5,9 @@
  */
 package controller;
 
-import business.Tweets;
+import business.Twit;
 import business.User;
-import dataaccess.TweetDB;
+import dataaccess.TwitDB;
 import dataaccess.UserDB;
 import java.io.IOException;
 import java.text.ParseException;
@@ -26,7 +26,7 @@ import javax.servlet.http.HttpSession;
  * @author xl
  */
 @WebServlet(name = "membershipServlet", urlPatterns = {"/membership"})
-public class membershipServlet extends HttpServlet {
+public class MembershipServlet extends HttpServlet {
     final static String DATE_FORMAT = "M/d/yyyy";
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -150,8 +150,8 @@ public class membershipServlet extends HttpServlet {
                 System.out.println("cUser: " + cUser.toString());
             }
             
-            ArrayList<Tweets> tweetList = TweetDB.all();
-            session.setAttribute("tweets", tweetList);
+            ArrayList<Twit> twitList = TwitDB.all();
+            session.setAttribute("twits", twitList);
 
             request.setAttribute("message", message);
         } else {

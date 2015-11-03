@@ -14,16 +14,16 @@ import java.util.Date;
  * @author Garrick
  */
 
-public class Tweets implements Serializable {
+public class Twit implements Serializable {
     private String email, text, date;
     
-    public Tweets() {
+    public Twit() {
         this.email = "";
         this.date = null;
         this.text ="";
     }
 
-    public Tweets(String email, String text) {
+    public Twit(String email, String text) {
         this.email = email;
         this.text = text;
         
@@ -34,7 +34,7 @@ public class Tweets implements Serializable {
 
     }
 
-    public Tweets(String email, String date, String text){
+    public Twit(String email, String date, String text){
         this.email = email;
         this.date = date;
         this.text = text;
@@ -67,7 +67,7 @@ public class Tweets implements Serializable {
 
     @Override
     public String toString() {
-        return "Tweets{" + "email=" + email + ", text=" + text + ", date=" + date + '}';
+        return "Twits{" + "email=" + email + ", text=" + text + ", date=" + date + '}';
     }
     
 }

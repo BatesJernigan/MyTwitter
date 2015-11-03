@@ -2,26 +2,26 @@ package dataaccess;
 
 import java.io.*;
 import java.util.*;
-import business.Tweets;
+import business.Twit;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-public class TweetDB {
+public class TwitDB {
     
     final static String FILE_NAME = "/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/web/tweets.txt";
     
-    public static long addRecord(Tweets tweet) throws IOException {
-        System.out.println("in tweetdb add record");        
+    public static long addRecord(Twit twit) throws IOException {
+        System.out.println("in twitdb add record");        
         
         File file = new File(FILE_NAME);
         try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
             
-            System.out.println("tweet: " + tweet.toString());
-            out.println(tweet.getEmail() + "|"
-                    + tweet.getDate() + "|"
-                    + tweet.getText());
+            System.out.println("twit: " + twit.toString());
+            out.println(twit.getEmail() + "|"
+                    + twit.getDate() + "|"
+                    + twit.getText());
             out.close();
             return 1;
         } catch(IOException e) {
@@ -29,18 +29,18 @@ public class TweetDB {
         }
     }
 
-    public static ArrayList<Tweets> all() throws IOException {
+    public static ArrayList<Twit> all() throws IOException {
         String line;
         try {
             BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
-            ArrayList<Tweets> tweetList = new ArrayList<>();
+            ArrayList<Twit> twitList = new ArrayList<>();
             while ((line = reader.readLine()) != null) {
                 System.out.println("first line: " + line);
-                String[] tweetAttribute = line.split(Pattern.quote("|"));
-                tweetList.add(new Tweets(tweetAttribute[0], tweetAttribute[1], tweetAttribute[2]));
+                String[] twitAttribute = line.split(Pattern.quote("|"));
+                twitList.add(new Twit(twitAttribute[0], twitAttribute[1], twitAttribute[2]));
             }
             
-            return tweetList;
+            return twitList;
         } catch (FileNotFoundException e) {
             Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, null, e);
         } catch (IOException e) {

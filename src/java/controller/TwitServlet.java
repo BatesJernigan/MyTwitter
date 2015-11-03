@@ -6,8 +6,8 @@
 package controller;
 
 import business.User;
-import dataaccess.TweetDB;
-import business.Tweets;
+import dataaccess.TwitDB;
+import business.Twit;
 import dataaccess.UserDB;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,7 +26,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Garrick
  */
-@WebServlet(name = "twitServlet", urlPatterns = {"/twit"})
+@WebServlet(name = "TwitServlet", urlPatterns = {"/twit"})
 public class TwitServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -36,31 +36,31 @@ public class TwitServlet extends HttpServlet {
         String text = request.getParameter("text");
         HttpSession session = request.getSession();
         
-        if (action.equals("tweet")) {
+        if (action.equals("twit")) {
             
             User user = (User) session.getAttribute("user");
             String email = user.getEmail();
 
             if(text == null || email == null){
-                Tweets tweet = new Tweets(email, text);
-                TweetDB.addRecord(tweet);
+                Twit twit = new Twit(email, text);
+                TwitDB.addRecord(twit);
                 url = "/home.jsp";
             }else{
                 url = "/home.jsp";
 
             }
         }
-        ArrayList<Tweets> tweets = TweetDB.all();
-        session.setAttribute("tweets", tweets);
+        ArrayList<Twit> twits = TwitDB.all();
+        session.setAttribute("twits", twits);
     }
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("in do get of tweet servlet");
+        System.out.println("in do get of twit servlet");
         
         HttpSession session = request.getSession();
-        ArrayList<Tweets> tweets = TweetDB.all();
-        session.setAttribute("tweets", tweets);
+        ArrayList<Twit> twits = TwitDB.all();
+        session.setAttribute("twits", twits);
         //doPost(request, response);
     }
 }
