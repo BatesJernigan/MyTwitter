@@ -7,12 +7,13 @@ package controller;
 
 import business.Twit;
 import business.User;
-import dataaccess.TwitDB;
-import dataaccess.UserDB;
+import dataaccess.TwitRepo;
+import dataaccess.UserRepo;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -90,24 +91,21 @@ public class MembershipServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    public static boolean dateIsValid(String date) {
+    public static Date validatedDate(String date) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
             dateFormat.setLenient(false);
-            dateFormat.parse(date);
+            return dateFormat.parse(date);
         } catch (ParseException | IllegalArgumentException e) {
             System.out.println("date is not valid " + e);
-            return false;
+            return null;
         }
-        
-        return true;
     }
     
     public static boolean isUniqueEmail(String email) {
         User user;
-        if((user = UserDB.search(email)) == null) {
+        if((user = UserRepo.search(email)) == null) {
             System.out.println("email is unique");
-            System.out.println(user.toString());
             return true;
         };
         System.out.println("email is not unique");
@@ -116,7 +114,7 @@ public class MembershipServlet extends HttpServlet {
     }
     
     public static boolean userIsAuthenticated(String email, String password) {
-        return UserDB.select(email, password) != null;
+        return UserRepo.select(email, password) != null;
     }
 
     public void loginPost(HttpServletRequest request, HttpServletResponse response)
@@ -139,18 +137,19 @@ public class MembershipServlet extends HttpServlet {
             cookie.setPath("/");
             response.addCookie(cookie);
             url = "/home.jsp";
-            user = UserDB.search(email);
+            user = UserRepo.search(email);
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             
-            ArrayList<User> users = UserDB.selectAll();
-            session.setAttribute("users", users);
+            ArrayList<User> users = UserRepo.selectAll();
             
+            session.setAttribute("users", users);
+
             for(User cUser : users) {
                 System.out.println("cUser: " + cUser.toString());
             }
             
-            ArrayList<Twit> twitList = TwitDB.all();
+            ArrayList<Twit> twitList = TwitRepo.all();
             session.setAttribute("twits", twitList);
 
             request.setAttribute("message", message);
@@ -177,18 +176,14 @@ public class MembershipServlet extends HttpServlet {
         String month = request.getParameter("month");
         String day = request.getParameter("day");
         String year = request.getParameter("year");
-        String birthdate = null;
+        Date birthdate = validatedDate(month + "/" + day + "/"  + year);
          // 1 means error from user db, 2 means never run
         long insertResultCode = 2;
-
-        if (dateIsValid(month + "/" + day + "/"  + year)) {
-            birthdate = month + "/" + day + "/"  + year;
-        }
 
         if(!fullName.isEmpty() && !email.isEmpty() && !nickname.isEmpty() &&
                 !password.isEmpty() && birthdate != null && isUniqueEmail(email)) {
             user = new User(email, password, fullName, nickname, birthdate);
-            insertResultCode = UserDB.insert(user);
+            insertResultCode = UserRepo.insert(user);
             System.out.println("Insert result code");
             System.out.println(insertResultCode);
         } else {
@@ -200,7 +195,7 @@ public class MembershipServlet extends HttpServlet {
             url = "/signup.jsp";
         }
         
-        ArrayList<User> userList = UserDB.selectAll();
+        ArrayList<User> userList = UserRepo.selectAll();
         for(User currentUser : userList) {
             System.out.println(currentUser.toString());
         }

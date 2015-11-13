@@ -6,9 +6,9 @@
 package controller;
 
 import business.User;
-import dataaccess.TwitDB;
+import dataaccess.TwitRepo;
 import business.Twit;
-import dataaccess.UserDB;
+import dataaccess.UserRepo;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -43,14 +43,14 @@ public class TwitServlet extends HttpServlet {
 
             if(text == null || email == null){
                 Twit twit = new Twit(email, text);
-                TwitDB.addRecord(twit);
+                TwitRepo.addRecord(twit);
                 url = "/home.jsp";
             }else{
                 url = "/home.jsp";
 
             }
         }
-        ArrayList<Twit> twits = TwitDB.all();
+        ArrayList<Twit> twits = TwitRepo.all();
         session.setAttribute("twits", twits);
     }
     
@@ -59,7 +59,7 @@ public class TwitServlet extends HttpServlet {
         System.out.println("in do get of twit servlet");
         
         HttpSession session = request.getSession();
-        ArrayList<Twit> twits = TwitDB.all();
+        ArrayList<Twit> twits = TwitRepo.all();
         session.setAttribute("twits", twits);
         //doPost(request, response);
     }
