@@ -5,28 +5,35 @@
  */
 package business;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.Random;
 
 /**
  *
  * @javabean for User Entity
  */
 public class User implements Serializable {
-    private String fullName, email, password, nickname, birthdate;
-    
-    public User() {
-        this.fullName = "";
-        this.email = "";
-        this.password = "";
-        this.nickname = "";
-        this.birthdate = "";
-    }
+    private long id;
+    private String fullName, email, password, nickname;
+    private Date birthdate;
 
-    public User(String email, String password, String fullName, String nickname, String birthdate) {
+    public User() {}
+
+    public User(String fullName, String email, String password, String nickname, Date birthdate) {
+        this.id = new Random().nextInt(1000000000);
+        this.fullName = fullName;
         this.email = email;
         this.password = password;
-        this.fullName = fullName;
         this.nickname = nickname;
         this.birthdate = birthdate;
+    }
+    
+    public void setId() {
+        this.id = new Random().nextInt(1000000000);
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getFullName() {
@@ -61,16 +68,17 @@ public class User implements Serializable {
         this.nickname = nickname;
     }
 
-    public String getBirthdate() {
+    public Date getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(String birthdate) {
+    public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
     }
-
+    
     @Override
     public String toString() {
         return "User{" + "fullName=" + fullName + ", email=" + email + ", password=" + password + ", nickname=" + nickname + ", birthdate=" + birthdate + '}';
     }
+    
 }
