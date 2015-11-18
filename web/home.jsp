@@ -60,9 +60,11 @@
             <p>Here are all of the twits</p>
             <p>${user}</p>
             <c:forEach var = "i" items="${twits}">
+
                 <p>after this comes a twit</p>
-                <div id="viewTwits">
-                    <p>Here comes a twit</p>
+                <div id="twits">
+                    <p></p>
+                    <p>${i.user_id}</p>
                     
                     <p>${i.userId} ${i.postedDate} ${i.content}</p>
                 </div>

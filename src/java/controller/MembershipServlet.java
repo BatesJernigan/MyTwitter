@@ -208,9 +208,7 @@ public class MembershipServlet extends HttpServlet {
             }
         }
         ArrayList<User> userList = UserRepo.selectAll();
-        userList.stream().forEach((currentUser) -> {
-            System.out.println(currentUser.toString());
-        });
+        
 
         request.setAttribute("message", message);
         
