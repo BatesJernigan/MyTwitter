@@ -6,7 +6,6 @@
 package business;
 
 import java.io.Serializable;
-//import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
@@ -16,22 +15,29 @@ import java.util.Random;
  */
 
 public class Twit implements Serializable {
-    private long id;
-    private String email, content;
+    private long id, user_id;
+    private String content;
     private Date posted_date;
     
     public Twit() {}
 
-    public Twit(String email, String content) {
-        this.email = email;
+    public Twit(long user_id, String content) {
+        this.user_id = user_id;
         this.content = content;
         this.posted_date = new Date();
         this.id = new Random().nextInt(1000000000);
     }
 
-    public Twit(String email, Date posted_date, String content){
+    public Twit(long user_id, Date posted_date, String content){
         this.id = new Random().nextInt(1000000000);
-        this.email = email;
+        this.user_id = user_id;
+        this.posted_date = posted_date;
+        this.content = content;
+    }
+    
+    public Twit(long id, long user_id, Date posted_date, String content){
+        this.id = id;
+        this.user_id = user_id;
         this.posted_date = posted_date;
         this.content = content;
     }
@@ -43,14 +49,15 @@ public class Twit implements Serializable {
     public long getId() {
         return id;
     }
-    
-    public String getEmail() {
-        return email;
+
+    public long getUserId() {
+        return user_id;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUserId(long user_id) {
+        this.user_id = user_id;
     }
+    
     
     public String getContent() {
         return content;
@@ -66,11 +73,6 @@ public class Twit implements Serializable {
 
     public void setPostedDate(Date posted_date) {
         this.posted_date = posted_date;
-    }
-
-    @Override
-    public String toString() {
-        return "Twits{" + "email=" + email + ", content=" + content + ", posted_date=" + posted_date + '}';
     }
     
 }

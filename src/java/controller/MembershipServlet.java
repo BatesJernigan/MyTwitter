@@ -62,16 +62,16 @@ public class MembershipServlet extends HttpServlet {
         
         Cookie[] cookies = request.getCookies();
         
-        for(Cookie cookie: cookies) {
-            if(cookie.getName().equals("emailCookie")) {
-                System.out.println("email cookie, value: " + cookie.getValue());
-                getServletContext()
-                    .getRequestDispatcher("/home.jsp")
-                    .forward(request, response);
-            }
-        }
-        
-        
+//        for(Cookie cookie: cookies) {
+//            if(cookie.getName().equals("emailCookie")) {
+//                System.out.println("email cookie, value: " + cookie.getValue());
+//                getServletContext()
+//                    .getRequestDispatcher("/home.jsp")
+//                    .forward(request, response);
+//                return;
+//            }
+//        }
+
         if (action == null) {
             action = "autheticate";  // default action
         } else if (action.equals("authenticate")) {
@@ -119,11 +119,13 @@ public class MembershipServlet extends HttpServlet {
 
     public void loginPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println("in login post");
         String url = "/login.jsp";
         String password = request.getParameter("password");
         String email = request.getParameter("email");
         String message = null;
         User user = new User();
+        HttpSession session = request.getSession();
         // validate the parameters
         if (email == null || email.isEmpty() ||
                 password == null || password.isEmpty()) {
@@ -132,31 +134,29 @@ public class MembershipServlet extends HttpServlet {
             request.setAttribute("message", message);
         } 
         else if (userIsAuthenticated(email, password)){
+            System.out.println("user is authenticated");
             Cookie cookie = new Cookie("emailCookie", email);
             cookie.setMaxAge(60*60*24);
             cookie.setPath("/");
             response.addCookie(cookie);
             url = "/home.jsp";
             user = UserRepo.search(email);
-            HttpSession session = request.getSession();
+            System.out.println("user attribute in login: " + user.toString());
             session.setAttribute("user", user);
             
-            ArrayList<User> users = UserRepo.selectAll();
+            ArrayList<Twit> twitList = TwitRepo.all();
             
-            session.setAttribute("users", users);
-
-            for(User cUser : users) {
-                System.out.println("cUser: " + cUser.toString());
+            for(Twit twit: twitList) {
+                System.out.println("twit list in membership serv: " + twit.toString());
             }
             
-            ArrayList<Twit> twitList = TwitRepo.all();
             session.setAttribute("twits", twitList);
-
+            
             request.setAttribute("message", message);
         } else {
+            System.out.println("not authenticated");
             message = "Wrong Email / Password Combo";
             url = "/login.jsp";
-            request.setAttribute("user", user);
             request.setAttribute("message", message);
         }
         getServletContext()
@@ -166,8 +166,9 @@ public class MembershipServlet extends HttpServlet {
     
     public void signupPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String message;
-        String url = "/signup";
+        String message = "";
+        String url = "";
+        HttpSession session = request.getSession();
         User user = new User();
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
@@ -177,44 +178,45 @@ public class MembershipServlet extends HttpServlet {
         String day = request.getParameter("day");
         String year = request.getParameter("year");
         Date birthdate = validatedDate(month + "/" + day + "/"  + year);
-         // 1 means error from user db, 2 means never run
-        long insertResultCode = 2;
+        System.out.println("fullname: " + fullName); 
+        System.out.println("email: " + email); 
+        System.out.println("nickname: " + nickname); 
+        System.out.println("password: " + password); 
+        System.out.println("birthdate: " + birthdate); 
+
+        long insertResultCode = 0;
 
         if(!fullName.isEmpty() && !email.isEmpty() && !nickname.isEmpty() &&
                 !password.isEmpty() && birthdate != null && isUniqueEmail(email)) {
-            user = new User(email, password, fullName, nickname, birthdate);
+//            public User(String fullName, String email, String password, String nickname, Date birthdate) {
+            user = new User(fullName, email, password, nickname, birthdate);
             insertResultCode = UserRepo.insert(user);
             System.out.println("Insert result code");
             System.out.println(insertResultCode);
+            if(insertResultCode == 1) {
+                message = "Awesome! You're all signed up!";
+                System.out.println("user attribute in signup: " + user.toString());
+                session.setAttribute("user", user);
+                url = "/home.jsp";
+            } else {
+                message = "Something went wrong, please try to sign up with valid info";
+                url = "/signup.jsp";
+            }
         } else {
             if(!isUniqueEmail(email)) {
                 message = "Please use a unique Email";
-            } else {
-                message = "Please fill out all fields using valid information";
             }
-            url = "/signup.jsp";
         }
-        
         ArrayList<User> userList = UserRepo.selectAll();
-        for(User currentUser : userList) {
+        userList.stream().forEach((currentUser) -> {
             System.out.println(currentUser.toString());
-        }
-        
+        });
 
-        if(insertResultCode == 0) {
-            message = "Awesome! You're all signed up!";
-            request.setAttribute("user", user);
-            url = "/home.jsp";
-        } else {
-            message = "Something went wrong, please try to sign up with valid info";
-            url = "/signup.jsp";
-        }
         request.setAttribute("message", message);
         
         System.out.println("Sending to: " + url);
         getServletContext()
                 .getRequestDispatcher(url)
                 .forward(request, response);
-        
     }
 }

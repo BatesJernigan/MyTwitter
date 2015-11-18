@@ -51,16 +51,20 @@
             <div id ="twit">
                 <form action="twit" method="post">
                     <input type="hidden" name="action" value="twit">
-                    <textarea rows="4" cols="70" name="text" required></textarea>
+                    <textarea rows="4" cols="70" name="content" required></textarea>
                     <p></p>
                     <input type="submit" name="Twit" class="margin_left" align="right">
                 </form>
             </div>
 
+            <p>Here are all of the twits</p>
+            <p>${user}</p>
             <c:forEach var = "i" items="${twits}">
+                <p>after this comes a twit</p>
                 <div id="viewTwits">
-                    <h1${i.email} ${i.date}</h1>
-                    <p>${i.text}</p>
+                    <p>Here comes a twit</p>
+                    
+                    <p>${i.content}</p>
                 </div>
             </c:forEach>
         </div>

@@ -5,11 +5,8 @@ import java.util.*;
 import business.Twit;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 public class TwitRepo {
     
@@ -23,15 +20,15 @@ public class TwitRepo {
         System.out.println("connection " + connection.toString());
         PreparedStatement ps = null;
 
-//        private String email, text, date;
         String query
-                = "INSERT INTO twits (email, text, date) "
-                + "VALUES (?, ?, ?)";
+                = "INSERT INTO twits (id, user_id, content, posted_date) "
+                + "VALUES (?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(query);
-            ps.setString(1, twit.getEmail());
-            ps.setString(2, twit.getContent());
-            ps.setDate(3, new java.sql.Date(twit.getPostedDate().getTime()));
+            ps.setLong(1, twit.getId());
+            ps.setLong(2, twit.getUserId());
+            ps.setString(3, twit.getContent());
+            ps.setDate(4, new java.sql.Date(twit.getPostedDate().getTime()));
 
             return ps.executeUpdate();
         } catch (SQLException e) {
@@ -44,23 +41,41 @@ public class TwitRepo {
     }
 
     public static ArrayList<Twit> all() throws IOException {
-        String line;
-//        try {
-//            BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
-//            ArrayList<Twit> twitList = new ArrayList<>();
-//            while ((line = reader.readLine()) != null) {
-//                System.out.println("first line: " + line);
-//                String[] twitAttribute = line.split(Pattern.quote("|"));
-//                twitList.add(new Twit(twitAttribute[0], twitAttribute[1], twitAttribute[2]));
-//            }
-//            
-//            return twitList;
-//        } catch (FileNotFoundException e) {
-//            Logger.getLogger(UserRepo.class.getName()).log(Level.SEVERE, null, e);
-//        } catch (IOException e) {
-//            Logger.getLogger(UserRepo.class.getName()).log(Level.SEVERE, null, e);
-//        }
+        System.out.println("in twit all");
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ArrayList<Twit> twitList = new ArrayList<>();
+
+        String query = "SELECT * FROM twits";
+//        System.out.println("in twit all");
+        try {
+            ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                twitList.add(buildTwitFromResult(rs));
+            }
+            System.out.println("twit list from all");
+            twitList.stream().forEach((twit) -> {
+                System.out.println(twit.toString());
+            });
+            return twitList;
+        } catch(SQLException e) {
+            System.err.println(e);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
         return null;
     }
-
+    
+    private static Twit buildTwitFromResult(ResultSet rs) throws SQLException {
+        System.out.println("get long twit: " + rs.getLong("id"));
+//        long id, long user_id, Date posted_date, String content
+        return new Twit(rs.getLong("id"),
+                rs.getLong("user_id"),
+                rs.getDate("posted_date"),
+                rs.getString("content"));
+    }
 }

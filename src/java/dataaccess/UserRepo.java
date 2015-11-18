@@ -25,12 +25,15 @@ public class UserRepo {
         Connection connection = pool.getConnection();
         System.out.println("connection " + connection.toString());
         PreparedStatement ps = null;
+        
+        System.out.println("user in insert method: " + user.toString());
 
         String query
                 = "INSERT INTO users (email, password, full_name, nickname, id, birthdate)"
                 + "VALUES (?, ?, ?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(query);
+            System.out.println(user.toString());
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getPassword());
             ps.setString(3, user.getFullName());
@@ -41,6 +44,7 @@ public class UserRepo {
             System.out.println("ps: " + ps.toString());
             return ps.executeUpdate();
         } catch (SQLException e) {
+            System.out.println("there was a sql exception! " + e);
             System.out.println(e);
             return 0;
         } finally {
@@ -68,7 +72,7 @@ public class UserRepo {
             ResultSet rs = ps.executeQuery();
             
             if (rs.next()) {
-                return buildUserFromResultSet(rs);
+                return buildUserFromResult(rs);
             }
         } catch(SQLException e) {
             System.err.println(e);
@@ -86,7 +90,7 @@ public class UserRepo {
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         
-        String query = "SELECT email FROM users WHERE email = ?";
+        String query = "SELECT * FROM users WHERE email = ?";
 
         try {
             ps = connection.prepareStatement(query);
@@ -95,7 +99,8 @@ public class UserRepo {
             System.out.println("prepared statement: " + ps.toString());
             rs = ps.executeQuery();
             if (rs.next()) {
-                return buildUserFromResultSet(rs);
+                System.out.println("rs has next ");
+                return buildUserFromResult(rs);
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -160,7 +165,7 @@ public class UserRepo {
             ResultSet rs = ps.executeQuery();
             
             while (rs.next()) {
-                userList.add(buildUserFromResultSet(rs));
+                userList.add(buildUserFromResult(rs));
             }
             return userList;
         } catch(SQLException e) {
@@ -172,11 +177,12 @@ public class UserRepo {
         return null;
     }
     
-    private static User buildUserFromResultSet(ResultSet rs) throws SQLException {
-        return new User(rs.getString("full_name"), 
-                rs.getString("email"), 
-                rs.getString("password"),
-                rs.getString("nickname"),
-                rs.getDate("birthdate"));
+    private static User buildUserFromResult(ResultSet rs) throws SQLException {
+        return new User(rs.getLong("id"),
+            rs.getString("full_name"), 
+            rs.getString("email"), 
+            rs.getString("password"),
+            rs.getString("nickname"),
+            rs.getDate("birthdate"));
     }
 }

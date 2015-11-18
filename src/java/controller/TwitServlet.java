@@ -28,39 +28,56 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "TwitServlet", urlPatterns = {"/twit"})
 public class TwitServlet extends HttpServlet {
+    
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         String action = request.getParameter("action");
         String url = "/home.jsp";
-        String text = request.getParameter("text");
-        HttpSession session = request.getSession();
+        String content = request.getParameter("content");
+        
+        User user = (User) session.getAttribute("user");
+        System.out.println("session object: " + session.toString());
+        
+        String email = user.getEmail();
+        
+        System.out.println("twit content: " + content);
+        System.out.println("email content: " + email);
         
         if (action.equals("twit")) {
-            
-            User user = (User) session.getAttribute("user");
-            String email = user.getEmail();
+            System.out.println("action equals twit");
 
-            if(text == null || email == null){
-                Twit twit = new Twit(email, text);
+            System.out.println("twit content: " + content);
+
+            if(content != null && email != null){
+                System.out.println("text != null and content != null");
+                
+                Twit twit = new Twit(user.getId(), content);
+                System.out.println("Twit to add: " + twit);
                 TwitRepo.addRecord(twit);
-                url = "/home.jsp";
-            }else{
-                url = "/home.jsp";
-
             }
         }
+        
         ArrayList<Twit> twits = TwitRepo.all();
+        for(Twit twit : twits) {
+            System.out.println("twits from all call: " + twit);
+        }
         session.setAttribute("twits", twits);
+        
+        getServletContext()
+            .getRequestDispatcher(url)
+            .forward(request, response);
     }
     
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("in do get of twit servlet");
-        
+
         HttpSession session = request.getSession();
         ArrayList<Twit> twits = TwitRepo.all();
         session.setAttribute("twits", twits);
-        //doPost(request, response);
+        doPost(request, response);
     }
 }

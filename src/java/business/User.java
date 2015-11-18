@@ -28,6 +28,15 @@ public class User implements Serializable {
         this.birthdate = birthdate;
     }
     
+    public User(long id, String fullName, String email, String password, String nickname, Date birthdate) {
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.birthdate = birthdate;
+    }
+    
     public void setId() {
         this.id = new Random().nextInt(1000000000);
     }
