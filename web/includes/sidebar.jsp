@@ -33,9 +33,9 @@
     <p></p>
     <div id ="nav">
         <div id="user">
-            <h1>${session.getAttribute(user)}</h1>
-            <p>${session.getAttribute(user.nickname)}</p>
-            <p>Twits: twitCount()</p>
+            <p></p>
+            <h1>${user.fullName}</h1>
+            <p>${user.nickname}</p>
         </div>
             <p> </p>
         <div id="trending">  

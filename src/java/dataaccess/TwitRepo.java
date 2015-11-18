@@ -58,9 +58,7 @@ public class TwitRepo {
                 twitList.add(buildTwitFromResult(rs));
             }
             System.out.println("twit list from all");
-            twitList.stream().forEach((twit) -> {
-                System.out.println(twit.toString());
-            });
+            
             return twitList;
         } catch(SQLException e) {
             System.err.println(e);
