@@ -152,6 +152,10 @@ public class MembershipServlet extends HttpServlet {
             
             session.setAttribute("twits", twitList);
             
+            ArrayList<User> userList = UserRepo.selectAll();
+            session.setAttribute("users", userList);
+            
+            
             request.setAttribute("message", message);
         } else {
             System.out.println("not authenticated");
