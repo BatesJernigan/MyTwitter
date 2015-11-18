@@ -16,7 +16,7 @@
     </head>
     
     <!-- code to display menu dependent on what page user is currently on -->
-    <c:if test="${true}">
+    <c:if test="${user.nickname != null}">
         <div id="header">
             <ul>
                 <li><a href="home.jsp">Home</a></li>
@@ -26,7 +26,4 @@
         </div>
     </c:if>
 
-    <c:if test="${user.nickname != null}">
-        <span>${user.nickname}</span>
-    </c:if>
     <body>

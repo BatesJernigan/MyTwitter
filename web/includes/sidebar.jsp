@@ -35,7 +35,7 @@
         <div id="user">
             <p></p>
             <h1>${user.fullName}</h1>
-            <p>${user.nickname}</p>
+            <p>@${user.nickname}</p>
         </div>
             <p> </p>
         <div id="trending">  

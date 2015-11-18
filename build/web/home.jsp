@@ -41,33 +41,37 @@
             
         }
     </style>
-    <div>
-        <c:import url="/includes/header.jsp" />
-        <c:import url="/includes/sidebar.jsp" />
-        <c:import url="/includes/whoToFollow.jsp" />
-
-        <!-- box for inputing twits into the system. needs servlet to utilize this form-->
+    <body>
         <div>
-            <div id ="twit">
-                <form action="twit" method="post">
-                    <input type="hidden" name="action" value="twit">
-                    <textarea rows="4" cols="70" name="content" required></textarea>
-                    <p></p>
-                    <input type="submit" name="Twit" class="margin_left" align="right">
-                </form>
-            </div>
+            <c:import url="/includes/header.jsp" />
+            <c:import url="/includes/sidebar.jsp" />
+            <c:import url="/includes/whoToFollow.jsp" />
 
-            <p>Here are all of the twits</p>
-            <p>${user}</p>
-            <c:forEach var = "i" items="${twits}">
-                <p>after this comes a twit</p>
-                <div id="viewTwits">
-                    <p>Here comes a twit</p>
-                    
-                    <p>${i.userId} ${i.postedDate} ${i.content}</p>
+            <!-- box for inputing twits into the system. needs servlet to utilize this form-->
+            <div>
+                <div id ="twit">
+                    <form action="twit" method="post">
+                        <input type="hidden" name="action" value="twit">
+                        <textarea rows="4" cols="70" name="content" required></textarea>
+                        <p></p>
+                        <input type="submit" name="Twit" class="margin_left" align="right">
+                    </form>
                 </div>
-            </c:forEach>
+
+                <p>Here are all of the twits</p>
+                <p>${user}</p>
+                <c:forEach var = "i" items="${twits}">
+
+                    <p> </p>
+                    <div id="twits">
+                        <p></p>
+                        <p>${i.userId} @${i.postedDate}</p>
+                        <p>${i.content}</p>
+                    </div>
+                </c:forEach>
+            </div>
+            <p></p>
+            <c:import url="/includes/footer.jsp" />
         </div>
-        <c:import url="/includes/footer.jsp" />
-    </div>
+    </body>
 </html>
