@@ -64,7 +64,7 @@
                 <div id="viewTwits">
                     <p>Here comes a twit</p>
                     
-                    <p>${i.content}</p>
+                    <p>${i.userId} ${i.postedDate} ${i.content}</p>
                 </div>
             </c:forEach>
         </div>

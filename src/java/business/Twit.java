@@ -15,30 +15,30 @@ import java.util.Random;
  */
 
 public class Twit implements Serializable {
-    private long id, user_id;
+    private long id, userId;
     private String content;
-    private Date posted_date;
+    private Date postedDate;
     
     public Twit() {}
 
-    public Twit(long user_id, String content) {
-        this.user_id = user_id;
+    public Twit(long userId, String content) {
+        this.userId = userId;
         this.content = content;
-        this.posted_date = new Date();
+        this.postedDate = new Date();
         this.id = new Random().nextInt(1000000000);
     }
 
-    public Twit(long user_id, Date posted_date, String content){
+    public Twit(long userId, Date postedDate, String content){
         this.id = new Random().nextInt(1000000000);
-        this.user_id = user_id;
-        this.posted_date = posted_date;
+        this.userId = userId;
+        this.postedDate = postedDate;
         this.content = content;
     }
     
-    public Twit(long id, long user_id, Date posted_date, String content){
+    public Twit(long id, long userId, Date postedDate, String content){
         this.id = id;
-        this.user_id = user_id;
-        this.posted_date = posted_date;
+        this.userId = userId;
+        this.postedDate = postedDate;
         this.content = content;
     }
 
@@ -51,11 +51,11 @@ public class Twit implements Serializable {
     }
 
     public long getUserId() {
-        return user_id;
+        return userId;
     }
 
-    public void setUserId(long user_id) {
-        this.user_id = user_id;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
     
     
@@ -68,11 +68,11 @@ public class Twit implements Serializable {
     }
 
     public Date getPostedDate() {
-        return posted_date;
+        return postedDate;
     }
 
-    public void setPostedDate(Date posted_date) {
-        this.posted_date = posted_date;
+    public void setPostedDate(Date postedDate) {
+        this.postedDate = postedDate;
     }
     
 }

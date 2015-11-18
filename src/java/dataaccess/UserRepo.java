@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 /**
@@ -39,7 +40,7 @@ public class UserRepo {
             ps.setString(3, user.getFullName());
             ps.setString(4, user.getNickname());
             ps.setLong(5, user.getId());
-            ps.setDate(6, new java.sql.Date(user.getBirthdate().getTime()));
+            ps.setTimestamp(6, new Timestamp (user.getBirthdate().getTime()));
 
             System.out.println("ps: " + ps.toString());
             return ps.executeUpdate();

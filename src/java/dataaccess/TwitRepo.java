@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class TwitRepo {
     
@@ -28,7 +29,7 @@ public class TwitRepo {
             ps.setLong(1, twit.getId());
             ps.setLong(2, twit.getUserId());
             ps.setString(3, twit.getContent());
-            ps.setDate(4, new java.sql.Date(twit.getPostedDate().getTime()));
+            ps.setTimestamp(4, new Timestamp (twit.getPostedDate().getTime()));
 
             return ps.executeUpdate();
         } catch (SQLException e) {
@@ -71,8 +72,6 @@ public class TwitRepo {
     }
     
     private static Twit buildTwitFromResult(ResultSet rs) throws SQLException {
-        System.out.println("get long twit: " + rs.getLong("id"));
-//        long id, long user_id, Date posted_date, String content
         return new Twit(rs.getLong("id"),
                 rs.getLong("user_id"),
                 rs.getDate("posted_date"),
