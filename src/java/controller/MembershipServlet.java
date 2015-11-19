@@ -9,25 +9,35 @@ import business.Twit;
 import business.User;
 import dataaccess.TwitRepo;
 import dataaccess.UserRepo;
+
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
 /**
  *
  * @author xl
  */
 @WebServlet(name = "membershipServlet", urlPatterns = {"/membership"})
+@MultipartConfig(fileSizeThreshold=1024*1024*2, // 2MB
+                 maxFileSize=1024*1024*10,      // 10MB
+                 maxRequestSize=1024*1024*50)   // 50MB
 public class MembershipServlet extends HttpServlet {
+    private static final String SAVE_DIR = "uploadFiles";     
     final static String DATE_FORMAT = "M/d/yyyy";
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -38,12 +48,12 @@ public class MembershipServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("in do get of membership servlet");
-
-        //doPost(request, response);
+        doPost(request, response);
     }
 
     /**
@@ -59,40 +69,24 @@ public class MembershipServlet extends HttpServlet {
             throws ServletException, IOException {
         System.out.println("in do post of membership servlet");
         String action = request.getParameter("action");
-        
-        Cookie[] cookies = request.getCookies();
+//        Cookie[] cookies = request.getCookies();
         
 //        for(Cookie cookie: cookies) {
 //            if(cookie.getName().equals("emailCookie")) {
 //                System.out.println("email cookie, value: " + cookie.getValue());
-//                getServletContext()
-//                    .getRequestDispatcher("/home.jsp")
-//                    .forward(request, response);
-//                return;
 //            }
 //        }
 
-        if (action == null) {
-            action = "autheticate";  // default action
-        } else if (action.equals("authenticate")) {
+        if (action.equals("authenticate")) {
             loginPost(request, response);
         } else if(action.equals("add")) {
             signupPost(request, response);
         } else if(action.equals("logout")){
             logoutPost(request, response);
         }
+        
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+    
     // formats the date
     public static Date validatedDate(String date) {
         try {
@@ -166,7 +160,7 @@ public class MembershipServlet extends HttpServlet {
     // sets attributes to the session that are needed for the pages to work
     public void sessionAttributes(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession();
         
         // sets attribute for the list of twits
@@ -197,10 +191,12 @@ public class MembershipServlet extends HttpServlet {
     // handles new users and logs them in
     public void signupPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println("in signup post");
+        
+        String fileName = "";
         String message = "";
         String url = "";
         HttpSession session = request.getSession();
-        User user = new User();
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
         String nickname = request.getParameter("nickname");
@@ -208,6 +204,30 @@ public class MembershipServlet extends HttpServlet {
         String month = request.getParameter("month");
         String day = request.getParameter("day");
         String year = request.getParameter("year");
+        
+        String appPath = request.getServletContext().getRealPath("");
+        String savePath = appPath + File.separator + SAVE_DIR;
+        
+        System.out.println("appPath: " + appPath);
+        System.out.println("save path: " + savePath);
+        
+        // creates the save directory if it does not exists
+        File fileSaveDir = new File(savePath);
+        if (!fileSaveDir.exists()) {
+            fileSaveDir.mkdir();
+        }
+        
+        System.out.println("file save dir " + fileSaveDir.toString());
+        for (Part part : request.getParts()) {
+            fileName = extractFileName(part);
+            if(!fileName.isEmpty()) {
+                System.out.println("file save Dir path: " + fileSaveDir + File.separator + fileName);
+                part.write(fileSaveDir + File.separator + fileName);
+            }
+        }
+ 
+        request.setAttribute("uploadMessage", "Upload has been done successfully!");
+        
         Date birthdate = validatedDate(month + "/" + day + "/"  + year);
         System.out.println("fullname: " + fullName); 
         System.out.println("email: " + email); 
@@ -220,7 +240,7 @@ public class MembershipServlet extends HttpServlet {
         if(!fullName.isEmpty() && !email.isEmpty() && !nickname.isEmpty() &&
                 !password.isEmpty() && birthdate != null && isUniqueEmail(email)) {
 //            public User(String fullName, String email, String password, String nickname, Date birthdate) {
-            user = new User(fullName, email, password, nickname, birthdate);
+            User user = new User(fullName, email, password, nickname, birthdate, fileName);
             insertResultCode = UserRepo.insert(user);
             System.out.println("Insert result code");
             System.out.println(insertResultCode);
@@ -246,5 +266,22 @@ public class MembershipServlet extends HttpServlet {
         getServletContext()
                 .getRequestDispatcher(url)
                 .forward(request, response);
+    }
+
+    private String extractFileName(Part part) {
+        System.out.println("in extract fileName " + part.toString());
+        
+        String contentDisp = part.getHeader("content-disposition");
+        System.out.println("contentDisp: " + contentDisp);
+        String[] items = contentDisp.split(";");
+        for (String s : items) {
+            System.out.println("items s: " + s);
+            if (s.trim().startsWith("filename")) {
+                System.out.println("s starts with filename");
+                System.out.println(s.substring(s.indexOf("=") + 2, s.length()-1));
+                return new Date().getTime()+ "_" + s.substring(s.indexOf("=") + 2, s.length()-1);
+            }
+        }
+        return "";
     }
 }
