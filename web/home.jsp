@@ -52,7 +52,7 @@
                 <div id ="twit">
                     <form action="twit" method="post">
                         <input type="hidden" name="action" value="twit">
-                        <textarea rows="4" cols="70" name="content" required></textarea>
+                        <textarea rows="4" cols="70" name="content" required maxlength="200"></textarea>
                         <p></p>
                         <input type="submit" name="Twit" class="margin_left" align="right">
                     </form>
@@ -65,7 +65,7 @@
                     <p> </p>
                     <div id="twits">
                         <p></p>
-                        <p>${i.userId} @${i.postedDate}</p>
+                        <p>${i.userId} [@nickname]: ${i.postedDate}</p>
                         <p>${i.content}</p>
                     </div>
                 </c:forEach>
