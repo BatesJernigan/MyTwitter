@@ -15,8 +15,9 @@
         <span>${message}</span>
     </c:if>
 </p>
-<jsp:useBean id="user" scope="session" class="business.User"/>    
-<form action="membership" method="post">
+<jsp:useBean id="user" scope="session" class="business.User"/>
+
+<form action="membership" method="post" enctype="multipart/form-data">
     <input type="hidden" name="action" value="add">
     <label class="pad_top">Full Name:</label>
     <input type="text" name="fullName" value="${user.fullName}" required><br>
@@ -50,11 +51,17 @@
         <option><%= i %></option>
         <% } %>
     </select>
-    
+    <br><br>
+    Select file to upload: <input type="file" name="file" size="60" value="${user.profilePicture}"/>
+    <br><br>
+
     <label>&nbsp;</label>
+
     <p>
         <input type="submit" value="Submit" class="margin_left">
         <input type="reset" value="Clear Fields" class="margin_left">
     </p>
 </form>
+    
+
 <c:import url="/includes/footer.jsp" />

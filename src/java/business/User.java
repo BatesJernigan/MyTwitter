@@ -14,27 +14,37 @@ import java.util.Random;
  */
 public class User implements Serializable {
     private long id;
-    private String fullName, email, password, nickname;
+    private String fullName, email, password, nickname, profilePicture;
     private Date birthdate;
 
     public User() {}
 
-    public User(String fullName, String email, String password, String nickname, Date birthdate) {
+    public User(String fullName, String email, String password, String nickname, Date birthdate, String profilePicture) {
         this.id = new Random().nextInt(1000000000);
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.birthdate = birthdate;
+        this.profilePicture = profilePicture;
     }
     
-    public User(long id, String fullName, String email, String password, String nickname, Date birthdate) {
+    public User(long id, String fullName, String email, String password, String nickname, Date birthdate, String profilePicture) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.birthdate = birthdate;
+        this.profilePicture = profilePicture;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
     
     public void setId() {
@@ -84,10 +94,10 @@ public class User implements Serializable {
     public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
     }
-    
+
     @Override
     public String toString() {
-        return "User{" + "fullName=" + fullName + ", email=" + email + ", password=" + password + ", nickname=" + nickname + ", birthdate=" + birthdate + '}';
+        return "User{" + "id=" + id + ", fullName=" + fullName + ", email=" + email + ", password=" + password + ", nickname=" + nickname + ", profilePicture=" + profilePicture + ", birthdate=" + birthdate + '}';
     }
-    
+
 }

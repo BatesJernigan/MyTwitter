@@ -30,8 +30,8 @@ public class UserRepo {
         System.out.println("user in insert method: " + user.toString());
 
         String query
-                = "INSERT INTO users (email, password, full_name, nickname, id, birthdate)"
-                + "VALUES (?, ?, ?, ?, ?, ?)";
+                = "INSERT INTO users (email, password, full_name, nickname, id, birthdate, profile_picture)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(query);
             System.out.println(user.toString());
@@ -41,6 +41,7 @@ public class UserRepo {
             ps.setString(4, user.getNickname());
             ps.setLong(5, user.getId());
             ps.setTimestamp(6, new Timestamp (user.getBirthdate().getTime()));
+            ps.setString(7, user.getProfilePicture());
 
             System.out.println("ps: " + ps.toString());
             return ps.executeUpdate();
@@ -184,6 +185,8 @@ public class UserRepo {
             rs.getString("email"), 
             rs.getString("password"),
             rs.getString("nickname"),
-            rs.getDate("birthdate"));
+            rs.getDate("birthdate"),
+            rs.getString("profile_picture")
+        );
     }
 }
