@@ -163,6 +163,10 @@ public class MembershipServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         
+        String appPath = request.getServletContext().getRealPath("");
+        String savePath = appPath + File.separator + SAVE_DIR;
+        session.setAttribute("picture", savePath);
+        
         // sets attribute for the list of twits
         ArrayList<Twit> twitList = TwitRepo.all();  
         for(Twit twit: twitList) {

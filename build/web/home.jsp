@@ -41,13 +41,13 @@
             
         }
     </style>
+    
     <body>
         <div>
             <c:import url="/includes/header.jsp" />
             <c:import url="/includes/sidebar.jsp" />
             <c:import url="/includes/whoToFollow.jsp" />
 
-            <!-- box for inputing twits into the system. needs servlet to utilize this form-->
             <div>
                 <div id ="twit">
                     <form action="twit" method="post">
@@ -57,22 +57,14 @@
                         <input type="submit" name="Twit" class="margin_left" align="right">
                     </form>
                 </div>
-
-                <p>Here are all of the twits</p>
-                <p>${user}</p>
+                <p> </p>
                 <c:forEach var = "i" items="${twits}">
 
                     <p> </p>
                     <div id="twits">
                         <p></p>
                         <p>${i.userId} [@nickname]: ${i.postedDate}</p>
-                        <p>
-                            <script>
-                                System.out.println("im being run");
-                                String adjusted = TwitServlet.twitAlter(i.content);
-                            </script>
-                            ${i.content}
-                        </p>
+                        <p>${i.content}</p>
                     </div>
                 </c:forEach>
             </div>
