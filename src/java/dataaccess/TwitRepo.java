@@ -59,6 +59,23 @@ public class TwitRepo {
             }
             System.out.println("twit list from all");
             
+            // code for updating content to work with hashtags and mentions
+            for(int i = 0; i < twitList.size(); i++ ){
+                String adjusted = "";
+                Twit hold = twitList.get(i);
+                for (String retval: hold.getContent().split(" ")){
+                    if(retval.indexOf("@") == 0 | retval.indexOf("#") == 0){
+                        retval = "<span style=\"color:blue\">" + retval + "</span>";
+                    }
+                    adjusted = adjusted + " " + retval; 
+                    
+                }
+                System.out.println(adjusted);
+                hold.setContent(adjusted);
+                twitList.set(i, hold);
+                
+            }
+            
             return twitList;
         } catch(SQLException e) {
             System.err.println(e);

@@ -66,7 +66,13 @@
                     <div id="twits">
                         <p></p>
                         <p>${i.userId} [@nickname]: ${i.postedDate}</p>
-                        <p>${i.content}</p>
+                        <p>
+                            <script>
+                                System.out.println("im being run");
+                                String adjusted = TwitServlet.twitAlter(i.content);
+                            </script>
+                            ${i.content}
+                        </p>
                     </div>
                 </c:forEach>
             </div>
