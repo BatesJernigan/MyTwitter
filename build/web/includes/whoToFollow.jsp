@@ -16,16 +16,15 @@
             width:200px;
             float:right;
             padding:5px;	      
-        }        
+        }
     </style>
     <div id="follow">
         <h1>Who to follow</h1>
         <c:forEach var = "user" items="${users}">
-        <div>
-            <p>for each</p>
-            <h1>${user.fullName} @${user.nickname}</h1>
-        </div>
-    </c:forEach>
+            <div>
+                <p>${user.fullName} [@${user.nickname}]</p>
+            </div>
+        </c:forEach>
 
     </div>
 </html>

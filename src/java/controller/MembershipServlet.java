@@ -78,6 +78,8 @@ public class MembershipServlet extends HttpServlet {
             loginPost(request, response);
         } else if(action.equals("add")) {
             signupPost(request, response);
+        } else if(action.equals("logout")){
+            logoutPost(request, response);
         }
     }
 
@@ -91,6 +93,7 @@ public class MembershipServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    // formats the date
     public static Date validatedDate(String date) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -102,6 +105,7 @@ public class MembershipServlet extends HttpServlet {
         }
     }
     
+    // checks database to ensure user did not submit a duplicate email
     public static boolean isUniqueEmail(String email) {
         User user;
         if((user = UserRepo.search(email)) == null) {
@@ -113,10 +117,12 @@ public class MembershipServlet extends HttpServlet {
         return false;
     }
     
+    // checks if user used the correct email
     public static boolean userIsAuthenticated(String email, String password) {
         return UserRepo.select(email, password) != null;
     }
 
+    // handles user login and authentication
     public void loginPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("in login post");
@@ -143,16 +149,9 @@ public class MembershipServlet extends HttpServlet {
             user = UserRepo.search(email);
             System.out.println("user attribute in login: " + user.toString());
             session.setAttribute("user", user);
-            
-            ArrayList<Twit> twitList = TwitRepo.all();
-            
-            for(Twit twit: twitList) {
-                System.out.println("twit list in membership serv: " + twit.toString());
-            }
-            
-            session.setAttribute("twits", twitList);
-            
             request.setAttribute("message", message);
+            sessionAttributes(request, response);
+            
         } else {
             System.out.println("not authenticated");
             message = "Wrong Email / Password Combo";
@@ -164,6 +163,38 @@ public class MembershipServlet extends HttpServlet {
             .forward(request, response);
     }
     
+    // sets attributes to the session that are needed for the pages to work
+    public void sessionAttributes(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        HttpSession session = request.getSession();
+        
+        // sets attribute for the list of twits
+        ArrayList<Twit> twitList = TwitRepo.all();  
+        for(Twit twit: twitList) {
+            System.out.println("twit list in membership serv: " + twit.toString());
+        }
+        session.setAttribute("twits", twitList);
+
+        // sets atributes for user to view all other users
+        ArrayList<User> users = UserRepo.selectAll();
+        session.setAttribute("users", users);
+
+    }
+    
+    // handles logout and invalidation of the user session
+    public void logoutPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = "/login.jsp";
+        HttpSession session = request.getSession();
+        session.invalidate(); 
+        
+        getServletContext()
+            .getRequestDispatcher(url)
+            .forward(request, response);
+    }
+    
+    // handles new users and logs them in
     public void signupPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String message = "";
@@ -207,9 +238,8 @@ public class MembershipServlet extends HttpServlet {
                 message = "Please use a unique Email";
             }
         }
-        ArrayList<User> userList = UserRepo.selectAll();
         
-
+        sessionAttributes(request, response);
         request.setAttribute("message", message);
         
         System.out.println("Sending to: " + url);
