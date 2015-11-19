@@ -36,6 +36,7 @@
             <p></p>
             <h1>${user.fullName}</h1>
             <p>@${user.nickname}</p>
+            <img src="build/web/uploadFiles/${user.profilePicture}">
         </div>
             <p> </p>
         <div id="trending">  

@@ -58,20 +58,15 @@
                     </form>
                 </div>
 
-                <p>Here are all of the twits</p>
                 <p>${user}</p>
-                <c:forEach var = "i" items="${twits}">
+                <c:forEach var = "twit" items="${twits}">
 
                     <p> </p>
                     <div id="twits">
                         <p></p>
-                        <p>${i.userId} [@nickname]: ${i.postedDate}</p>
+                        <p>[@${twit.nickname}]: ${twit.postedDate}</p>
                         <p>
-                            <script>
-                                System.out.println("im being run");
-                                String adjusted = TwitServlet.twitAlter(i.content);
-                            </script>
-                            ${i.content}
+                            ${twit.content}
                         </p>
                     </div>
                 </c:forEach>
