@@ -6,8 +6,10 @@
 package controller;
 
 import business.Twit;
+import business.TwitView;
 import business.User;
 import dataaccess.TwitRepo;
+import dataaccess.TwitViewRepo;
 import dataaccess.UserRepo;
 
 import java.io.File;
@@ -26,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
 /**
  *
@@ -164,16 +165,18 @@ public class MembershipServlet extends HttpServlet {
         HttpSession session = request.getSession();
         
         // sets attribute for the list of twits
-        ArrayList<Twit> twitList = TwitRepo.all();  
-        for(Twit twit: twitList) {
+        ArrayList<TwitView> twitList = TwitViewRepo.all();  
+        
+        for(TwitView twit: twitList) {
             System.out.println("twit list in membership serv: " + twit.toString());
         }
         session.setAttribute("twits", twitList);
+        
 
         // sets atributes for user to view all other users
         ArrayList<User> users = UserRepo.selectAll();
-        session.setAttribute("users", users);
 
+        session.setAttribute("users", users);
     }
     
     // handles logout and invalidation of the user session
@@ -227,7 +230,7 @@ public class MembershipServlet extends HttpServlet {
         }
  
         request.setAttribute("uploadMessage", "Upload has been done successfully!");
-        
+
         Date birthdate = validatedDate(month + "/" + day + "/"  + year);
         System.out.println("fullname: " + fullName); 
         System.out.println("email: " + email); 

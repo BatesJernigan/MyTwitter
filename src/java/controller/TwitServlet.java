@@ -8,6 +8,8 @@ package controller;
 import business.User;
 import dataaccess.TwitRepo;
 import business.Twit;
+import business.TwitView;
+import dataaccess.TwitViewRepo;
 import dataaccess.UserRepo;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -46,8 +48,6 @@ public class TwitServlet extends HttpServlet {
         System.out.println("email content: " + email);
         
         if (action.equals("twit")) {
-            System.out.println("action equals twit");
-
             System.out.println("twit content: " + content);
 
             if(content != null && email != null){
@@ -59,8 +59,8 @@ public class TwitServlet extends HttpServlet {
             }
         }
         
-        ArrayList<Twit> twits = TwitRepo.all();
-        for(Twit twit : twits) {
+        ArrayList<TwitView> twits = TwitViewRepo.all();
+        for(TwitView twit : twits) {
             System.out.println("twits from all call: " + twit);
         }
         session.setAttribute("twits", twits);
