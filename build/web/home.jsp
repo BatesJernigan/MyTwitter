@@ -6,73 +6,28 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<body>
+    <c:import url="/includes/header.jsp" />
+    <c:import url="/includes/sidebar.jsp" />
+    <c:import url="/includes/whoToFollow.jsp" />
 
-<html>
-    
-    <style>
-        #twit{
-            line-height:30px;
-            background-color:#FFFFFF;
-            height:150px;
-            width:700px;
-            padding:5px;
-            top: 220px;
-            border-radius: 1em;
-            left: 50%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        #twits{
-            line-height:30px;
-            background-color:#FFFFFF;
-            height:100px;
-            width:700px;
-            padding:5px;
-            top: 220px;
-            border-radius: 1em;
-            left: 50%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        textArea {
-            margin-left: auto;
-            margin-right: auto;
-            left:50%;
-            
-        }
-    </style>
-    <body>
-        <div>
-            <c:import url="/includes/header.jsp" />
-            <c:import url="/includes/sidebar.jsp" />
-            <c:import url="/includes/whoToFollow.jsp" />
-
-            <!-- box for inputing twits into the system. needs servlet to utilize this form-->
-            <div>
-                <div id ="twit">
-                    <form action="twit" method="post">
-                        <input type="hidden" name="action" value="twit">
-                        <textarea rows="4" cols="70" name="content" required maxlength="200"></textarea>
-                        <p></p>
-                        <input type="submit" name="Twit" class="margin_left" align="right">
-                    </form>
-                </div>
-
-                <p>${user}</p>
-                <c:forEach var = "twit" items="${twits}">
-
-                    <p> </p>
-                    <div id="twits">
-                        <p></p>
-                        <p>[@${twit.nickname}]: ${twit.postedDate}</p>
-                        <p>
-                            ${twit.content}
-                        </p>
-                    </div>
-                </c:forEach>
-            </div>
+    <!-- box for inputing twits into the system. needs servlet to utilize this form-->
+    <div class="twits">
+        <form action="twit" method="post">
+            <input type="hidden" name="action" value="twit">
+            <textarea rows="4" cols="70" name="content" required maxlength="200"></textarea>
             <p></p>
-            <c:import url="/includes/footer.jsp" />
+            <input type="submit" name="Twit" class="margin_left" align="right">
+        </form>
+    </div>
+
+    <p/>
+    <c:forEach var = "twit" items="${twits}">
+        <div class="twits">
+            <p>[@${twit.nickname}]: ${twit.postedDate}</p>
+            <p>${twit.content}</p>
         </div>
-    </body>
-</html>
+        <p/>
+    </c:forEach>
+    <c:import url="/includes/footer.jsp" />
+</body>

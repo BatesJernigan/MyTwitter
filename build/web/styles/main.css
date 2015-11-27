@@ -27,6 +27,15 @@ li {
     float: left;
 }
 
+#footer {
+    background-color:white;
+    color:black;
+    text-align:center;
+    padding:5px;
+
+    bottom: 0;
+}
+
 a:link, a:visited {
     display: block;
     width: 120px;
@@ -41,16 +50,6 @@ a:link, a:visited {
 
 a:hover, a:active {
     background-color: #7A991A;
-}
-
-// style for the tweet input eventulally
-#twit{
-    line-height:30px;
-    background-color:#FFFFFF;
-    height:300px;
-    width:700px;
-    padding:5px;
-
 }
 
 label {
@@ -79,3 +78,54 @@ br {
 .margin_left {
     margin-left: 0.5em;
 }
+
+.twits{
+    line-height:30px;
+    background-color:#FFFFF;
+    height:100px;
+    width:700px;
+    padding:5px;
+    top: 220px;
+    border-radius: 1em;
+    left: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+}
+
+textarea {
+    margin-left: auto;
+    margin-right: auto;
+    left:50%;
+}
+
+#follow {
+    line-height:30px;
+    background-color:#FFFFFF;
+    height:500px;
+    width:200px;
+    float:right;
+    padding:5px;	      
+}
+    
+#nav {
+    float:left;	
+    border-radius: 1em;
+}
+
+#user {
+    line-height:30px;
+    background-color:#FFFFFF;
+    height:100px;
+    width:200px;
+    padding:5px;
+}
+
+#trending {
+    line-height:30px;
+    background-color:#FFFFFF;
+    height:500px;
+    width:200px;
+    padding:5px;
+}
+        
