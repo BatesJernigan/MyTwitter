@@ -49,37 +49,41 @@ public class TwitRepo {
         ArrayList<Twit> twitList = new ArrayList<>();
 
         String query = "SELECT * FROM twits";
-//        System.out.println("in twit all");
+        System.out.println("in twit all");
         try {
+            System.out.println("start of try");
+            System.out.println(ps);
             ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
-
+            
+            System.out.println("right before while");
             while (rs.next()) {
-                twitList.add(buildTwitFromResult(rs));
+                System.out.println("inside of while");
+                Twit currentTwit = buildTwitFromResult(rs);
+                StringBuilder newContent;
+//                twitList.add(currentTwit);
+//                String adjusted = "";
+//                
+//                for (String wordFromContent: currentTwit.getContent().split(" ")){
+//                    if(wordFromContent.indexOf("@") == 0 || wordFromContent.indexOf("#") == 0){
+//                        wordFromContent = "<span style=\"color:blue\">" + wordFromContent + "</span>";
+//                    }
+//                    adjusted += " " + wordFromContent; 
+//                    
+//                }
+//                System.out.println("adjusted stuff");
+//                System.out.println(adjusted);
+//                currentTwit.setContent(adjusted);
+                twitList.add(currentTwit);
             }
             System.out.println("twit list from all");
-            
-            // code for updating content to work with hashtags and mentions
-            for(int i = 0; i < twitList.size(); i++ ){
-                String adjusted = "";
-                Twit hold = twitList.get(i);
-                for (String retval: hold.getContent().split(" ")){
-                    if(retval.indexOf("@") == 0 | retval.indexOf("#") == 0){
-                        retval = "<span style=\"color:blue\">" + retval + "</span>";
-                    }
-                    adjusted = adjusted + " " + retval; 
-                    
-                }
-                System.out.println(adjusted);
-                hold.setContent(adjusted);
-                twitList.set(i, hold);
-                
-            }
-            
+
             return twitList;
         } catch(SQLException e) {
+            System.out.println("THERE WAS AN ERROR");
             System.err.println(e);
         } finally {
+            System.out.println("in finally");
             DBUtil.closePreparedStatement(ps);
             pool.freeConnection(connection);
         }
