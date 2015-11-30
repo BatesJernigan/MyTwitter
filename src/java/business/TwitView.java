@@ -12,13 +12,14 @@ import java.util.Date;
  * @author batesjernigan
  */
 public class TwitView {
-    long userId, twitId;
+    long userId, twitId, mentionedUser;
     String content, fullName, nickname, email;
     Date postedDate;
 
-    public TwitView(long userId, long twitId, String content, String fullName, String nickname, String email, Date postedDate) {
+    public TwitView(long userId, long twitId, long mentionedUser, String content, String fullName, String nickname, String email, Date postedDate) {
         this.userId = userId;
         this.twitId = twitId;
+        this.mentionedUser = mentionedUser;
         this.content = content;
         this.fullName = fullName;
         this.nickname = nickname;
@@ -28,7 +29,7 @@ public class TwitView {
 
     @Override
     public String toString() {
-        return "TwitView{" + "userId=" + userId + ", twitId=" + twitId + ", content=" + content + ", fullName=" + fullName + ", nickname=" + nickname + ", email=" + email + ", postedDate=" + postedDate + '}';
+        return "TwitView{" + "userId=" + userId + ", twitId=" + twitId + ", mentionedUser=" + mentionedUser + ", content=" + content + ", fullName=" + fullName + ", nickname=" + nickname + ", email=" + email + ", postedDate=" + postedDate + '}';
     }
 
     public long getUserId() {
@@ -87,5 +88,12 @@ public class TwitView {
         this.postedDate = postedDate;
     }
 
+    public long getMentionedUser() {
+        return mentionedUser;
+    }
+
+    public void setMentionedUser(long mentionedUser) {
+        this.mentionedUser = mentionedUser;
+    }
     
 }

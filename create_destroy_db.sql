@@ -28,6 +28,7 @@ DROP TABLE IF EXISTS `mytwitter`.`twits` ;
 CREATE TABLE IF NOT EXISTS `mytwitter`.`twits` (
   `id` INT(11) NOT NULL,
   `user_id` VARCHAR(45) NOT NULL,
+  `mentioned_user_id` INT(11) NOT NULL,
   `content` VARCHAR(200) NULL DEFAULT NULL,
   `posted_date` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
@@ -80,6 +81,7 @@ select `mytwitter`.`twits`.`id` AS `twit_id`,
 	`mytwitter`.`twits`.`user_id` AS `user_id`,
 	`mytwitter`.`twits`.`content` AS `content`,
 	`mytwitter`.`twits`.`posted_date` AS `posted_date`,
+    `mytwitter`.`twits`.`mentioned_user_id` AS `mentioned_user_id`,
 	`mytwitter`.`users`.`full_name` AS `full_name`,
 	`mytwitter`.`users`.`nickname` AS `nickname`,
 	`mytwitter`.`users`.`email` AS `email` 

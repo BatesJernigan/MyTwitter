@@ -15,7 +15,7 @@ import java.util.Random;
  */
 
 public class Twit implements Serializable {
-    private long id, userId;
+    private long id, userId, mentionedUserId;
     private String content;
     private Date postedDate;
     
@@ -34,12 +34,13 @@ public class Twit implements Serializable {
         this.postedDate = postedDate;
         this.content = content;
     }
-    
-    public Twit(long id, long userId, Date postedDate, String content){
+
+    public Twit(long id, long userId, long mentionedUserId, String content, Date postedDate) {
         this.id = id;
         this.userId = userId;
-        this.postedDate = postedDate;
+        this.mentionedUserId = mentionedUserId;
         this.content = content;
+        this.postedDate = postedDate;
     }
 
     public void setId() {
@@ -74,5 +75,19 @@ public class Twit implements Serializable {
     public void setPostedDate(Date postedDate) {
         this.postedDate = postedDate;
     }
-    
+
+    public long getMentionedUserId() {
+        return mentionedUserId;
+    }
+
+    public void setMentionedUserId(long mentionedUserId) {
+        this.mentionedUserId = mentionedUserId;
+    }
+
+    @Override
+    public String toString() {
+        return "Twit{" + "id=" + id + ", userId=" + userId + ", mentionedUser="
+                + mentionedUserId + ", content=" + content + ", postedDate="
+                + postedDate + '}';
+    }
 }

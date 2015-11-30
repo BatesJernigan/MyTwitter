@@ -56,15 +56,40 @@ public class UserRepo {
 
     }
     
-    public static User select(String email, String password) {
+    public static long selectNickname(String nickname) {
         ConnectionPool pool = ConnectionPool.getInstance();
-        System.out.println("pool " + pool.toString());
         Connection connection = pool.getConnection();
-        System.out.println("connection " + connection.toString());
         PreparedStatement ps = null;
 
-        String query
-                = "SELECT * FROM users WHERE email = ? AND password = ?";
+        String query = "SELECT id "
+                + "FROM users "
+                + "WHERE nickname = ?";
+        try {
+            User user = new User();
+            ps = connection.prepareStatement(query);
+            ps.setString(1, nickname);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getLong("id");
+            }
+        } catch(SQLException e) {
+            System.err.println(e);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+        return 0;
+    }
+    
+    public static User authenticate(String email, String password) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query = "SELECT * "
+                + "FROM users "
+                + "WHERE email = ? AND password = ?";
         try {
             User user = new User();
             ps = connection.prepareStatement(query);
@@ -152,20 +177,40 @@ public class UserRepo {
         return -1;
     }
     
-    public static ArrayList<User> selectAll() {
+    public static ArrayList<User> all() {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ArrayList<User> userList = new ArrayList<>();
 
-        String query
-                = "SELECT * FROM users";
+        String query = "SELECT * FROM users";
         try {
-            User user = new User();
             ps = connection.prepareStatement(query);
-
             ResultSet rs = ps.executeQuery();
-            
+            while (rs.next()) {
+                userList.add(buildUserFromResult(rs));
+            }
+            return userList;
+        } catch(SQLException e) {
+            System.err.println(e);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+        return null;
+    }
+    
+    public static ArrayList<User> getWhoToFollow(User user) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ArrayList<User> userList = new ArrayList<>();
+
+        String query = "SELECT * FROM users WHERE id != ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setLong(1, user.getId());
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 userList.add(buildUserFromResult(rs));
             }

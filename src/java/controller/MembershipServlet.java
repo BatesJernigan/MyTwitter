@@ -70,13 +70,6 @@ public class MembershipServlet extends HttpServlet {
             throws ServletException, IOException {
         System.out.println("in do post of membership servlet");
         String action = request.getParameter("action");
-//        Cookie[] cookies = request.getCookies();
-        
-//        for(Cookie cookie: cookies) {
-//            if(cookie.getName().equals("emailCookie")) {
-//                System.out.println("email cookie, value: " + cookie.getValue());
-//            }
-//        }
 
         if (action.equals("authenticate")) {
             loginPost(request, response);
@@ -85,7 +78,6 @@ public class MembershipServlet extends HttpServlet {
         } else if(action.equals("logout")){
             logoutPost(request, response);
         }
-        
     }
     
     // formats the date
@@ -114,18 +106,18 @@ public class MembershipServlet extends HttpServlet {
     
     // checks if user used the correct email
     public static boolean userIsAuthenticated(String email, String password) {
-        return UserRepo.select(email, password) != null;
+        return UserRepo.authenticate(email, password) != null;
     }
 
     // handles user login and authentication
     public void loginPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        User user;
         System.out.println("in login post");
         String url = "/login.jsp";
         String password = request.getParameter("password");
         String email = request.getParameter("email");
         String message = null;
-        User user = new User();
         HttpSession session = request.getSession();
         // validate the parameters
         if (email == null || email.isEmpty() ||
@@ -133,8 +125,7 @@ public class MembershipServlet extends HttpServlet {
             message = "Please fill out both boxes.";
             url = "/login.jsp";
             request.setAttribute("message", message);
-        } 
-        else if (userIsAuthenticated(email, password)){
+        } else if (userIsAuthenticated(email, password)){
             System.out.println("user is authenticated");
             Cookie cookie = new Cookie("emailCookie", email);
             cookie.setMaxAge(60*60*24);
@@ -163,18 +154,13 @@ public class MembershipServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        
+        User currentUser = (User) session.getAttribute("user");
         // sets attribute for the list of twits
-        ArrayList<TwitView> twitList = TwitViewRepo.all();  
-        
-        for(TwitView twit: twitList) {
-            System.out.println("twit list in membership serv: " + twit.toString());
-        }
+        ArrayList<TwitView> twitList = TwitViewRepo.all(currentUser);
         session.setAttribute("twits", twitList);
-        
 
         // sets atributes for user to view all other users
-        ArrayList<User> users = UserRepo.selectAll();
+        ArrayList<User> users = UserRepo.getWhoToFollow(currentUser);
 
         session.setAttribute("users", users);
     }
@@ -273,7 +259,7 @@ public class MembershipServlet extends HttpServlet {
 
     private String extractFileName(Part part) {
         System.out.println("in extract fileName " + part.toString());
-        
+
         String contentDisp = part.getHeader("content-disposition");
         System.out.println("contentDisp: " + contentDisp);
         String[] items = contentDisp.split(";");

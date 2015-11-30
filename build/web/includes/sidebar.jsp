@@ -11,7 +11,7 @@
         <p></p>
         <h1>${user.fullName}</h1>
         <p>@${user.nickname}</p>
-        <img src="build/web/uploadFiles/${user.profilePicture}">
+        <img src="uploadFiles/${user.profilePicture}" height="160" width="160">
     </div>
         <p> </p>
     <div id="trending">  
