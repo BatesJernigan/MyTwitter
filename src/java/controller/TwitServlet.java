@@ -40,22 +40,20 @@ public class TwitServlet extends HttpServlet {
         String content = request.getParameter("content");
         
         User user = (User) session.getAttribute("user");
-        System.out.println("session object: " + session.toString());
-
         String email = user.getEmail();
-
-        System.out.println("twit content: " + content);
-        System.out.println("email content: " + email);
         
         if (action.equals("twit")) {
-            System.out.println("twit content: " + content);
-
             if(content != null && email != null){
-                System.out.println("text != null and content != null");
-                
                 Twit twit = new Twit(user.getId(), content);
-                System.out.println("Twit to add: " + twit.toString());
                 TwitRepo.addRecord(twit);
+            }
+        } else if(action.equals("Delete")) {
+            System.out.println("action equals DELETE");
+            long twitId = Long.parseLong(request.getParameter("twitId"));
+            long authorId = Long.parseLong(request.getParameter("userId"));
+            System.out.println("twitId: " + twitId + "end");
+            if(authorId == user.getId()) {
+                TwitRepo.delete(twitId, user);
             }
         }
         

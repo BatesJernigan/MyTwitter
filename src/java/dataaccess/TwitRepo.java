@@ -86,18 +86,17 @@ public class TwitRepo {
         return null;
     }
     
-    public static long delete(Twit twit, User user) {
-        if(twit.getUserId() != user.getId())
-            return 0;
+//    TwitRepo.delete(twitId, authorId, user);
+    public static long delete(long twitId, User user) {
 
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
-        String query = "DELETE FROM twits"
+        String query = "DELETE FROM twits "
                 + "WHERE id = ?";
         try {
             ps = connection.prepareStatement(query);
-            ps.setLong(1, twit.getId());
+            ps.setLong(1, twitId);
             return ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e);
