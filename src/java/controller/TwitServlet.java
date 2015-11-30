@@ -41,9 +41,9 @@ public class TwitServlet extends HttpServlet {
         
         User user = (User) session.getAttribute("user");
         System.out.println("session object: " + session.toString());
-        
+
         String email = user.getEmail();
-        
+
         System.out.println("twit content: " + content);
         System.out.println("email content: " + email);
         
@@ -54,12 +54,12 @@ public class TwitServlet extends HttpServlet {
                 System.out.println("text != null and content != null");
                 
                 Twit twit = new Twit(user.getId(), content);
-                System.out.println("Twit to add: " + twit);
+                System.out.println("Twit to add: " + twit.toString());
                 TwitRepo.addRecord(twit);
             }
         }
         
-        ArrayList<TwitView> twits = TwitViewRepo.all();
+        ArrayList<TwitView> twits = TwitViewRepo.all(user);
         for(TwitView twit : twits) {
             System.out.println("twits from all call: " + twit);
         }

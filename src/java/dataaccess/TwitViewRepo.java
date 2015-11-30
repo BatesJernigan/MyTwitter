@@ -5,8 +5,8 @@
  */
 package dataaccess;
 
-import business.Twit;
 import business.TwitView;
+import business.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,31 +19,26 @@ import java.util.ArrayList;
  */
 public class TwitViewRepo {
 
-    public static ArrayList<TwitView> all() {
+    public static ArrayList<TwitView> all(User currentUser) {
+        System.out.println("In twit view repo all");
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ArrayList<TwitView> twitList = new ArrayList<>();
 
-        String query = "SELECT * FROM v_twits ORDER BY posted_date DESC;";
+        String query = "SELECT * FROM v_twits "
+                + "WHERE user_id = ? OR mentioned_user_id = ? "
+                + "ORDER BY posted_date DESC";
+            
         try {
             ps = connection.prepareStatement(query);
+            ps.setLong(1, currentUser.getId());
+            ps.setLong(2, currentUser.getId());
+            System.out.println(ps);
             ResultSet rs = ps.executeQuery();
-
             while (rs.next()) {
                 TwitView currentTwit = buildTwitViewFromResult(rs);
                 
-                String adjusted = "";
-                
-                for (String wordFromContent: currentTwit.getContent().split(" ")){
-                    if(wordFromContent.indexOf("@") == 0 || wordFromContent.indexOf("#") == 0){
-                        wordFromContent = "<span style=\"color:blue\">" + wordFromContent + "</span>";
-                    }
-                    adjusted += " " + wordFromContent;     
-                }
-                System.out.println("adjusted stuff");
-                System.out.println(adjusted);
-                currentTwit.setContent(adjusted);
                 twitList.add(currentTwit);
             }
 
@@ -56,10 +51,12 @@ public class TwitViewRepo {
         }
         return null;
     }
-    
+//    16:26:26	mentioned	Error Code: 1064. You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'mentioned' at line 1	0.00044 sec
+
     private static TwitView buildTwitViewFromResult(ResultSet rs) throws SQLException {
         return new TwitView(rs.getLong("user_id"),
             rs.getLong("twit_id"),
+            rs.getLong("mentioned_user_id"),
             rs.getString("content"),
             rs.getString("full_name"),
             rs.getString("nickname"),

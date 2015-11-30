@@ -102,7 +102,6 @@ textarea {
 #follow {
     line-height:30px;
     background-color:#FFFFFF;
-    height:500px;
     width:200px;
     float:right;
     padding:5px;	      
@@ -116,7 +115,6 @@ textarea {
 #user {
     line-height:30px;
     background-color:#FFFFFF;
-    height:100px;
     width:200px;
     padding:5px;
 }
@@ -124,7 +122,6 @@ textarea {
 #trending {
     line-height:30px;
     background-color:#FFFFFF;
-    height:500px;
     width:200px;
     padding:5px;
 }
