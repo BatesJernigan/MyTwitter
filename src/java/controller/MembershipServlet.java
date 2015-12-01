@@ -249,6 +249,7 @@ public class MembershipServlet extends HttpServlet {
         } else {
             if(!isUniqueEmail(email)) {
                 message = "Please use a unique Email";
+                url = "/signup.jsp";
             }
         }
         

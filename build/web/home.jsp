@@ -26,7 +26,11 @@
         <form action="twit" method="post" class="twits">
             <input type="hidden" name="twitId" value="${twit.twitId}">
             <input type="hidden" name="userId" value="${twit.userId}">
-            <p>[@${twit.nickname}]: ${twit.postedDate} <input type="submit" name="action" value="Delete"></p>
+            <p>[@${twit.nickname}]: ${twit.postedDate} 
+                <c:if test = "${user.id == twit.userId}">
+                    <input type="submit" name="action" value="Delete">
+                </c:if>
+            </p>
             <p>${twit.content}</p>
             
         <!--<input type="hidden" name="action" value="logout">-->
