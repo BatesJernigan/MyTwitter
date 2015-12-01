@@ -12,6 +12,7 @@ import dataaccess.TwitRepo;
 import dataaccess.TwitViewRepo;
 import dataaccess.UserRepo;
 
+import javax.mail.MessagingException;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -77,6 +78,8 @@ public class MembershipServlet extends HttpServlet {
             signupPost(request, response);
         } else if(action.equals("logout")){
             logoutPost(request, response);
+        } else if(action.equals("password")){
+            emailPost(request, response);
         }
     }
     
@@ -257,6 +260,51 @@ public class MembershipServlet extends HttpServlet {
                 .forward(request, response);
     }
 
+    private void emailPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        String email = request.getParameter("email");
+        String url = "";
+        
+        
+        String to = email;
+            String from = "myTwitterHelper.com";
+            String subject = "Password Recovery";
+            String body = "Here is the link to reset your password: "
+                    + "some link that does things will be here\n"
+                    + "Keep you password in a safe place\n\n"
+                    + "Bob the builder\n"
+                    + "Twitter Fixer Upper";
+            boolean isBodyHTML = true;
+            
+        try {
+                MailUtil.sendMail(to, from, subject, body, isBodyHTML);
+            } catch (MessagingException e) {
+                String errorMessage
+                        = "ERROR: Unable to send email. "
+                        + "Check Tomcat logs for details.<br>"
+                        + "NOTE: You may need to configure your system "
+                        + "as described in chapter 14.<br>"
+                        + "ERROR MESSAGE: " + e.getMessage();
+                request.setAttribute("errorMessage", errorMessage);
+                this.log(
+                        "Unable to send email. \n"
+                        + "Here is the email you tried to send: \n"
+                        + "=====================================\n"
+                        + "TO: " + email + "\n"
+                        + "FROM: " + from + "\n"
+                        + "SUBJECT: " + subject + "\n"
+                        + "\n"
+                        + body + "\n\n");
+            }
+            url = "/login.jsp";
+        
+        getServletContext()
+                .getRequestDispatcher(url)
+                .forward(request, response);
+        
+    }
+    
     private String extractFileName(Part part) {
         System.out.println("in extract fileName " + part.toString());
 
