@@ -147,8 +147,8 @@ public class UserRepo {
         
         String query = "UPDATE users SET "
                 + "full_name = ?, "
-                + "password = ? "
-                + "nickname = ? "
+                + "password = ?, "
+                + "nickname = ?, "
                 + "birthdate = ? "
                 + "WHERE email = ?";
         
@@ -158,13 +158,10 @@ public class UserRepo {
             ps.setString(2, updatedUser.getPassword());
             ps.setString(3, updatedUser.getNickname());
             ps.setDate(4, new java.sql.Date(updatedUser.getBirthdate().getTime()));
+            ps.setString(5, updatedUser.getEmail());
 
             System.out.println("prepared statement: " + ps.toString());
-            ResultSet rs = ps.executeQuery();
-            System.out.println("result set " + rs.toString());
-            while (rs.next()) {
-                return 1;
-            }
+            return ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("sql exception caught!");
             System.out.println(e);
@@ -174,7 +171,6 @@ public class UserRepo {
             DBUtil.closePreparedStatement(ps);
             pool.freeConnection(connection);
         }
-        return -1;
     }
     
     public static ArrayList<User> all() {

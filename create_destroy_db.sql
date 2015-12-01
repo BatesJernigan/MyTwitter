@@ -40,7 +40,6 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `mytwitter`.`users`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `mytwitter`.`users` ;
-
 CREATE TABLE IF NOT EXISTS `mytwitter`.`users` (
   `id` INT(11) NOT NULL,
   `full_name` VARCHAR(45) NOT NULL,

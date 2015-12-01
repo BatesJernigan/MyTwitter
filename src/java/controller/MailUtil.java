@@ -1,4 +1,3 @@
-  
 package controller;
 
 import java.util.Properties;
@@ -10,15 +9,15 @@ public class MailUtil {
     public static void sendMail(String to, String from,
             String subject, String body, boolean bodyIsHTML)
             throws MessagingException {
+        System.out.println("In send mail of mail util gmail");
         
         // 1 - get a mail session
-        System.out.println("Find me i'm a bananana");
         Properties props = new Properties();
         props.put("mail.transport.protocol", "smtps");
-        props.put("mail.smtps.host", "smtp.mail.yahoo.com");
-        props.setProperty("mail.smtp.**ssl.enable", "true");
+        props.put("mail.smtps.host", "smtp.gmail.com");
         props.put("mail.smtps.port", 465);
         props.put("mail.smtps.auth", "true");
+        props.put("mail.smtps.quitwait", "false");
         Session session = Session.getDefaultInstance(props);
         session.setDebug(true);
 
@@ -38,6 +37,9 @@ public class MailUtil {
         message.setRecipient(Message.RecipientType.TO, toAddress);
 
         // 4 - send the message
-        Transport.send(message);
+        Transport transport = session.getTransport();
+        transport.connect(from, "Dl36853512");
+        transport.sendMessage(message, message.getAllRecipients());
+        transport.close();
     }
 }

@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -267,24 +268,19 @@ public class MembershipServlet extends HttpServlet {
         String url = "";
         String message = "";
         User user = UserRepo.search(email);
-        if ( user != null ){
-            String password = "";
-            // some code that randomizes the new password
-            password = "pass";
+        if (user != null) {
+            String password = String.valueOf(new Random().nextInt(1000000000));
             
             // updates user password with generated one.
             user.setPassword(password);
             UserRepo.update(user);
-            
-            
+
             // creates email fields
-            String to = email;
-                String from = "myTwitterHelper.com";
+            String to = request.getParameter("email");
+                String from = "bates1012@gmail.com";
                 String subject = "Password Recovery";
-                String body = "Here is your new password" + password 
-                        + "\nKeep you password in a safe place\n\n"
-                        + "Bob the builder\n"
-                        + "Twitter Fixer Upper";
+                String body = "Here is your new password: " + password 
+                        + "\nKeep you password in a safe place\n\n";
                 boolean isBodyHTML = true;
                 request.setAttribute("message", message);
             try {
@@ -318,7 +314,6 @@ public class MembershipServlet extends HttpServlet {
         getServletContext()
                 .getRequestDispatcher(url)
                 .forward(request, response);
-        
     }
     
     private String extractFileName(Part part) {
