@@ -266,13 +266,23 @@ public class MembershipServlet extends HttpServlet {
         String email = request.getParameter("email");
         String url = "";
         String message = "";
-        if ( UserRepo.search(email) != null ){
+        User user = UserRepo.search(email);
+        if ( user != null ){
+            String password = "";
+            // some code that randomizes the new password
+            password = "pass";
+            
+            // updates user password with generated one.
+            user.setPassword(password);
+            UserRepo.update(user);
+            
+            
+            // creates email fields
             String to = email;
                 String from = "myTwitterHelper.com";
                 String subject = "Password Recovery";
-                String body = "Here is the link to reset your password: "
-                        + "<a href='./signup.jsp'>Password Reset</a>"
-                        + "Keep you password in a safe place\n\n"
+                String body = "Here is your new password" + password 
+                        + "\nKeep you password in a safe place\n\n"
                         + "Bob the builder\n"
                         + "Twitter Fixer Upper";
                 boolean isBodyHTML = true;
@@ -300,6 +310,7 @@ public class MembershipServlet extends HttpServlet {
                 url = "/login.jsp";
             
             }else{
+                // if email was not valid
                 message = "email was not valid";
                 request.setAttribute("message", message);
                 url = "/forgotpassword.jsp";

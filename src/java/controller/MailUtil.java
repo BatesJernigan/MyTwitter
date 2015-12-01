@@ -16,6 +16,7 @@ public class MailUtil {
         Properties props = new Properties();
         props.put("mail.transport.protocol", "smtps");
         props.put("mail.smtps.host", "smtp.mail.yahoo.com");
+        props.setProperty("mail.smtp.**ssl.enable", "true");
         props.put("mail.smtps.port", 465);
         props.put("mail.smtps.auth", "true");
         Session session = Session.getDefaultInstance(props);
