@@ -18,7 +18,7 @@
         <form action="membership" method="post">
             <input type="hidden" name="action" value="password">
             <label class="pad_top">Email:</label>
-            <input type="email" name="email" value="${user.email}"><br>
+            <input type="email" name="email" value="${user.email}" required><br>
             <input type="submit" value="Reset Password" class="margin_left">
         </form>
     </body>

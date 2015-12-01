@@ -12,10 +12,12 @@ public class MailUtil {
             throws MessagingException {
         
         // 1 - get a mail session
+        System.out.println("Find me i'm a bananana");
         Properties props = new Properties();
-        //props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.host", "localhost");
-        //props.put("mail.smtp.port", 25);        
+        props.put("mail.transport.protocol", "smtps");
+        props.put("mail.smtps.host", "smtp.mail.yahoo.com");
+        props.put("mail.smtps.port", 465);
+        props.put("mail.smtps.auth", "true");
         Session session = Session.getDefaultInstance(props);
         session.setDebug(true);
 
