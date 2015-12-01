@@ -58,9 +58,7 @@ public class TwitServlet extends HttpServlet {
         }
         
         ArrayList<TwitView> twits = TwitViewRepo.all(user);
-        for(TwitView twit : twits) {
-            System.out.println("twits from all call: " + twit);
-        }
+
         session.setAttribute("twits", twits);
         
         getServletContext()
