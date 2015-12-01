@@ -23,10 +23,15 @@
 
     <p/>
     <c:forEach var = "twit" items="${twits}">
-        <div class="twits">
-            <p>[@${twit.nickname}]: ${twit.postedDate}</p>
+        <form action="twit" method="post" class="twits">
+            <input type="hidden" name="twitId" value="${twit.twitId}">
+            <input type="hidden" name="userId" value="${twit.userId}">
+            <p>[@${twit.nickname}]: ${twit.postedDate} <input type="submit" name="action" value="Delete"></p>
             <p>${twit.content}</p>
-        </div>
+            
+        <!--<input type="hidden" name="action" value="logout">-->
+        
+        </form>
         <p/>
     </c:forEach>
     <c:import url="/includes/footer.jsp" />

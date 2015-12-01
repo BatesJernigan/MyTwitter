@@ -51,7 +51,6 @@ public class TwitViewRepo {
         }
         return null;
     }
-//    16:26:26	mentioned	Error Code: 1064. You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'mentioned' at line 1	0.00044 sec
 
     private static TwitView buildTwitViewFromResult(ResultSet rs) throws SQLException {
         return new TwitView(rs.getLong("user_id"),
