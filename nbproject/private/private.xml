@@ -5,7 +5,8 @@
         <group>
             <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/UserRepo.java</file>
             <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/controller/MembershipServlet.java</file>
-            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/TwitViewRepo.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/web/home.jsp</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/business/User.java</file>
             <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/controller/TwitServlet.java</file>
         </group>
     </open-files>

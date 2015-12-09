@@ -10,11 +10,7 @@ import dataaccess.TwitRepo;
 import business.Twit;
 import business.TwitView;
 import dataaccess.TwitViewRepo;
-import dataaccess.UserRepo;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,7 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 
 /**
  *
@@ -34,6 +30,7 @@ public class TwitServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        ShaPasswordEncoder encoder = new ShaPasswordEncoder(256);
         HttpSession session = request.getSession();
         String action = request.getParameter("action");
         String url = "/home.jsp";
