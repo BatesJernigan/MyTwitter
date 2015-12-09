@@ -7,6 +7,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <body>
+    
+    <!--add c:if for redirect to login.jsp, c:redirect-->
     <c:import url="/includes/header.jsp" />
     <c:import url="/includes/sidebar.jsp" />
     <c:import url="/includes/whoToFollow.jsp" />
