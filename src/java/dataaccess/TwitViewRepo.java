@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class TwitViewRepo {
 
     public static ArrayList<TwitView> all(User currentUser) {
-        System.out.println("In twit view repo all");
+        System.out.println("In twit view repo all currentUser: " + currentUser);
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;

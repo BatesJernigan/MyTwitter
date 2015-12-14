@@ -9,6 +9,7 @@
     </session-config>
 
     <welcome-file-list>
+        <welcome-file>membership</welcome-file>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
 
