@@ -1,9 +1,9 @@
 package dataaccess;
 
+import business.Hashtag;
 import java.io.*;
 import java.util.*;
 import business.Twit;
-import business.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,15 +23,29 @@ public class TwitRepo {
         String adjusted = "";
 
         for(String wordFromContent: twit.getContent().split(" ")){
-            System.out.println("word from content: " + wordFromContent + "end");
+            System.out.println("word from content: " + wordFromContent + " end");
             if(wordFromContent.indexOf("#") == 0) {
-                wordFromContent = "<span style=\"color:blue\">" + wordFromContent + "</span>";
+                String hashtagContent = wordFromContent.substring(1);
+
+                Hashtag existingHashtag = HashtagRepo.get(hashtagContent);
+                System.out.println("existing hashtag from twit repo: " + existingHashtag);
+                if(existingHashtag == null) {
+                    Hashtag newHashtag = new Hashtag(1, hashtagContent);
+                    HashtagRepo.insert(newHashtag);
+                } else {
+                    HashtagRepo.update(new Hashtag(existingHashtag.getId(),
+                            existingHashtag.getCount()+1, hashtagContent));
+                }
+                
+                wordFromContent = "<a href=\"/MyTwitter/twit?q=" + hashtagContent +
+                    "\" style=\"color:blue\">" + wordFromContent + "</a>";
             }
             if(wordFromContent.indexOf('@') == 0) {
                 long userId = UserRepo.selectNickname(wordFromContent.substring(1));
                 if(userId != 0) {
                     twit.setMentionedUserId(UserRepo.selectNickname(wordFromContent.substring(1)));
                     wordFromContent = "<span style=\"color:blue\">" + wordFromContent + "</span>";
+                    System.out.println("word from content: " + wordFromContent);
                 } else {
                     wordFromContent = "";
                 }
@@ -85,9 +99,8 @@ public class TwitRepo {
         }
         return null;
     }
-    
-//    TwitRepo.delete(twitId, authorId, user);
-    public static long delete(long twitId, User user) {
+
+    public static long delete(long twitId) {
 
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
@@ -107,7 +120,7 @@ public class TwitRepo {
         return 0;
     }
 
-    private static Twit buildTwitFromResult(ResultSet rs) throws SQLException {
+    public static Twit buildTwitFromResult(ResultSet rs) throws SQLException {
         return new Twit(rs.getLong("id"),
             rs.getLong("user_id"),
             rs.getLong("mentioned_user_id"),

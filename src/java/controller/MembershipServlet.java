@@ -5,7 +5,6 @@
  */
 package controller;
 
-import business.Twit;
 import business.TwitView;
 import business.User;
 import business.Follow;
@@ -44,6 +43,7 @@ import javax.servlet.http.Part;
 public class MembershipServlet extends HttpServlet {
     private static final String SAVE_DIR = "uploadFiles";     
     final static String DATE_FORMAT = "M/d/yyyy";
+    final static String EMAIL_COOKIE_NAME = "email_cookie";
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -74,8 +74,33 @@ public class MembershipServlet extends HttpServlet {
             throws ServletException, IOException {
         System.out.println("in do post of membership servlet");
         String action = request.getParameter("action");
+        
+        Cookie[] cookies = request.getCookies();
+        Cookie emailCookie = null;
+        for(Cookie cookie : cookies) {
+            if(cookie.getName().equals(EMAIL_COOKIE_NAME)) {
+                System.out.println("cookie name does equal email cookie name");
+                emailCookie = cookie;
+            }
+        }
 
-        if (action.equals("authenticate")) {
+        if (action == null) {
+            if(emailCookie != null) {
+                System.out.println("email cookie is not null");
+                User user = UserRepo.search(emailCookie.getValue());
+                System.out.println("user from search: " + user);
+
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+
+                sessionAttributes(request, response);            
+                response.sendRedirect("home.jsp");
+            } else {
+                getServletContext()
+                    .getRequestDispatcher("/login.jsp")
+                    .forward(request, response);
+            }
+        } else if (action.equals("authenticate")) {
             loginPost(request, response);
         } else if(action.equals("add")) {
             signupPost(request, response);
@@ -167,7 +192,7 @@ public class MembershipServlet extends HttpServlet {
             request.setAttribute("message", message);
         } else if (userIsAuthenticated(email, password)){
             System.out.println("user is authenticated");
-            Cookie cookie = new Cookie("emailCookie", email);
+            Cookie cookie = new Cookie(EMAIL_COOKIE_NAME, email);
             cookie.setMaxAge(60*60*24);
             cookie.setPath("/");
             response.addCookie(cookie);

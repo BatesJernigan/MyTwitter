@@ -68,6 +68,50 @@ CREATE TABLE IF NOT EXISTS `mytwitter`.`v_twits` (
     `email` INT);
 
 -- -----------------------------------------------------
+-- Table `mytwitter`.`hashtags`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mytwitter`.`hashtags` ;
+CREATE TABLE IF NOT EXISTS `mytwitter`.`hashtags` (
+  `id` INT(11) NOT NULL,
+  `count` INT(11) NOT NULL,
+  `content` VARCHAR(200) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE (content))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `mytwitter`.`twit_hashtag`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mytwitter`.`twit_hashtags` ;
+CREATE TABLE IF NOT EXISTS `mytwitter`.`twit_hashtags` (
+  `hashtag_id` INT(11) NOT NULL,
+  `twit_id` INT(11) NOT NULL,
+  PRIMARY KEY (hashtag_id, twit_id),
+  FOREIGN KEY (`hashtag_id`) REFERENCES hashtags(id)
+	ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  FOREIGN KEY (`twit_id`) REFERENCES twits(id)
+	ON DELETE CASCADE
+    ON UPDATE CASCADE
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `mytwitter`.`twit_hashtag`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mytwitter`.`user_twits` ;
+CREATE TABLE IF NOT EXISTS `mytwitter`.`user_twits` (
+  `id` INT(11) NOT NULL,
+  `user_id` INT(11) NOT NULL,
+  `twit_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
 -- View `mytwitter`.`v_twits`
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS `mytwitter`.`v_twits` ;
