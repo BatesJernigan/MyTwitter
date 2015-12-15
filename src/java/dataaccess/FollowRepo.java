@@ -76,7 +76,7 @@ public class FollowRepo {
         }
         return null;
     }
-    
+    /*
     public static ArrayList<Follow> getNotFollowing(long id) {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
@@ -100,7 +100,7 @@ public class FollowRepo {
         }
         return null;
     }
-
+    */
     public static ArrayList<Follow> all(Long id) {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();

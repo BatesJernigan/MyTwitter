@@ -14,7 +14,7 @@
             <input type ="submit" name=action" value ="follow">
             <input type ="hidden" name="action" value = "follow">
             <input type ="hidden" name="followed" value = "${notFollowedUser.id}">
-            <input type ="hidden" name ="user" value ="${notFollowedUser.id}">
+            <input type ="hidden" name ="user" value ="${user.id}">
         </form>
     </c:forEach>
     <c:forEach var = "followedUser" items="${followingList}">
@@ -23,7 +23,7 @@
             <input type="submit" name="action" value="unfollow">
             <input type ="hidden" name="action" value = "unfollow">
             <input type ="hidden" name="followed" value = "${followedUser.id}">
-            <input type ="hidden" name ="user" value ="${followedUser.id}">
+            <input type ="hidden" name ="user" value ="${user.id}">
         </form>
     </c:forEach>
 </div>

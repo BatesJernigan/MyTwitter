@@ -201,15 +201,16 @@ public class UserRepo {
         return null;
     }
     
+    // display users you are not following
     public static ArrayList<User> getWhoToFollow(User user) {
         String query = "SELECT * FROM users WHERE id != ? ";
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ArrayList<User> userList = new ArrayList<>();
-        ArrayList<Follow> notFollowingList = FollowRepo.getNotFollowing(user.getId());
+        ArrayList<Follow> notFollowingList = FollowRepo.getFollwing(user.getId());
         if(!notFollowingList.isEmpty()) {
-            query = "AND " + buildQueryString(query, "id != ?", " AND ", notFollowingList.size());
+            query = query + " AND " + buildQueryString(query, "id != ?", " AND ", notFollowingList.size());
         }
         System.out.println("not following list size: " + notFollowingList.size());
         try {
@@ -218,7 +219,7 @@ public class UserRepo {
 
             int indexForInsert = 2;
             for(int i =0; i<notFollowingList.size(); i++) {
-                ps.setLong(indexForInsert++, notFollowingList.get(i).getID());
+                ps.setLong(indexForInsert++, notFollowingList.get(i).getFollowed());
             }
 
             System.out.println("ps in get who to follow: " +ps);
@@ -227,7 +228,6 @@ public class UserRepo {
             while (rs.next()) {
                 userList.add(buildUserFromResult(rs));
             }
-            System.out.println("we made it here");
             return userList;
         } catch(SQLException e) {
             System.err.println(e);
@@ -239,24 +239,26 @@ public class UserRepo {
     }
     
     
-    
+    // display users you are following
     public static ArrayList<User> getWhoNotToFollow(User user) {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ArrayList<User> userList = new ArrayList<>();
+        
+        // gets list of people user is following
         ArrayList<Follow> followList = FollowRepo.getFollwing(user.getId());
-        String query = "SELECT * FROM users WHERE id = ? ";
+        String query = "SELECT * FROM users WHERE id != ? ";
         if(!followList.isEmpty()) {
-            query += " AND " + buildQueryString(query, "id = ?", " AND ", followList.size());
+            query += " OR " + buildQueryString(query, "id = ?", " OR ", followList.size() - 1);
         }
         System.out.println("follow list size: " +followList.size());
         try {
             ps = connection.prepareStatement(query);
-            ps.setLong(1, user.getId());
-            int indexForInsert = 2;
+            //ps.setLong(1, user.getId());
+            int indexForInsert = 1;
             for(int i =0; i<followList.size(); i++) {
-                ps.setLong(indexForInsert++, followList.get(i).getID());
+                ps.setLong(indexForInsert++, followList.get(i).getFollowed());
             }
 
             System.out.println("ps in get who not to follow: " +ps);
@@ -290,9 +292,9 @@ public class UserRepo {
         );
     }
      public static String buildQueryString(String intialQuery, String stringToAppend, String connector, int dataSize) {
-        String query = intialQuery;
+        String query = "";
         for(int i=0; i<dataSize; i++) {
-            query += stringToAppend;
+            query = query + stringToAppend;
             if(i != dataSize - 1) {
                 query += connector;
             }

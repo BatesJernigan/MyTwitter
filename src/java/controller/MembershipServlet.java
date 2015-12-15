@@ -120,6 +120,7 @@ public class MembershipServlet extends HttpServlet {
         
         Long followed = Long.parseLong(request.getParameter("followed"));
         Long user = Long.parseLong(request.getParameter("user"));
+        System.out.println("user " + user + " follow " + followed);
         Follow follow = new Follow(user, followed);
         FollowRepo.insert(follow);
         sessionAttributes(request, response);
@@ -209,23 +210,24 @@ public class MembershipServlet extends HttpServlet {
         session.setAttribute("twits", twitList);
         
         ArrayList<User> followingList = UserRepo.getWhoNotToFollow(currentUser);
+        /*
         for(int i=0; i<followingList.size(); i++){
             if(currentUser.getEmail().equals(followingList.get(i).getEmail())) {
                 followingList.remove(i);
             }
         }
-        
-        followingList.remove(currentUser);
-        System.out.println("follwing size: " + followingList.size());
-        for(int i =0; i<followingList.size(); i++) {
-            System.out.println("follwing: " + followingList.get(i));
-        }
+        */
+        //followingList.remove(currentUser);
+        //System.out.println("follwing size: " + followingList.size());
+        //for(int i =0; i<followingList.size(); i++) {
+        //    System.out.println("follwing: " + followingList.get(i));
+        //}
         ArrayList<User> notFollowingList = UserRepo.getWhoToFollow(currentUser);
-        System.out.println("not follwing size: " + notFollowingList.size());
+        //System.out.println("not follwing size: " + notFollowingList.size());
         
-        for(int i =0; i<notFollowingList.size(); i++) {
-            System.out.println("not follwing: " + notFollowingList.get(i));
-        }
+        //for(int i =0; i<notFollowingList.size(); i++) {
+        //   System.out.println("not follwing: " + notFollowingList.get(i));
+        //}
         
         ArrayList<User> users = UserRepo.all();
         users.remove(currentUser);
