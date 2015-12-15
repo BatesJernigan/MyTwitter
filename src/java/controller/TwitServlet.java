@@ -46,8 +46,13 @@ public class TwitServlet extends HttpServlet {
         String email = user.getEmail();
 
         if (action == null) {
+            
             if(queryString != null) {
-                System.out.println("search q: " + queryString);
+                String parsedQueryString = queryString.split("q=")[1];
+                System.out.println("search q: " + parsedQueryString);
+                twits = TwitViewRepo.getByHashtagContent(parsedQueryString);
+                session.setAttribute("hashtagContent", parsedQueryString);
+                System.out.println("twits size: " + twits.size());
                 url = "/hashtag.jsp";
             }
         } else if (action.equals("twit")) {

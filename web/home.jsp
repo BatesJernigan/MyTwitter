@@ -21,7 +21,7 @@
         </form>
     </div>
 
-    <p/>
+    <p>
     <c:forEach var = "twit" items="${twits}">
         <form action="twit" method="post" class="twits">
             <input type="hidden" name="twitId" value="${twit.twitId}">

@@ -189,7 +189,10 @@ public class MembershipServlet extends HttpServlet {
 
         // sets atributes for user to view all other users
         ArrayList<User> users = UserRepo.getWhoToFollow(currentUser);
+        ArrayList<TwitView> twitViewList = TwitViewRepo.getByTrending();
 
+        System.out.println("view list size: " + twitViewList.size());
+        session.setAttribute("trendingTwits", twitViewList);
         session.setAttribute("users", users);
     }
     
