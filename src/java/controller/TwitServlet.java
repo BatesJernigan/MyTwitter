@@ -11,6 +11,8 @@ import business.Twit;
 import business.TwitView;
 import dataaccess.TwitViewRepo;
 import dataaccess.UserRepo;
+import business.Follow;
+import dataaccess.FollowRepo;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -57,7 +59,8 @@ public class TwitServlet extends HttpServlet {
             }
         }
         
-        ArrayList<TwitView> twits = TwitViewRepo.all(user);
+        ArrayList<Follow> followlist = FollowRepo.all(user.getId());
+        ArrayList<TwitView> twits = TwitViewRepo.all(user, followlist);
 
         session.setAttribute("twits", twits);
         

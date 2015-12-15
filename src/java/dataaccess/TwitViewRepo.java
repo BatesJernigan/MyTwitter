@@ -7,11 +7,13 @@ package dataaccess;
 
 import business.TwitView;
 import business.User;
+import business.Follow;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 
 /**
  *
@@ -19,15 +21,20 @@ import java.util.ArrayList;
  */
 public class TwitViewRepo {
 
-    public static ArrayList<TwitView> all(User currentUser) {
+    public static ArrayList<TwitView> all(User currentUser, ArrayList<Follow> followlist) {
         System.out.println("In twit view repo all");
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ArrayList<TwitView> twitList = new ArrayList<>();
-
+        String follows = "";
+        for(int i = 0; i < followlist.size(); i++ ){
+            follows = follows + "OR user_id = " + followlist.get(i).getFollowed() + " ";
+            
+        }
         String query = "SELECT * FROM v_twits "
                 + "WHERE user_id = ? OR mentioned_user_id = ? "
+                + follows
                 + "ORDER BY posted_date DESC";
             
         try {
@@ -51,7 +58,7 @@ public class TwitViewRepo {
         }
         return null;
     }
-
+    
     private static TwitView buildTwitViewFromResult(ResultSet rs) throws SQLException {
         return new TwitView(rs.getLong("user_id"),
             rs.getLong("twit_id"),

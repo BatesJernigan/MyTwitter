@@ -200,7 +200,7 @@ public class MembershipServlet extends HttpServlet {
         session.setAttribute("follows", followlist);
         
         // sets attribute for the list of twits
-        ArrayList<TwitView> twitList = TwitViewRepo.all(currentUser);
+        ArrayList<TwitView> twitList = TwitViewRepo.all(currentUser, followlist);
         session.setAttribute("twits", twitList);
         
         // sets atributes for user to view all other users
