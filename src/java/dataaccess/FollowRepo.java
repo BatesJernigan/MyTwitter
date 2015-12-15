@@ -75,4 +75,26 @@ public class FollowRepo {
         }
         return null;
     }
+    
+    public static int delete(String user, String followed){
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        String query = "DELETE FROM followers "
+                + "WHERE id = ? AND followed = ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, user);
+            ps.setString(2, followed);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+        return 0;
+    }
+       
 }

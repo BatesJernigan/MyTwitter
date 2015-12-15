@@ -14,7 +14,12 @@ public class Follow {
     private long user;
     private long followed;
     private Date date;
-    
+    public Follow(long user, long followed){
+        this.user = user;
+        this.followed = followed;
+        this.date = new Date();
+        
+    }
     public Follow(long user, long followed, Date date){
         this.user = user;
         this.followed = followed;

@@ -8,17 +8,23 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div id="follow">
     <h1>Who to follow</h1>
-    <c:forEach var = "user" items="${users}">
+    <c:forEach var = "users" items="${users}">
         <div>
-            <p>${user.fullName} [@${user.nickname}]
+            <p>${users.fullName} [@${users.nickname}]
             <form>
-                <c:forEach var = "followed" items="${follows}">
-                    <c:if test = "${followed.followed} == ${user.id}">
-                        <input type="submit" name="action" value="unfollow">
-                    </c:if>
-                    
-                </c:forEach>
-                <input type ="hidden" name="id" value = "${user.id}">
+                <c:choose>
+                    <c:forEach var = "followed" items="${follows}">
+                        <c:when test="${followed.followed} == ${users.id}">
+                           <input type="submit" name="action" value="unfollow">
+                        </c:when>
+                    </c:forEach>
+                           
+                    <c:otherwise>
+                        <input type ="submit" name=action" value ="follow">
+                    </c:otherwise>
+                </c:choose>
+                <input type ="hidden" name="followed" value = "${users.id}">
+                <input type ="hidden" name ="user" value ="${user.id}">
             </form>
             </p>
         </div>

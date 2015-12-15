@@ -85,6 +85,8 @@ public class MembershipServlet extends HttpServlet {
             emailPost(request, response);
         } else if(action.equals("follow")){
             followPost(request, response); 
+        } else if(action.equals("unfollow")){
+            unfollowPost(request, response);    
         }
     }
     
@@ -116,7 +118,29 @@ public class MembershipServlet extends HttpServlet {
     public void followPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        Long followed = Long.parseLong(request.getParameter("followed"));
+        Long user = Long.parseLong(request.getParameter("user"));
+        Follow follow = new Follow(user, followed);
+        FollowRepo.insert(follow);
+        sessionAttributes(request, response);
+        String url = "/home.jsp";
         
+        getServletContext()
+            .getRequestDispatcher(url)
+            .forward(request, response); 
+        
+    }
+    public void unfollowPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String followed = request.getParameter("followed");
+        String user = request.getParameter("user");
+        FollowRepo.delete(user, followed);
+        sessionAttributes(request, response);
+        String url = "/home.jsp";
+        
+        getServletContext()
+            .getRequestDispatcher(url)
+            .forward(request, response);
     }
     
     // checks if user used the correct email
