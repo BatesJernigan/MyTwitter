@@ -14,12 +14,12 @@ import java.util.Random;
  */
 public class User implements Serializable {
     private long id;
-    private String fullName, email, password, nickname, profilePicture;
+    private String fullName, email, password, nickname, profilePicture, passwordSalt;
     private Date birthdate;
 
     public User() {}
 
-    public User(String fullName, String email, String password, String nickname, Date birthdate, String profilePicture) {
+    public User(String fullName, String email, String password, String nickname, Date birthdate, String profilePicture, String passwordSalt) {
         this.id = new Random().nextInt(1000000000);
         this.fullName = fullName;
         this.email = email;
@@ -27,9 +27,10 @@ public class User implements Serializable {
         this.nickname = nickname;
         this.birthdate = birthdate;
         this.profilePicture = profilePicture;
+        this.passwordSalt = passwordSalt;
     }
     
-    public User(long id, String fullName, String email, String password, String nickname, Date birthdate, String profilePicture) {
+    public User(long id, String fullName, String email, String password, String nickname, Date birthdate, String profilePicture, String passwordSalt) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
@@ -37,6 +38,7 @@ public class User implements Serializable {
         this.nickname = nickname;
         this.birthdate = birthdate;
         this.profilePicture = profilePicture;
+        this.passwordSalt = passwordSalt;
     }
 
     public String getProfilePicture() {
@@ -95,9 +97,17 @@ public class User implements Serializable {
         this.birthdate = birthdate;
     }
 
-    @Override
-    public String toString() {
-        return "User{" + "id=" + id + ", fullName=" + fullName + ", email=" + email + ", password=" + password + ", nickname=" + nickname + ", profilePicture=" + profilePicture + ", birthdate=" + birthdate + '}';
+    public String getPasswordSalt() {
+        return passwordSalt;
     }
 
+    public void setPasswordSalt(String passwordSalt) {
+        this.passwordSalt = passwordSalt;
+    }
+    
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", fullName=" + fullName + ", email=" + email + ", password=" + password + ", nickname=" + nickname + ", profilePicture=" + profilePicture + ", passwordSalt=" + passwordSalt + ", birthdate=" + birthdate + '}';
+    }
+    
 }

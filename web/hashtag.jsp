@@ -1,7 +1,7 @@
 <%-- 
-    Document   : home.jsp
-    Created on : Sep 24, 2015, 6:47:02 PM
-    Author     : xl
+    Document   : hashtag
+    Created on : Dec 12, 2015, 10:38:29 AM
+    Author     : batesjernigan
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -12,14 +12,7 @@
     <c:import url="/includes/whoToFollow.jsp" />
 
     <!-- box for inputing twits into the system. needs servlet to utilize this form-->
-    <div class="twits">
-        <form action="twit" method="post">
-            <input type="hidden" name="action" value="twit">
-            <textarea rows="4" cols="70" name="content" required maxlength="200"></textarea>
-            <p></p>
-            <input type="submit" name="Twit" class="margin_left" align="right">
-        </form>
-    </div>
+    <h2>All twits talking about ${hashtagContent}</h2>
 
     <p>
     <c:forEach var = "twit" items="${twits}">

@@ -5,8 +5,14 @@
         <group>
             <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/UserRepo.java</file>
             <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/controller/MembershipServlet.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/HashtagRepo.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/TwitRepo.java</file>
             <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/TwitViewRepo.java</file>
             <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/controller/TwitServlet.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/TwitHashtagRepo.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/ConnectionPool.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/web/includes/whoToFollow.jsp</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/PasswordUtil.java</file>
         </group>
     </open-files>
 </project-private>
