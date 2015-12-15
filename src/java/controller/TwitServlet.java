@@ -50,9 +50,10 @@ public class TwitServlet extends HttpServlet {
         if (action == null) {
             
             if(queryString != null) {
+                System.out.println("search q: " + queryString);
                 String parsedQueryString = queryString.split("q=")[1];
                 System.out.println("search q: " + parsedQueryString);
-                twits = TwitViewRepo.getByHashtagContent(parsedQueryString);
+                twits = TwitViewRepo.getByHashtagContent(hashtagWrapper(parsedQueryString));
                 session.setAttribute("hashtagContent", parsedQueryString);
                 System.out.println("twits size: " + twits.size());
                 url = "/hashtag.jsp";
@@ -79,6 +80,10 @@ public class TwitServlet extends HttpServlet {
         //ArrayList<Follow> notFollowingList = FollowRepo.getNotFollowing(user.getId());
         ArrayList<Follow> followingList = FollowRepo.getFollwing(user.getId());
         twits = TwitViewRepo.all(user, followingList);
+        ArrayList<Hashtag> hashtagList = HashtagRepo.getTrending();
+        if(hashtagList != null) {
+            session.setAttribute("trendingHashtags", hashtagList);
+        }
         session.setAttribute("twits", twits);
         session.setAttribute(email, url);
 
@@ -105,7 +110,6 @@ public class TwitServlet extends HttpServlet {
             System.out.println("word from content: " + wordFromContent + " end");
             if(wordFromContent.indexOf("#") == 0) {
                 String hashtagContent = wordFromContent.substring(1);
-
                 wordFromContent = "<a href=\"/MyTwitter/twit?q=" + hashtagContent +
                     "\" style=\"color:blue\">" + wordFromContent + "</a>";
             }
@@ -148,5 +152,10 @@ public class TwitServlet extends HttpServlet {
             }
         }
         return hashtags;
+    }
+    
+    public String hashtagWrapper(String hashtag) {
+        return "<a href=\"/MyTwitter/twit?q=" + hashtag +
+                    "\" style=\"color:blue\">" + hashtag + "</a>";
     }
 }

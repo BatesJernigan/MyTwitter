@@ -46,8 +46,9 @@ CREATE TABLE IF NOT EXISTS `mytwitter`.`users` (
   `email` VARCHAR(45) NOT NULL,
   `birthdate` VARCHAR(45) NOT NULL,
   `nickname` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
   `lastlogin` VARCHAR(45) NULL DEFAULT NULL,
+  `password` VARCHAR(200) NOT NULL,
+  `password_salt` VARCHAR(200) NOT NULL,
   `profile_picture` VARCHAR(200) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB

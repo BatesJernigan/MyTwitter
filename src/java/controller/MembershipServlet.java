@@ -5,10 +5,13 @@
  */
 package controller;
 
+import business.Hashtag;
 import business.TwitView;
 import business.User;
 import business.Follow;
 import dataaccess.TwitRepo;
+import dataaccess.HashtagRepo;
+import dataaccess.PasswordUtil;
 import dataaccess.TwitViewRepo;
 import dataaccess.FollowRepo;
 import dataaccess.UserRepo;
@@ -16,11 +19,14 @@ import dataaccess.UserRepo;
 import javax.mail.MessagingException;
 import java.io.File;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -178,6 +184,7 @@ public class MembershipServlet extends HttpServlet {
     public void loginPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User user;
+        
         System.out.println("in login post");
         String url = "/login.jsp";
         String password = request.getParameter("password");
@@ -190,7 +197,7 @@ public class MembershipServlet extends HttpServlet {
             message = "Please fill out both boxes.";
             url = "/login.jsp";
             request.setAttribute("message", message);
-        } else if (userIsAuthenticated(email, password)){
+        } else if (userIsAuthenticated(email, password)) {
             System.out.println("user is authenticated");
             Cookie cookie = new Cookie(EMAIL_COOKIE_NAME, email);
             cookie.setMaxAge(60*60*24);
@@ -202,7 +209,7 @@ public class MembershipServlet extends HttpServlet {
             session.setAttribute("user", user);
             request.setAttribute("message", message);
             sessionAttributes(request, response);
-            
+
         } else {
             System.out.println("not authenticated");
             message = "Wrong Email / Password Combo";
@@ -264,9 +271,13 @@ public class MembershipServlet extends HttpServlet {
             session.setAttribute("followingList", followingList);
         }
         ArrayList<TwitView> twitViewList = TwitViewRepo.getByTrending();
+        ArrayList<Hashtag> hashtagList = HashtagRepo.getTrending();
 
-        System.out.println("view list size: " + twitViewList.size());
-        session.setAttribute("trendingTwits", twitViewList);
+//        System.out.println("view list size: " + twitViewList.size());
+        if(hashtagList != null) {
+            session.setAttribute("trendingHashtags", hashtagList);
+        }
+
         session.setAttribute("users", users);
     }
     
@@ -333,19 +344,28 @@ public class MembershipServlet extends HttpServlet {
 
         if(!fullName.isEmpty() && !email.isEmpty() && !nickname.isEmpty() &&
                 !password.isEmpty() && birthdate != null && isUniqueEmail(email)) {
-//            public User(String fullName, String email, String password, String nickname, Date birthdate) {
-            User user = new User(fullName, email, password, nickname, birthdate, fileName);
-            insertResultCode = UserRepo.insert(user);
-            System.out.println("Insert result code");
-            System.out.println(insertResultCode);
-            if(insertResultCode == 1) {
-                message = "Awesome! You're all signed up!";
-                System.out.println("user attribute in signup: " + user.toString());
-                session.setAttribute("user", user);
-                url = "/home.jsp";
-            } else {
-                message = "Something went wrong, please try to sign up with valid info";
-                url = "/signup.jsp";
+            try {
+                String salt = PasswordUtil.getSalt();
+                String hashedPassword = PasswordUtil.hashPassword(salt + password);
+                User user = new User(fullName, email, hashedPassword, nickname, birthdate, fileName, salt);
+                insertResultCode = UserRepo.insert(user);
+                System.out.println("Insert result code");
+                System.out.println(insertResultCode);
+                if(insertResultCode == 1) {
+                    Cookie cookie = new Cookie(EMAIL_COOKIE_NAME, email);
+                    cookie.setMaxAge(60*60*24);
+                    cookie.setPath("/");
+                    response.addCookie(cookie);
+                    message = "Awesome! You're all signed up!";
+                    System.out.println("user attribute in signup: " + user.toString());
+                    session.setAttribute("user", user);
+                    url = "/home.jsp";
+                } else {
+                    message = "Something went wrong, please try to sign up with valid info";
+                    url = "/signup.jsp";
+                }
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(MembershipServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             if(!isUniqueEmail(email)) {

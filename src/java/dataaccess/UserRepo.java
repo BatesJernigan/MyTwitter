@@ -7,6 +7,7 @@ package dataaccess;
 import business.Follow;
 import business.User;
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +15,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,12 +31,12 @@ public class UserRepo {
         Connection connection = pool.getConnection();
         System.out.println("connection " + connection.toString());
         PreparedStatement ps = null;
-        
+
         System.out.println("user in insert method: " + user.toString());
 
         String query
-                = "INSERT INTO users (email, password, full_name, nickname, id, birthdate, profile_picture)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                = "INSERT INTO users (email, password, full_name, nickname, id, birthdate, profile_picture, password_salt)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(query);
             System.out.println(user.toString());
@@ -44,6 +47,7 @@ public class UserRepo {
             ps.setLong(5, user.getId());
             ps.setTimestamp(6, new Timestamp (user.getBirthdate().getTime()));
             ps.setString(7, user.getProfilePicture());
+            ps.setString(8, user.getPasswordSalt());
 
             System.out.println("ps: " + ps.toString());
             return ps.executeUpdate();
@@ -88,22 +92,29 @@ public class UserRepo {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
-
-        String query = "SELECT * "
-                + "FROM users "
-                + "WHERE email = ? AND password = ?";
+        User dbUser = search(email);
         try {
-            User user = new User();
-            ps = connection.prepareStatement(query);
-            ps.setString(1, email);
-            ps.setString(2, password);
+            String dbHashedPassword = dbUser.getPassword();
+            String passwordSalt = dbUser.getPasswordSalt();
+            String inputHashedPassword = PasswordUtil.hashPassword(passwordSalt + password);
+            System.out.println("db hashed password: " + dbHashedPassword);
+            System.out.println("input hashed password: " + inputHashedPassword);
+//            String query = "SELECT * "
+//                    + "FROM users "
+//                    + "WHERE email = ? AND password = ?";
+//            ps = connection.prepareStatement(query);
+//            ps.setString(1, email);
+//            ps.setString(2, password);
+//
+//            ResultSet rs = ps.executeQuery();
 
-            ResultSet rs = ps.executeQuery();
-            
-            if (rs.next()) {
-                return buildUserFromResult(rs);
+//            if (rs.next()) {
+//                return buildUserFromResult(rs);
+//            }
+            if(dbHashedPassword.equals(inputHashedPassword)) {
+                return dbUser;
             }
-        } catch(SQLException e) {
+        } catch(NoSuchAlgorithmException e) {
             System.err.println(e);
         } finally {
             DBUtil.closePreparedStatement(ps);
@@ -111,6 +122,33 @@ public class UserRepo {
         }
         return null;
     }
+    
+//    public static String getPasswordSalt(String email) {
+//        ConnectionPool pool = ConnectionPool.getInstance();
+//        Connection connection = pool.getConnection();
+//        PreparedStatement ps = null;
+//
+//        String query = "SELECT * "
+//                + "FROM users "
+//                + "WHERE email = ?";
+//        try {
+//            ps = connection.prepareStatement(query);
+//            ps.setString(1, email);
+//            ps.setString(2, password);
+//
+//            ResultSet rs = ps.executeQuery();
+//            
+//            if (rs.next()) {
+//                return buildUserFromResult(rs);
+//            }
+//        } catch(SQLException e) {
+//            System.err.println(e);
+//        } finally {
+//            DBUtil.closePreparedStatement(ps);
+//            pool.freeConnection(connection);
+//        }
+//        return null;
+//    }
     
     // return null; if exist make a User object and return it.
     public static User search(String email) {
@@ -288,8 +326,11 @@ public class UserRepo {
             rs.getString("nickname"),
             rs.getDate("birthdate"),
             rs.getDate("lastlogin"),
-            rs.getString("profile_picture")
-        );
+            rs.getString("profile_picture"),
+            rs.getString("password_salt"));
+//                    long id, String fullName, String email, String password, String nickname, Date birthdate, String profilePicture, String passwordSalt) {
+
+        
     }
      public static String buildQueryString(String intialQuery, String stringToAppend, String connector, int dataSize) {
         String query = "";

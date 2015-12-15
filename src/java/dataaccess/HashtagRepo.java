@@ -31,11 +31,14 @@ public class HashtagRepo {
                 + "VALUES (?, ?, ?)";
 
         System.out.println("current hashtag in insert method " + hashtag.toString());
+
         try {
             ps = connection.prepareStatement(query);
             ps.setLong(1, hashtag.getId());
             ps.setLong(2, hashtag.getCount());
-            ps.setString(3, hashtag.getContent());
+            ps.setString(3, "<a href=\"/MyTwitter/twit?q="
+                    + hashtag.getContent() + "\" style=\"color:blue\">"
+                    + hashtag.getContent() + "</a>");
 
             return ps.executeUpdate();
         } catch (SQLException e) {
@@ -77,8 +80,9 @@ public class HashtagRepo {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
+        ArrayList<Hashtag> updatedHashtags = hashtags;
 
-        String query = "INSERT INTO hashtags (id, count, content) VALUES";
+        String query = "INSERT INTO hashtags (id, count, content) VALUES ";
 
         try {
             int indexForInsert = 1;
@@ -86,6 +90,11 @@ public class HashtagRepo {
                 if(hashtags.get(i).getCount() == 1) {
                     System.out.println("hashtags size: "+hashtags.size() +"; i: " + i);
                     System.out.println("current hashtag in insert method " + hashtags.get(i));
+
+                    updatedHashtags.get(i).setContent("<a href=\"/MyTwitter/twit?q="
+                            + hashtags.get(i).getContent() +
+                            "\" style=\"color:blue\">" +
+                            hashtags.get(i).getContent() + "</a>");
                     query += "(?, ?, ?)";
                     // checks whether or not to add a ,
                     if(i != hashtags.size()-1) {
@@ -97,9 +106,9 @@ public class HashtagRepo {
             ps = connection.prepareStatement(query);
             for(int i =0; i<hashtags.size(); i++) {
                 System.out.println("current prepared statement pre sets: " + ps);
-                ps.setLong(indexForInsert++, hashtags.get(i).getId());
-                ps.setLong(indexForInsert++, hashtags.get(i).getCount());
-                ps.setString(indexForInsert++, hashtags.get(i).getContent());
+                ps.setLong(indexForInsert++, updatedHashtags.get(i).getId());
+                ps.setLong(indexForInsert++, updatedHashtags.get(i).getCount());
+                ps.setString(indexForInsert++, updatedHashtags.get(i).getContent());
                 System.out.println("current prepared statement post sets: " + ps);
             }
 
