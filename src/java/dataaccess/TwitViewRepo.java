@@ -23,6 +23,7 @@ public class TwitViewRepo {
 
     public static ArrayList<TwitView> all(User currentUser, ArrayList<Follow> followlist) {
         System.out.println("In twit view repo all");
+        System.out.println("current user: " + currentUser);
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
@@ -68,8 +69,7 @@ public class TwitViewRepo {
         String follows = "";
         for(int i = 0; i < followlist.size(); i++ ){
             follows = follows + "OR user_id = " + followlist.get(i).getFollowed() + " ";
-            
-        }
+                    }
         String query = "SELECT * FROM v_twits "
                 + "WHERE user_id = ? OR mentioned_user_id = ? "
                 + follows

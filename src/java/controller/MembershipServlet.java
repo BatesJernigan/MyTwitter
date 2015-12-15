@@ -196,19 +196,47 @@ public class MembershipServlet extends HttpServlet {
         User currentUser = (User) session.getAttribute("user");
         
         //sets follower information for who to follow section
-        ArrayList<Follow> followlist = FollowRepo.all(currentUser.getId());
-        session.setAttribute("follows", followlist);
+        ArrayList<Follow> followList = new ArrayList<>();
+        followList.addAll(FollowRepo.getFollwing(currentUser.getId()));
+        session.setAttribute("follows", followList);
         
         // updates last login time
         session.setAttribute("lastlogin", currentUser.getLastLogin());
         UserRepo.update(currentUser);
         
         // sets attribute for the list of twits
-        ArrayList<TwitView> twitList = TwitViewRepo.all(currentUser, followlist);
+        ArrayList<TwitView> twitList = TwitViewRepo.all(currentUser, followList);
         session.setAttribute("twits", twitList);
         
-        // sets atributes for user to view all other users
-        ArrayList<User> users = UserRepo.getWhoToFollow(currentUser);
+        ArrayList<User> followingList = UserRepo.getWhoNotToFollow(currentUser);
+        for(int i=0; i<followingList.size(); i++){
+            if(currentUser.getEmail().equals(followingList.get(i).getEmail())) {
+                followingList.remove(i);
+            }
+        }
+        
+        followingList.remove(currentUser);
+        System.out.println("follwing size: " + followingList.size());
+        for(int i =0; i<followingList.size(); i++) {
+            System.out.println("follwing: " + followingList.get(i));
+        }
+        ArrayList<User> notFollowingList = UserRepo.getWhoToFollow(currentUser);
+        System.out.println("not follwing size: " + notFollowingList.size());
+        
+        for(int i =0; i<notFollowingList.size(); i++) {
+            System.out.println("not follwing: " + notFollowingList.get(i));
+        }
+        
+        ArrayList<User> users = UserRepo.all();
+        users.remove(currentUser);
+        if(notFollowingList != null) {
+            System.out.println("not follwing list is not null: ");
+            session.setAttribute("notFollowingList", notFollowingList);
+        }
+        if(followingList != null) {
+            System.out.println("follwing list is not null: ");
+            session.setAttribute("followingList", followingList);
+        }
 
         session.setAttribute("users", users);
     }

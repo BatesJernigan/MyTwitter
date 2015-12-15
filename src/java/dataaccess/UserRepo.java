@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package dataaccess;
+import business.Follow;
 import business.User;
 import java.io.*;
 import java.sql.Connection;
@@ -201,14 +202,27 @@ public class UserRepo {
     }
     
     public static ArrayList<User> getWhoToFollow(User user) {
+        String query = "SELECT * FROM users WHERE id != ? ";
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ArrayList<User> userList = new ArrayList<>();
-        String query = "SELECT * FROM users WHERE id != ?";
+        ArrayList<Follow> notFollowingList = FollowRepo.getNotFollowing(user.getId());
+        if(!notFollowingList.isEmpty()) {
+            query = "AND " + buildQueryString(query, "id != ?", " AND ", notFollowingList.size());
+        }
+        System.out.println("not following list size: " + notFollowingList.size());
         try {
             ps = connection.prepareStatement(query);
             ps.setLong(1, user.getId());
+
+            int indexForInsert = 2;
+            for(int i =0; i<notFollowingList.size(); i++) {
+                ps.setLong(indexForInsert++, notFollowingList.get(i).getID());
+            }
+
+            System.out.println("ps in get who to follow: " +ps);
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 userList.add(buildUserFromResult(rs));
@@ -224,6 +238,46 @@ public class UserRepo {
         return null;
     }
     
+    
+    
+    public static ArrayList<User> getWhoNotToFollow(User user) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ArrayList<User> userList = new ArrayList<>();
+        ArrayList<Follow> followList = FollowRepo.getFollwing(user.getId());
+        String query = "SELECT * FROM users WHERE id = ? ";
+        if(!followList.isEmpty()) {
+            query += " AND " + buildQueryString(query, "id = ?", " AND ", followList.size());
+        }
+        System.out.println("follow list size: " +followList.size());
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setLong(1, user.getId());
+            int indexForInsert = 2;
+            for(int i =0; i<followList.size(); i++) {
+                ps.setLong(indexForInsert++, followList.get(i).getID());
+            }
+
+            System.out.println("ps in get who not to follow: " +ps);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                userList.add(buildUserFromResult(rs));
+            }
+            System.out.println("we made it here");
+            return userList;
+        } catch(SQLException e) {
+            System.err.println(e);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+        return null;
+    }
+    
+    
+    
     private static User buildUserFromResult(ResultSet rs) throws SQLException {
         return new User(rs.getLong("id"),
             rs.getString("full_name"), 
@@ -234,5 +288,15 @@ public class UserRepo {
             rs.getDate("lastlogin"),
             rs.getString("profile_picture")
         );
+    }
+     public static String buildQueryString(String intialQuery, String stringToAppend, String connector, int dataSize) {
+        String query = intialQuery;
+        for(int i=0; i<dataSize; i++) {
+            query += stringToAppend;
+            if(i != dataSize - 1) {
+                query += connector;
+            }
+        }
+        return query;
     }
 }

@@ -59,10 +59,11 @@ public class TwitServlet extends HttpServlet {
             }
         }
         
-        ArrayList<Follow> followlist = FollowRepo.all(user.getId());
-        ArrayList<TwitView> twits = TwitViewRepo.all(user, followlist);
-
+        ArrayList<Follow> notFollowingList = FollowRepo.getNotFollowing(user.getId());
+        ArrayList<Follow> followingList = FollowRepo.getFollwing(user.getId());
+        ArrayList<TwitView> twits = TwitViewRepo.all(user, followingList);
         session.setAttribute("twits", twits);
+        session.setAttribute(email, url);
         
         getServletContext()
             .getRequestDispatcher(url)

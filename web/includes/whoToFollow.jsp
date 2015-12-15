@@ -8,26 +8,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div id="follow">
     <h1>Who to follow</h1>
-    <c:forEach var = "users" items="${users}">
-        <div>
-            <p>${users.fullName} [@${users.nickname}]
-            <form>
-                <c:choose>
-                        <c:when test="true">
-                           <input type="submit" name="action" value="unfollow">
-                           <input type ="hidden" name="action" value = "unfollow">
-                        </c:when>
-                        
-                    <c:otherwise>
-                        <input type ="submit" name=action" value ="follow">
-                        <input type ="hidden" name="action" value = "follow">
-                    </c:otherwise>
-                </c:choose>
-                <input type ="hidden" name="followed" value = "${users.id}">
-                <input type ="hidden" name ="user" value ="${user.id}">
-                
-            </form>
-            </p>
-        </div>
+    <c:forEach var = "notFollowedUser" items="${notFollowingList}">
+        <p>${notFollowedUser.fullName} [@${notFollowedUser.nickname}]
+        <form>
+            <input type ="submit" name=action" value ="follow">
+            <input type ="hidden" name="action" value = "follow">
+            <input type ="hidden" name="followed" value = "${notFollowedUser.id}">
+            <input type ="hidden" name ="user" value ="${notFollowedUser.id}">
+        </form>
+    </c:forEach>
+    <c:forEach var = "followedUser" items="${followingList}">
+        <p>${followedUser.fullName} [@${followedUser.nickname}]
+        <form>
+            <input type="submit" name="action" value="unfollow">
+            <input type ="hidden" name="action" value = "unfollow">
+            <input type ="hidden" name="followed" value = "${followedUser.id}">
+            <input type ="hidden" name ="user" value ="${followedUser.id}">
+        </form>
     </c:forEach>
 </div>

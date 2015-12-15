@@ -52,12 +52,61 @@ public class FollowRepo {
         }
     }
     
-    public static ArrayList<Follow> all(Long id) {
+    public static ArrayList<Follow> getFollwing(long id) {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ArrayList<Follow> followList = new ArrayList<>();
         String query = "SELECT * FROM followers WHERE id = ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Follow follow = new Follow(rs.getLong("id"), rs.getLong("followed"), rs.getDate("date"));
+                followList.add(follow);
+            }
+            System.out.println("ps in get following follow repo: " +ps);
+            return followList;
+        } catch(SQLException e) {
+            System.err.println(e);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+        return null;
+    }
+    
+    public static ArrayList<Follow> getNotFollowing(long id) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ArrayList<Follow> followList = new ArrayList<>();
+        String query = "SELECT * FROM followers WHERE id != ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Follow follow = new Follow(rs.getLong("id"), rs.getLong("followed"), rs.getDate("date"));
+                followList.add(follow);
+            }
+            return followList;
+        } catch(SQLException e) {
+            System.err.println(e);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+        return null;
+    }
+
+    public static ArrayList<Follow> all(Long id) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ArrayList<Follow> followList = new ArrayList<>();
+        String query = "SELECT * FROM followers";
         try {
             ps = connection.prepareStatement(query);
             ps.setLong(1, id);
