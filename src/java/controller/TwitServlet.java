@@ -11,8 +11,8 @@ import dataaccess.TwitRepo;
 import business.Twit;
 import business.TwitView;
 import dataaccess.HashtagRepo;
-import dataaccess.TwitHashtagRepo;
 import dataaccess.TwitViewRepo;
+import dataaccess.TwitHashtagRepo;
 import dataaccess.UserRepo;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,24 +46,28 @@ public class TwitServlet extends HttpServlet {
         String email = user.getEmail();
 
         if (action == null) {
-            
             if(queryString != null) {
                 System.out.println("search q: " + queryString);
                 String parsedQueryString = queryString.split("q=")[1];
                 System.out.println("search q: " + parsedQueryString);
-                twits = TwitViewRepo.getByHashtagContent(hashtagWrapper(parsedQueryString));
+                twits = TwitViewRepo.getByHashtagContent(parsedQueryString);
                 session.setAttribute("hashtagContent", parsedQueryString);
                 System.out.println("twits size: " + twits.size());
                 url = "/hashtag.jsp";
             }
         } else if (action.equals("twit")) {
+            System.out.println("action equals twit");
             if(content != null && email != null){
                 Twit twit = modifyTwitContent(new Twit(user.getId(), content));
-                ArrayList<Hashtag> newHashtags = findNewHashtags(content);
                 TwitRepo.addRecord(twit);
-                HashtagRepo.insertAll(newHashtags);
-                // avoids o(n) queries
-                TwitHashtagRepo.insertAll(twit, newHashtags);
+                ArrayList<Hashtag> newHashtags = findNewHashtags(content);
+
+                if(!newHashtags.isEmpty()) {
+                    
+                    HashtagRepo.insertAll(newHashtags);
+                    TwitHashtagRepo.insertAll(twit, newHashtags);
+                }
+
             }
             twits = TwitViewRepo.all(user);
         } else if(action.equals("Delete")) {
@@ -79,6 +83,7 @@ public class TwitServlet extends HttpServlet {
 
         ArrayList<Hashtag> hashtagList = HashtagRepo.getTrending();
         if(hashtagList != null) {
+            System.out.println("hashtag list: " + hashtagList.size());
             session.setAttribute("trendingHashtags", hashtagList);
         }
         session.setAttribute("twits", twits);

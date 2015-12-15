@@ -200,10 +200,8 @@ public class MembershipServlet extends HttpServlet {
 
 //        System.out.println("view list size: " + twitViewList.size());
         if(hashtagList != null) {
-            
             session.setAttribute("trendingHashtags", hashtagList);
         }
-
         session.setAttribute("users", users);
     }
     

@@ -33,11 +33,11 @@ public class TwitHashtagRepo {
                 + "ON th.twit_id = t.id "
                 + "INNER JOIN hashtags h "
                 + "ON th.hashtag_id = h.id "
-                + "WHERE h.content=?";
+                + "WHERE h.content LIKE ?";
         try {
             ps = connection.prepareStatement(query);
             System.out.println("query in get all twit by hashtag id: " +query);
-            ps.setString(1, hashtagContent);
+            ps.setString(1, "%" + hashtagContent + "%");
             System.out.println("ps in get all twit by hashtag id: " + ps);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -125,6 +125,8 @@ public class TwitHashtagRepo {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
+        
+        System.out.println("inside of insert all");
 
         String query
                 = "INSERT INTO twit_hashtags (twit_id, hashtag_id) VALUES ";
@@ -137,8 +139,8 @@ public class TwitHashtagRepo {
                 ps.setLong(indexForInsert++, hashtags.get(i).getId());
                 System.out.println("prepared statment: " + ps);
             }
-            
-            System.out.println("prepared statement: " + ps);
+
+            System.out.println("prepared statement in insert all: " + ps);
             return ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("there was an exception! " + e);
