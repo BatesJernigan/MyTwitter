@@ -210,7 +210,7 @@ public class UserRepo {
         ArrayList<User> userList = new ArrayList<>();
         ArrayList<Follow> notFollowingList = FollowRepo.getFollwing(user.getId());
         if(!notFollowingList.isEmpty()) {
-            query = query + " AND " + buildQueryString(query, "id != ?", " AND ", notFollowingList.size());
+            query = query + buildQueryString(query, "id != ?", " AND ", notFollowingList.size());
         }
         System.out.println("not following list size: " + notFollowingList.size());
         try {
@@ -248,10 +248,10 @@ public class UserRepo {
         
         // gets list of people user is following
         ArrayList<Follow> followList = FollowRepo.getFollwing(user.getId());
-        String query = "SELECT * FROM users WHERE id != ? ";
+        String query = "SELECT * FROM users WHERE id = ? ";
         if(!followList.isEmpty()) {
-            query += " OR " + buildQueryString(query, "id = ?", " OR ", followList.size() - 1);
-        }
+            query +=  buildQueryString(query, "id = ?", " OR ", followList.size() - 1);
+        
         System.out.println("follow list size: " +followList.size());
         try {
             ps = connection.prepareStatement(query);
@@ -275,6 +275,7 @@ public class UserRepo {
             DBUtil.closePreparedStatement(ps);
             pool.freeConnection(connection);
         }
+    }
         return null;
     }
     
@@ -294,10 +295,8 @@ public class UserRepo {
      public static String buildQueryString(String intialQuery, String stringToAppend, String connector, int dataSize) {
         String query = "";
         for(int i=0; i<dataSize; i++) {
+            query += connector;
             query = query + stringToAppend;
-            if(i != dataSize - 1) {
-                query += connector;
-            }
         }
         return query;
     }

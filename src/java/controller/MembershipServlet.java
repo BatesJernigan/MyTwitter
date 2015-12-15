@@ -238,6 +238,8 @@ public class MembershipServlet extends HttpServlet {
         if(followingList != null) {
             System.out.println("follwing list is not null: ");
             session.setAttribute("followingList", followingList);
+        }else{
+            session.removeAttribute("followingList");
         }
 
         session.setAttribute("users", users);
