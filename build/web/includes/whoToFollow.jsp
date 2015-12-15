@@ -13,18 +13,19 @@
             <p>${users.fullName} [@${users.nickname}]
             <form>
                 <c:choose>
-                    <c:forEach var = "followed" items="${follows}">
-                        <c:when test="${followed.followed} == ${users.id}">
+                        <c:when test="true">
                            <input type="submit" name="action" value="unfollow">
+                           <input type ="hidden" name="action" value = "unfollow">
                         </c:when>
-                    </c:forEach>
-                           
+                        
                     <c:otherwise>
                         <input type ="submit" name=action" value ="follow">
+                        <input type ="hidden" name="action" value = "follow">
                     </c:otherwise>
                 </c:choose>
                 <input type ="hidden" name="followed" value = "${users.id}">
                 <input type ="hidden" name ="user" value ="${user.id}">
+                
             </form>
             </p>
         </div>

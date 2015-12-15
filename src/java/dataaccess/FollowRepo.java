@@ -56,7 +56,6 @@ public class FollowRepo {
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ArrayList<Follow> followList = new ArrayList<>();
-
         String query = "SELECT * FROM followers WHERE id = ?";
         try {
             ps = connection.prepareStatement(query);

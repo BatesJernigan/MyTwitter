@@ -201,7 +201,6 @@ public class UserRepo {
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ArrayList<User> userList = new ArrayList<>();
-
         String query = "SELECT * FROM users WHERE id != ?";
         try {
             ps = connection.prepareStatement(query);
@@ -210,6 +209,7 @@ public class UserRepo {
             while (rs.next()) {
                 userList.add(buildUserFromResult(rs));
             }
+            System.out.println("we made it here");
             return userList;
         } catch(SQLException e) {
             System.err.println(e);
