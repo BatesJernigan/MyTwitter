@@ -83,10 +83,12 @@ public class MembershipServlet extends HttpServlet {
         
         Cookie[] cookies = request.getCookies();
         Cookie emailCookie = null;
-        for(Cookie cookie : cookies) {
-            if(cookie.getName().equals(EMAIL_COOKIE_NAME)) {
-                System.out.println("cookie name does equal email cookie name");
-                emailCookie = cookie;
+        if(cookies != null) {
+            for(Cookie cookie : cookies) {
+                if(cookie.getName().equals(EMAIL_COOKIE_NAME)) {
+                    System.out.println("cookie name does equal email cookie name");
+                    emailCookie = cookie;
+                }
             }
         }
 
@@ -188,6 +190,7 @@ public class MembershipServlet extends HttpServlet {
         System.out.println("in login post");
         String url = "/login.jsp";
         String password = request.getParameter("password");
+        
         String email = request.getParameter("email");
         String message = null;
         HttpSession session = request.getSession();
@@ -269,6 +272,8 @@ public class MembershipServlet extends HttpServlet {
         if(followingList != null) {
             System.out.println("follwing list is not null: ");
             session.setAttribute("followingList", followingList);
+        }else{
+            session.removeAttribute("followingList");
         }
         ArrayList<TwitView> twitViewList = TwitViewRepo.getByTrending();
         ArrayList<Hashtag> hashtagList = HashtagRepo.getTrending();
@@ -305,6 +310,7 @@ public class MembershipServlet extends HttpServlet {
         String email = request.getParameter("email");
         String nickname = request.getParameter("nickname");
         String password = request.getParameter("password");
+        System.out.println("password from signup " + password);
         String month = request.getParameter("month");
         String day = request.getParameter("day");
         String year = request.getParameter("year");
@@ -345,8 +351,10 @@ public class MembershipServlet extends HttpServlet {
                 !password.isEmpty() && birthdate != null && isUniqueEmail(email)) {
             try {
                 String salt = PasswordUtil.getSalt();
+                System.out.println(salt);
                 String hashedPassword = PasswordUtil.hashPassword(salt + password);
                 User user = new User(fullName, email, hashedPassword, nickname, birthdate, fileName, salt);
+                System.out.println("user from membership serv: " + user);
                 insertResultCode = UserRepo.insert(user);
                 System.out.println("Insert result code");
                 System.out.println(insertResultCode);

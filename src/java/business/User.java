@@ -39,6 +39,7 @@ public class User implements Serializable {
         this.birthdate = birthdate;
         this.lastlogin = lastlogin;
         this.profilePicture = profilePicture;
+        this.passwordSalt = passwordSalt;
     }
     public String getProfilePicture() {
         return profilePicture;

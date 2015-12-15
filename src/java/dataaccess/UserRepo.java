@@ -93,24 +93,15 @@ public class UserRepo {
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         User dbUser = search(email);
+        System.out.println("db user: " + dbUser);
+        
         try {
             String dbHashedPassword = dbUser.getPassword();
             String passwordSalt = dbUser.getPasswordSalt();
+            System.out.println("password salt: " + passwordSalt);
             String inputHashedPassword = PasswordUtil.hashPassword(passwordSalt + password);
             System.out.println("db hashed password: " + dbHashedPassword);
             System.out.println("input hashed password: " + inputHashedPassword);
-//            String query = "SELECT * "
-//                    + "FROM users "
-//                    + "WHERE email = ? AND password = ?";
-//            ps = connection.prepareStatement(query);
-//            ps.setString(1, email);
-//            ps.setString(2, password);
-//
-//            ResultSet rs = ps.executeQuery();
-
-//            if (rs.next()) {
-//                return buildUserFromResult(rs);
-//            }
             if(dbHashedPassword.equals(inputHashedPassword)) {
                 return dbUser;
             }
@@ -248,7 +239,7 @@ public class UserRepo {
         ArrayList<User> userList = new ArrayList<>();
         ArrayList<Follow> notFollowingList = FollowRepo.getFollwing(user.getId());
         if(!notFollowingList.isEmpty()) {
-            query = query + " AND " + buildQueryString(query, "id != ?", " AND ", notFollowingList.size());
+            query = query + buildQueryString(query, "id != ?", " AND ", notFollowingList.size());
         }
         System.out.println("not following list size: " + notFollowingList.size());
         try {
@@ -286,10 +277,10 @@ public class UserRepo {
         
         // gets list of people user is following
         ArrayList<Follow> followList = FollowRepo.getFollwing(user.getId());
-        String query = "SELECT * FROM users WHERE id != ? ";
+        String query = "SELECT * FROM users WHERE id = ? ";
         if(!followList.isEmpty()) {
-            query += " OR " + buildQueryString(query, "id = ?", " OR ", followList.size() - 1);
-        }
+            query +=  buildQueryString(query, "id = ?", " OR ", followList.size() - 1);
+        
         System.out.println("follow list size: " +followList.size());
         try {
             ps = connection.prepareStatement(query);
@@ -313,11 +304,10 @@ public class UserRepo {
             DBUtil.closePreparedStatement(ps);
             pool.freeConnection(connection);
         }
+    }
         return null;
     }
-    
-    
-    
+
     private static User buildUserFromResult(ResultSet rs) throws SQLException {
         return new User(rs.getLong("id"),
             rs.getString("full_name"), 
@@ -328,17 +318,13 @@ public class UserRepo {
             rs.getDate("lastlogin"),
             rs.getString("profile_picture"),
             rs.getString("password_salt"));
-//                    long id, String fullName, String email, String password, String nickname, Date birthdate, String profilePicture, String passwordSalt) {
-
-        
     }
-     public static String buildQueryString(String intialQuery, String stringToAppend, String connector, int dataSize) {
+    
+    public static String buildQueryString(String intialQuery, String stringToAppend, String connector, int dataSize) {
         String query = "";
         for(int i=0; i<dataSize; i++) {
+            query += connector;
             query = query + stringToAppend;
-            if(i != dataSize - 1) {
-                query += connector;
-            }
         }
         return query;
     }
