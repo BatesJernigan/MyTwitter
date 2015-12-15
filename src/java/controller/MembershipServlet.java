@@ -277,7 +277,6 @@ public class MembershipServlet extends HttpServlet {
         if(hashtagList != null) {
             session.setAttribute("trendingHashtags", hashtagList);
         }
-
         session.setAttribute("users", users);
     }
     

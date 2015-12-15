@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 
 /**
@@ -99,6 +100,9 @@ public class TwitViewRepo {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
+
+        System.out.println("hastag content2: " + hashtagContent);
+//        hastag content: <a href="/MyTwitter/twit?q=hello" style="color:blue">hello</a>
         ArrayList<Twit> twitList = TwitHashtagRepo.getAllTwitByHashtagContent(hashtagContent);
         System.out.println("twit list size in get by hashtag content: " +twitList.size());
         ArrayList<TwitView> twitViewList = new ArrayList<>();

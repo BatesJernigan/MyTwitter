@@ -23,19 +23,19 @@ public class TwitRepo {
         String adjusted = "";
 
         for(String wordFromContent: twit.getContent().split(" ")){
-            System.out.println("word from content: " + wordFromContent + " end");
+//            System.out.println("word from content: " + wordFromContent + " end");
             if(wordFromContent.indexOf("#") == 0) {
                 String hashtagContent = wordFromContent.substring(1);
 
-                Hashtag existingHashtag = HashtagRepo.get(hashtagContent);
-                System.out.println("existing hashtag from twit repo: " + existingHashtag);
-                if(existingHashtag == null) {
-                    Hashtag newHashtag = new Hashtag(1, hashtagContent);
-                    HashtagRepo.insert(newHashtag);
-                } else {
-                    HashtagRepo.update(new Hashtag(existingHashtag.getId(),
-                            existingHashtag.getCount()+1, hashtagContent));
-                }
+//                Hashtag existingHashtag = HashtagRepo.get(hashtagContent);
+//                System.out.println("existing hashtag from twit repo: " + existingHashtag);
+//                if(existingHashtag == null) {
+////                    Hashtag newHashtag = new Hashtag(1, hashtagContent);
+////                    HashtagRepo.insert(newHashtag);
+//                } else {
+//                    HashtagRepo.update(new Hashtag(existingHashtag.getId(),
+//                            existingHashtag.getCount()+1, hashtagContent));
+//                }
                 
                 wordFromContent = "<a href=\"/MyTwitter/twit?q=" + hashtagContent +
                     "\" style=\"color:blue\">" + wordFromContent + "</a>";

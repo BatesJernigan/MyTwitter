@@ -56,7 +56,7 @@ public class HashtagRepo {
         PreparedStatement ps = null;
         ArrayList<Hashtag> hashtagList = new ArrayList<>();
 
-        String query = "SELECT * FROM hashtags ORDER BY count LIMIT 10";
+        String query = "SELECT * FROM hashtags ORDER BY count DESC LIMIT 10";
 
         try {
             ps = connection.prepareStatement(query);
@@ -77,6 +77,7 @@ public class HashtagRepo {
     }
     
     public static long insertAll(ArrayList<Hashtag> hashtags) {
+        System.out.println("in hashtag insert all ");
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
@@ -89,7 +90,7 @@ public class HashtagRepo {
             for(int i =0; i<hashtags.size(); i++) {
                 if(hashtags.get(i).getCount() == 1) {
                     System.out.println("hashtags size: "+hashtags.size() +"; i: " + i);
-                    System.out.println("current hashtag in insert method " + hashtags.get(i));
+                    System.out.println("current hashtag in insert all method " + hashtags.get(i));
 
                     updatedHashtags.get(i).setContent("<a href=\"/MyTwitter/twit?q="
                             + hashtags.get(i).getContent() +
@@ -123,16 +124,17 @@ public class HashtagRepo {
     }
     
     public static Hashtag get(String content) {
+        
         System.out.println("content in get: " + content);
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
 
-        String query = "SELECT * FROM hashtags WHERE content=?";
+        String query = "select * from hashtags WHERE content like ? ";
 
         try {
             ps = connection.prepareStatement(query);
-            ps.setString(1, content);
+            ps.setString(1, "%" + content + "%");
             System.out.println("prepared statement: " + ps);
             ResultSet rs = ps.executeQuery();
             System.out.println("result set" + rs);
