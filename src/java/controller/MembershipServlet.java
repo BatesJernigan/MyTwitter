@@ -8,8 +8,10 @@ package controller;
 import business.Twit;
 import business.TwitView;
 import business.User;
+import business.Follow;
 import dataaccess.TwitRepo;
 import dataaccess.TwitViewRepo;
+import dataaccess.FollowRepo;
 import dataaccess.UserRepo;
 
 import javax.mail.MessagingException;
@@ -81,6 +83,8 @@ public class MembershipServlet extends HttpServlet {
             logoutPost(request, response);
         } else if(action.equals("password")){
             emailPost(request, response);
+        } else if(action.equals("follow")){
+            followPost(request, response); 
         }
     }
     
@@ -106,6 +110,13 @@ public class MembershipServlet extends HttpServlet {
         System.out.println("email is not unique");
         System.out.println(user.toString());
         return false;
+    }
+    
+    // handles following and unfollowing
+    public void followPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        
     }
     
     // checks if user used the correct email
@@ -159,10 +170,15 @@ public class MembershipServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("user");
+        
+        //sets follower information for who to follow section
+        ArrayList<Follow> followlist = FollowRepo.all(currentUser.getId());
+        session.setAttribute("follows", followlist);
+        
         // sets attribute for the list of twits
         ArrayList<TwitView> twitList = TwitViewRepo.all(currentUser);
         session.setAttribute("twits", twitList);
-
+        
         // sets atributes for user to view all other users
         ArrayList<User> users = UserRepo.getWhoToFollow(currentUser);
 

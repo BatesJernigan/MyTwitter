@@ -90,6 +90,19 @@ from (`mytwitter`.`twits`
 	)
 );
 
+-- -----------------------------------------------------
+-- View `mytwitter`.`v_twits`
+-- -----------------------------------------------------
+
+DROP TABLE IF EXISTS `mytwitter`.`followers` ;
+CREATE TABLE IF NOT EXISTS `mytwitter`.`followers` (
+  `id` INT(11) NOT NULL,
+  `followed` INT(11) NOT NULL,
+  `date` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
