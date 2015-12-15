@@ -100,7 +100,6 @@ public class MembershipServlet extends HttpServlet {
 
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
-
                 sessionAttributes(request, response);            
                 response.sendRedirect("home.jsp");
             } else {

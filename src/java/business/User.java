@@ -30,7 +30,7 @@ public class User implements Serializable {
         this.passwordSalt = passwordSalt;
     }
 
-    public User(long id, String fullName, String email, String password, String nickname, Date birthdate,Date lastlogin, String profilePicture, String passwordSalt) {
+    public User(long id, String fullName, String email, String password, String nickname, Date birthdate, Date lastlogin, String profilePicture, String passwordSalt) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
