@@ -199,6 +199,10 @@ public class MembershipServlet extends HttpServlet {
         ArrayList<Follow> followlist = FollowRepo.all(currentUser.getId());
         session.setAttribute("follows", followlist);
         
+        // updates last login time
+        session.setAttribute("lastlogin", currentUser.getLastLogin());
+        UserRepo.update(currentUser);
+        
         // sets attribute for the list of twits
         ArrayList<TwitView> twitList = TwitViewRepo.all(currentUser, followlist);
         session.setAttribute("twits", twitList);

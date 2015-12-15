@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -149,17 +150,20 @@ public class UserRepo {
                 + "full_name = ?, "
                 + "password = ?, "
                 + "nickname = ?, "
-                + "birthdate = ? "
+                + "birthdate = ?, "
+                + "lastlogin = ? "
                 + "WHERE email = ?";
         
         try {
+            System.out.println("update user is being called");
             ps = connection.prepareStatement(query);
             ps.setString(1, updatedUser.getFullName());
             ps.setString(2, updatedUser.getPassword());
             ps.setString(3, updatedUser.getNickname());
             ps.setDate(4, new java.sql.Date(updatedUser.getBirthdate().getTime()));
-            ps.setString(5, updatedUser.getEmail());
-
+            Date date = new Date();
+            ps.setDate(5, new java.sql.Date(date.getTime()));
+            ps.setString(6, updatedUser.getEmail());
             System.out.println("prepared statement: " + ps.toString());
             return ps.executeUpdate();
         } catch (SQLException e) {
@@ -227,6 +231,7 @@ public class UserRepo {
             rs.getString("password"),
             rs.getString("nickname"),
             rs.getDate("birthdate"),
+            rs.getDate("lastlogin"),
             rs.getString("profile_picture")
         );
     }

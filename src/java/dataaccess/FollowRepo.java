@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -74,7 +75,30 @@ public class FollowRepo {
         }
         return null;
     }
-    
+     public static ArrayList<Follow> newfollows(Long id, Date date) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ArrayList<Follow> followList = new ArrayList<>();
+        String query = "SELECT * FROM followers WHERE followed = ? AND date >= ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setLong(1, id);
+            //ps.setDate(2, date);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Follow follow = new Follow(rs.getLong("id"), rs.getLong("followed"), rs.getDate("date"));
+                followList.add(follow);
+            }
+            return followList;
+        } catch(SQLException e) {
+            System.err.println(e);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+        return null;
+    }
     public static int delete(String user, String followed){
 
         ConnectionPool pool = ConnectionPool.getInstance();

@@ -59,6 +59,45 @@ public class TwitViewRepo {
         return null;
     }
     
+    public static ArrayList<TwitView> updates(User currentUser, ArrayList<Follow> followlist) {
+        System.out.println("In twit view repo all");
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ArrayList<TwitView> twitList = new ArrayList<>();
+        String follows = "";
+        for(int i = 0; i < followlist.size(); i++ ){
+            follows = follows + "OR user_id = " + followlist.get(i).getFollowed() + " ";
+            
+        }
+        String query = "SELECT * FROM v_twits "
+                + "WHERE user_id = ? OR mentioned_user_id = ? "
+                + follows
+                + "ORDER BY posted_date DESC";
+            
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setLong(1, currentUser.getId());
+            ps.setLong(2, currentUser.getId());
+            System.out.println(ps);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                TwitView currentTwit = buildTwitViewFromResult(rs);
+                
+                twitList.add(currentTwit);
+            }
+
+            return twitList;
+        } catch(SQLException e) {
+            System.err.println(e);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+        return null;
+    }
+    
+    
     private static TwitView buildTwitViewFromResult(ResultSet rs) throws SQLException {
         return new TwitView(rs.getLong("user_id"),
             rs.getLong("twit_id"),

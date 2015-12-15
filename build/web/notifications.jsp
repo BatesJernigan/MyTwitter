@@ -12,21 +12,22 @@
     <c:import url="/includes/whoToFollow.jsp" />
     
     
-    <c:forEach var = "twit" items="${twits}">
-        <form action="twit" method="post" class="twits">
-            <input type="hidden" name="twitId" value="${twit.twitId}">
-            <input type="hidden" name="userId" value="${twit.userId}">
-            <p>[@${twit.nickname}]: ${twit.postedDate} 
-                <c:if test = "${user.id == twit.userId}">
-                    <input type="submit" name="action" value="Delete">
-                </c:if>
-            </p>
-            <p>${twit.content}</p>
-            
-
         
-        </form>
-        <p/>
+        
+    <c:forEach var = "twit" items="${twits}">
+        <c:if test ="${twit.postedDate}.after(${lastlogin})">
+            <form action="twit" method="post" class="twits">
+                <input type="hidden" name="twitId" value="${twit.twitId}">
+                <input type="hidden" name="userId" value="${twit.userId}">
+                <p>[@${twit.nickname}]: ${twit.postedDate} 
+                    <c:if test = "${user.id == twit.userId}">
+                        <input type="submit" name="action" value="Delete">
+                    </c:if>
+                </p>
+                <p>${twit.content}</p>
+            </form>
+            <p/>
+        </c:if>
     </c:forEach>
     <c:import url="/includes/footer.jsp" />
 </body>
