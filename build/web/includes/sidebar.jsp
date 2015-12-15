@@ -17,11 +17,8 @@
         <p> </p>
     <div id="trending">  
         <h1>Trending</h1>
-        <c:forEach var = "twit" items="${trendingTwits}">
-            <div class="smallTwit">
-                <p>[@${twit.nickname}]: ${twit.postedDate}</p>
-                <p>${twit.content}</p>
-            </div>
+        <c:forEach var = "hashtag" items="${trendingHashtags}">
+            <p>#${hashtag.content}</p>
         </c:forEach>
     </div>
 </div>

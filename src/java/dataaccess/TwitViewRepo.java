@@ -94,32 +94,34 @@ public class TwitViewRepo {
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ArrayList<Twit> twitList = TwitHashtagRepo.getTrending();
-        System.out.println("twit list size in get by hashtag content: " +twitList.size());
-        ArrayList<TwitView> twitViewList = new ArrayList<>();
+        if(twitList != null) {
+            System.out.println("twit list size in get by hashtag content: " +twitList.size());
+            ArrayList<TwitView> twitViewList = new ArrayList<>();
 
-        String query = "SELECT * FROM v_twits WHERE ";
-        String finalQuery = buildQueryString(query, "twit_id = ? ", " OR ", twitList.size());
-        try {
-            System.out.println("final query: " + finalQuery);
-            ps = connection.prepareStatement(finalQuery);
-            
-            int indexForInsert = 1;
-            for(int i =0; i<twitList.size(); i++) {
-                ps.setLong(indexForInsert++, twitList.get(i).getId());
+            String query = "SELECT * FROM v_twits WHERE ";
+            String finalQuery = buildQueryString(query, "twit_id = ? ", " OR ", twitList.size());
+            try {
+                System.out.println("final query: " + finalQuery);
+                ps = connection.prepareStatement(finalQuery);
+
+                int indexForInsert = 1;
+                for(int i =0; i<twitList.size(); i++) {
+                    ps.setLong(indexForInsert++, twitList.get(i).getId());
+                }
+
+                System.out.println("prepared statement: " + ps);
+
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    twitViewList.add(buildTwitViewFromResult(rs));
+                }
+                return twitViewList;
+            } catch(SQLException e) {
+                System.err.println(e);
+            } finally {
+                DBUtil.closePreparedStatement(ps);
+                pool.freeConnection(connection);
             }
-
-            System.out.println("prepared statement: " + ps);
-
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                twitViewList.add(buildTwitViewFromResult(rs));
-            }
-            return twitViewList;
-        } catch(SQLException e) {
-            System.err.println(e);
-        } finally {
-            DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
         }
         return null;
     }
