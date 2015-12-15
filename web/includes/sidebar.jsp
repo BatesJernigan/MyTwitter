@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <p></p>
 <div id ="nav">
     <div id="user">
@@ -16,6 +17,11 @@
         <p> </p>
     <div id="trending">  
         <h1>Trending</h1>
-        <p>some interesting information will eventually go here.</p>
+        <c:forEach var = "twit" items="${trendingTwits}">
+            <div class="smallTwit">
+                <p>[@${twit.nickname}]: ${twit.postedDate}</p>
+                <p>${twit.content}</p>
+            </div>
+        </c:forEach>
     </div>
 </div>

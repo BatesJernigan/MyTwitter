@@ -91,6 +91,19 @@ br {
     background-color: white;
 }
 
+.smallTwit{
+    line-height:30px;
+    background-color:#FFFFF;
+    height:100px;
+    width:auto;
+    padding:5px;
+    border-radius: 1em;
+    left: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+}
+
 textarea {
     margin-left: auto;
     margin-right: auto;

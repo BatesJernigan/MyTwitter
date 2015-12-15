@@ -254,8 +254,7 @@ public class MembershipServlet extends HttpServlet {
         //   System.out.println("not follwing: " + notFollowingList.get(i));
         //}
         
-        ArrayList<User> users = UserRepo.all();
-        users.remove(currentUser);
+        ArrayList<User> users = UserRepo.getWhoToFollow(currentUser);
         if(notFollowingList != null) {
             System.out.println("not follwing list is not null: ");
             session.setAttribute("notFollowingList", notFollowingList);
@@ -264,7 +263,10 @@ public class MembershipServlet extends HttpServlet {
             System.out.println("follwing list is not null: ");
             session.setAttribute("followingList", followingList);
         }
+        ArrayList<TwitView> twitViewList = TwitViewRepo.getByTrending();
 
+        System.out.println("view list size: " + twitViewList.size());
+        session.setAttribute("trendingTwits", twitViewList);
         session.setAttribute("users", users);
     }
     

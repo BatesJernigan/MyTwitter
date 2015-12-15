@@ -47,6 +47,32 @@ public class HashtagRepo {
         }
     }
     
+    public static ArrayList<Hashtag> getTrending() {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ArrayList<Hashtag> hashtagList = new ArrayList<>();
+
+        String query = "SELECT * FROM hashtags ORDER BY count LIMIT 10";
+
+        try {
+            ps = connection.prepareStatement(query);
+            System.out.println("prepared statement: " + ps);
+            ResultSet rs = ps.executeQuery();
+            System.out.println("result set" + rs);
+            while(rs.next()) {
+                hashtagList.add(buildHashtagFromResult(rs));
+            }
+            return hashtagList;
+        } catch (SQLException ex) {
+            Logger.getLogger(HashtagRepo.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+        return null;
+    }
+    
     public static long insertAll(ArrayList<Hashtag> hashtags) {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
