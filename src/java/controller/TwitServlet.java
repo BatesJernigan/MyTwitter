@@ -14,6 +14,8 @@ import dataaccess.HashtagRepo;
 import dataaccess.TwitViewRepo;
 import dataaccess.TwitHashtagRepo;
 import dataaccess.UserRepo;
+import business.Follow;
+import dataaccess.FollowRepo;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
@@ -69,7 +71,6 @@ public class TwitServlet extends HttpServlet {
                 }
 
             }
-            twits = TwitViewRepo.all(user);
         } else if(action.equals("Delete")) {
             System.out.println("action equals DELETE");
             long twitId = Long.parseLong(request.getParameter("twitId"));
@@ -78,15 +79,19 @@ public class TwitServlet extends HttpServlet {
             if(authorId == user.getId()) {
                 TwitRepo.delete(twitId);
             }
-            twits = TwitViewRepo.all(user);
         }
 
+        //ArrayList<Follow> notFollowingList = FollowRepo.getNotFollowing(user.getId());
+        ArrayList<Follow> followingList = FollowRepo.getFollwing(user.getId());
+        twits = TwitViewRepo.all(user, followingList);
         ArrayList<Hashtag> hashtagList = HashtagRepo.getTrending();
         if(hashtagList != null) {
             System.out.println("hashtag list: " + hashtagList.size());
             session.setAttribute("trendingHashtags", hashtagList);
         }
         session.setAttribute("twits", twits);
+        session.setAttribute(email, url);
+
         getServletContext()
             .getRequestDispatcher(url)
             .forward(request, response);

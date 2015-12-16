@@ -20,7 +20,7 @@
         <div id="header">
             <ul>
                 <li><a href="home.jsp">Home</a></li>
-                <li><a href="#">Notifications</a></li>
+                <li><a href="notifications.jsp">Notifications</a></li>
                 <li><a href="signup.jsp">Profile</a></li>
                 <form action="membership" method="post">
                     <input type="hidden" name="action" value="logout">

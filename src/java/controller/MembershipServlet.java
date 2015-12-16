@@ -8,9 +8,12 @@ package controller;
 import business.Hashtag;
 import business.TwitView;
 import business.User;
+import business.Follow;
+import dataaccess.TwitRepo;
 import dataaccess.HashtagRepo;
 import dataaccess.PasswordUtil;
 import dataaccess.TwitViewRepo;
+import dataaccess.FollowRepo;
 import dataaccess.UserRepo;
 
 import javax.mail.MessagingException;
@@ -80,10 +83,12 @@ public class MembershipServlet extends HttpServlet {
         
         Cookie[] cookies = request.getCookies();
         Cookie emailCookie = null;
-        for(Cookie cookie : cookies) {
-            if(cookie.getName().equals(EMAIL_COOKIE_NAME)) {
-                System.out.println("cookie name does equal email cookie name");
-                emailCookie = cookie;
+        if(cookies != null) {
+            for(Cookie cookie : cookies) {
+                if(cookie.getName().equals(EMAIL_COOKIE_NAME)) {
+                    System.out.println("cookie name does equal email cookie name");
+                    emailCookie = cookie;
+                }
             }
         }
 
@@ -95,7 +100,6 @@ public class MembershipServlet extends HttpServlet {
 
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
-
                 sessionAttributes(request, response);            
                 response.sendRedirect("home.jsp");
             } else {
@@ -111,6 +115,10 @@ public class MembershipServlet extends HttpServlet {
             logoutPost(request, response);
         } else if(action.equals("password")){
             emailPost(request, response);
+        } else if(action.equals("follow")){
+            followPost(request, response); 
+        } else if(action.equals("unfollow")){
+            unfollowPost(request, response);    
         }
     }
     
@@ -138,6 +146,36 @@ public class MembershipServlet extends HttpServlet {
         return false;
     }
     
+    // handles following and unfollowing
+    public void followPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        Long followed = Long.parseLong(request.getParameter("followed"));
+        Long user = Long.parseLong(request.getParameter("user"));
+        System.out.println("user " + user + " follow " + followed);
+        Follow follow = new Follow(user, followed);
+        FollowRepo.insert(follow);
+        sessionAttributes(request, response);
+        String url = "/home.jsp";
+        
+        getServletContext()
+            .getRequestDispatcher(url)
+            .forward(request, response); 
+        
+    }
+    public void unfollowPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String followed = request.getParameter("followed");
+        String user = request.getParameter("user");
+        FollowRepo.delete(user, followed);
+        sessionAttributes(request, response);
+        String url = "/home.jsp";
+        
+        getServletContext()
+            .getRequestDispatcher(url)
+            .forward(request, response);
+    }
+    
     // checks if user used the correct email
     public static boolean userIsAuthenticated(String email, String password) {
         return UserRepo.authenticate(email, password) != null;
@@ -151,6 +189,7 @@ public class MembershipServlet extends HttpServlet {
         System.out.println("in login post");
         String url = "/login.jsp";
         String password = request.getParameter("password");
+        
         String email = request.getParameter("email");
         String message = null;
         HttpSession session = request.getSession();
@@ -190,12 +229,52 @@ public class MembershipServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("user");
+        
+        //sets follower information for who to follow section
+        ArrayList<Follow> followList = new ArrayList<>();
+        followList.addAll(FollowRepo.getFollwing(currentUser.getId()));
+        session.setAttribute("follows", followList);
+        
+        // updates last login time
+        session.setAttribute("lastlogin", currentUser.getLastLogin());
+        UserRepo.update(currentUser);
+        
         // sets attribute for the list of twits
-        ArrayList<TwitView> twitList = TwitViewRepo.all(currentUser);
+        ArrayList<TwitView> twitList = TwitViewRepo.all(currentUser, followList);
         session.setAttribute("twits", twitList);
-
-        // sets atributes for user to view all other users
+        
+        ArrayList<User> followingList = UserRepo.getWhoNotToFollow(currentUser);
+        /*
+        for(int i=0; i<followingList.size(); i++){
+            if(currentUser.getEmail().equals(followingList.get(i).getEmail())) {
+                followingList.remove(i);
+            }
+        }
+        */
+        //followingList.remove(currentUser);
+        //System.out.println("follwing size: " + followingList.size());
+        //for(int i =0; i<followingList.size(); i++) {
+        //    System.out.println("follwing: " + followingList.get(i));
+        //}
+        ArrayList<User> notFollowingList = UserRepo.getWhoToFollow(currentUser);
+        //System.out.println("not follwing size: " + notFollowingList.size());
+        
+        //for(int i =0; i<notFollowingList.size(); i++) {
+        //   System.out.println("not follwing: " + notFollowingList.get(i));
+        //}
+        
         ArrayList<User> users = UserRepo.getWhoToFollow(currentUser);
+        if(notFollowingList != null) {
+            System.out.println("not follwing list is not null: ");
+            session.setAttribute("notFollowingList", notFollowingList);
+        }
+        if(followingList != null) {
+            System.out.println("follwing list is not null: ");
+            session.setAttribute("followingList", followingList);
+        }else{
+            session.removeAttribute("followingList");
+        }
+        ArrayList<TwitView> twitViewList = TwitViewRepo.getByTrending();
         ArrayList<Hashtag> hashtagList = HashtagRepo.getTrending();
 
 //        System.out.println("view list size: " + twitViewList.size());
@@ -230,6 +309,7 @@ public class MembershipServlet extends HttpServlet {
         String email = request.getParameter("email");
         String nickname = request.getParameter("nickname");
         String password = request.getParameter("password");
+        System.out.println("password from signup " + password);
         String month = request.getParameter("month");
         String day = request.getParameter("day");
         String year = request.getParameter("year");
@@ -270,8 +350,10 @@ public class MembershipServlet extends HttpServlet {
                 !password.isEmpty() && birthdate != null && isUniqueEmail(email)) {
             try {
                 String salt = PasswordUtil.getSalt();
+                System.out.println(salt);
                 String hashedPassword = PasswordUtil.hashPassword(salt + password);
                 User user = new User(fullName, email, hashedPassword, nickname, birthdate, fileName, salt);
+                System.out.println("user from membership serv: " + user);
                 insertResultCode = UserRepo.insert(user);
                 System.out.println("Insert result code");
                 System.out.println(insertResultCode);

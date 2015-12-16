@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `mytwitter`.`users` (
   `email` VARCHAR(45) NOT NULL,
   `birthdate` VARCHAR(45) NOT NULL,
   `nickname` VARCHAR(45) NOT NULL,
+  `lastlogin` VARCHAR(45) NULL DEFAULT NULL,
   `password` VARCHAR(200) NOT NULL,
   `password_salt` VARCHAR(200) NOT NULL,
   `profile_picture` VARCHAR(200) NULL DEFAULT NULL,
@@ -134,6 +135,17 @@ from (`mytwitter`.`twits`
 		(`mytwitter`.`twits`.`user_id` = `mytwitter`.`users`.`id`)
 	)
 );
+
+-- -----------------------------------------------------
+-- View `mytwitter`.`v_twits`
+-- -----------------------------------------------------
+
+DROP TABLE IF EXISTS `mytwitter`.`followers` ;
+CREATE TABLE IF NOT EXISTS `mytwitter`.`followers` (
+  `id` INT(11) NOT NULL,
+  `followed` INT(11) NOT NULL,
+  `date` VARCHAR(45) NOT NULL);
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

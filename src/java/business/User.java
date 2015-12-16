@@ -14,8 +14,8 @@ import java.util.Random;
  */
 public class User implements Serializable {
     private long id;
+    private Date birthdate, lastlogin;
     private String fullName, email, password, nickname, profilePicture, passwordSalt;
-    private Date birthdate;
 
     public User() {}
 
@@ -29,18 +29,18 @@ public class User implements Serializable {
         this.profilePicture = profilePicture;
         this.passwordSalt = passwordSalt;
     }
-    
-    public User(long id, String fullName, String email, String password, String nickname, Date birthdate, String profilePicture, String passwordSalt) {
+
+    public User(long id, String fullName, String email, String password, String nickname, Date birthdate, Date lastlogin, String profilePicture, String passwordSalt) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.birthdate = birthdate;
+        this.lastlogin = lastlogin;
         this.profilePicture = profilePicture;
         this.passwordSalt = passwordSalt;
     }
-
     public String getProfilePicture() {
         return profilePicture;
     }
@@ -95,6 +95,10 @@ public class User implements Serializable {
 
     public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
+    }
+
+    public Date getLastLogin(){
+        return lastlogin;
     }
 
     public String getPasswordSalt() {

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package dataaccess;
+import business.Follow;
 import business.User;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
@@ -13,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -91,24 +93,15 @@ public class UserRepo {
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         User dbUser = search(email);
+        System.out.println("db user: " + dbUser);
+        
         try {
             String dbHashedPassword = dbUser.getPassword();
             String passwordSalt = dbUser.getPasswordSalt();
+            System.out.println("password salt: " + passwordSalt);
             String inputHashedPassword = PasswordUtil.hashPassword(passwordSalt + password);
             System.out.println("db hashed password: " + dbHashedPassword);
             System.out.println("input hashed password: " + inputHashedPassword);
-//            String query = "SELECT * "
-//                    + "FROM users "
-//                    + "WHERE email = ? AND password = ?";
-//            ps = connection.prepareStatement(query);
-//            ps.setString(1, email);
-//            ps.setString(2, password);
-//
-//            ResultSet rs = ps.executeQuery();
-
-//            if (rs.next()) {
-//                return buildUserFromResult(rs);
-//            }
             if(dbHashedPassword.equals(inputHashedPassword)) {
                 return dbUser;
             }
@@ -187,17 +180,20 @@ public class UserRepo {
                 + "full_name = ?, "
                 + "password = ?, "
                 + "nickname = ?, "
-                + "birthdate = ? "
+                + "birthdate = ?, "
+                + "lastlogin = ? "
                 + "WHERE email = ?";
         
         try {
+            System.out.println("update user is being called");
             ps = connection.prepareStatement(query);
             ps.setString(1, updatedUser.getFullName());
             ps.setString(2, updatedUser.getPassword());
             ps.setString(3, updatedUser.getNickname());
             ps.setDate(4, new java.sql.Date(updatedUser.getBirthdate().getTime()));
-            ps.setString(5, updatedUser.getEmail());
-
+            Date date = new Date();
+            ps.setDate(5, new java.sql.Date(date.getTime()));
+            ps.setString(6, updatedUser.getEmail());
             System.out.println("prepared statement: " + ps.toString());
             return ps.executeUpdate();
         } catch (SQLException e) {
@@ -234,16 +230,29 @@ public class UserRepo {
         return null;
     }
     
+    // display users you are not following
     public static ArrayList<User> getWhoToFollow(User user) {
+        String query = "SELECT * FROM users WHERE id != ? ";
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ArrayList<User> userList = new ArrayList<>();
-
-        String query = "SELECT * FROM users WHERE id != ?";
+        ArrayList<Follow> notFollowingList = FollowRepo.getFollwing(user.getId());
+        if(!notFollowingList.isEmpty()) {
+            query = query + buildQueryString(query, "id != ?", " AND ", notFollowingList.size());
+        }
+        System.out.println("not following list size: " + notFollowingList.size());
         try {
             ps = connection.prepareStatement(query);
             ps.setLong(1, user.getId());
+
+            int indexForInsert = 2;
+            for(int i =0; i<notFollowingList.size(); i++) {
+                ps.setLong(indexForInsert++, notFollowingList.get(i).getFollowed());
+            }
+
+            System.out.println("ps in get who to follow: " +ps);
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 userList.add(buildUserFromResult(rs));
@@ -258,6 +267,47 @@ public class UserRepo {
         return null;
     }
     
+    
+    // display users you are following
+    public static ArrayList<User> getWhoNotToFollow(User user) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ArrayList<User> userList = new ArrayList<>();
+        
+        // gets list of people user is following
+        ArrayList<Follow> followList = FollowRepo.getFollwing(user.getId());
+        String query = "SELECT * FROM users WHERE id = ? ";
+        if(!followList.isEmpty()) {
+            query +=  buildQueryString(query, "id = ?", " OR ", followList.size() - 1);
+        
+        System.out.println("follow list size: " +followList.size());
+        try {
+            ps = connection.prepareStatement(query);
+            //ps.setLong(1, user.getId());
+            int indexForInsert = 1;
+            for(int i =0; i<followList.size(); i++) {
+                ps.setLong(indexForInsert++, followList.get(i).getFollowed());
+            }
+
+            System.out.println("ps in get who not to follow: " +ps);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                userList.add(buildUserFromResult(rs));
+            }
+            System.out.println("we made it here");
+            return userList;
+        } catch(SQLException e) {
+            System.err.println(e);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+    }
+        return null;
+    }
+
     private static User buildUserFromResult(ResultSet rs) throws SQLException {
         return new User(rs.getLong("id"),
             rs.getString("full_name"), 
@@ -265,8 +315,17 @@ public class UserRepo {
             rs.getString("password"),
             rs.getString("nickname"),
             rs.getDate("birthdate"),
+            rs.getDate("lastlogin"),
             rs.getString("profile_picture"),
-            rs.getString("password_salt")
-        );
+            rs.getString("password_salt"));
+    }
+    
+    public static String buildQueryString(String intialQuery, String stringToAppend, String connector, int dataSize) {
+        String query = "";
+        for(int i=0; i<dataSize; i++) {
+            query += connector;
+            query = query + stringToAppend;
+        }
+        return query;
     }
 }
