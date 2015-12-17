@@ -376,6 +376,7 @@ public class MembershipServlet extends HttpServlet {
                     System.out.println("user attribute in signup: " + user.toString());
                     session.setAttribute("user", user);
                     url = "/home.jsp";
+                    sessionAttributes(request, response);
                 } else {
                     message = "Something went wrong, please try to sign up with valid info";
                     url = "/signup.jsp";
@@ -389,8 +390,6 @@ public class MembershipServlet extends HttpServlet {
                 url = "/signup.jsp";
             }
         }
-        
-        sessionAttributes(request, response);
         request.setAttribute("message", message);
         
         System.out.println("Sending to: " + url);

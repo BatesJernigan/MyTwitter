@@ -5,6 +5,9 @@
  */
 package business;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
@@ -21,6 +24,7 @@ public class User implements Serializable {
 
     public User(String fullName, String email, String password, String nickname, Date birthdate, String profilePicture, String passwordSalt) {
         this.id = new Random().nextInt(1000000000);
+        this.lastlogin = new Date();
         this.fullName = fullName;
         this.email = email;
         this.password = password;
@@ -113,5 +117,4 @@ public class User implements Serializable {
     public String toString() {
         return "User{" + "id=" + id + ", fullName=" + fullName + ", email=" + email + ", password=" + password + ", nickname=" + nickname + ", profilePicture=" + profilePicture + ", passwordSalt=" + passwordSalt + ", birthdate=" + birthdate + '}';
     }
-    
 }

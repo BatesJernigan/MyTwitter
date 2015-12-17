@@ -22,7 +22,7 @@
             <label class="pad_top">Email:</label>
             <input type="email" name="email" value="${user.email}"><br>
             <label class="pad_top">Password:</label>
-            <input type="password" name="password" value="${user.password}"><br>
+            <input type="password" name="password"><br>
             <input type="submit" value="Log in" class="margin_left">
             <a href='./forgotpassword.jsp'>Forgot password?</a>
 
