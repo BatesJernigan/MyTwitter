@@ -226,15 +226,25 @@ public class MembershipServlet extends HttpServlet {
     // sets attributes to the session that are needed for the pages to work
     public void sessionAttributes(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("user");
         
         //sets follower information for who to follow section
         ArrayList<Follow> followList = new ArrayList<>();
-        followList.addAll(FollowRepo.getFollwing(currentUser.getId()));
-        session.setAttribute("follows", followList);
         
+        followList = FollowRepo.getFollwing(currentUser.getId());
+        if (followList != null){
+            session.setAttribute("follows", followList);
+        }else{
+            session.removeAttribute("follows");
+        }
+        ArrayList<Follow> newfollowstemp = FollowRepo.newfollows(currentUser.getId(), currentUser.getLastLogin());
+        ArrayList<User> newfollows = new ArrayList<>();
+        for( int i = 0; i < newfollowstemp.size(); i++){
+            newfollows.add(UserRepo.some(newfollowstemp.get(i).getID()));
+        }
+        
+        session.setAttribute("newfollows", newfollows);
         // updates last login time
         session.setAttribute("lastlogin", currentUser.getLastLogin());
         UserRepo.update(currentUser);

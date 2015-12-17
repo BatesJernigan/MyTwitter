@@ -10,10 +10,17 @@
     <c:import url="/includes/header.jsp" />
     <c:import url="/includes/sidebar.jsp" />
     <c:import url="/includes/whoToFollow.jsp" />
-     
+    
+    <c:forEach var = "newfollows" items = "${newfollows}">
+        <p>[@${newfollows.getNickname()}] has followed you
+        
+        </p>
+    </c:forEach>
+    
     <p> </p>
     <c:forEach var = "twit" items="${twits}">
-        <c:if test ="${twit.postedDate}.after(${lastlogin})">
+        <p></p>
+        <c:if test ="!${twit.postedDate}.after(${lastlogin})">
             <form action="twit" method="post" class="twits">
                 <input type="hidden" name="twitId" value="${twit.twitId}">
                 <input type="hidden" name="userId" value="${twit.userId}">

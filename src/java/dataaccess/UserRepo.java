@@ -192,7 +192,7 @@ public class UserRepo {
             ps.setString(3, updatedUser.getNickname());
             ps.setDate(4, new java.sql.Date(updatedUser.getBirthdate().getTime()));
             Date date = new Date();
-            ps.setDate(5, new java.sql.Date(date.getTime()));
+            ps.setTimestamp(5, new Timestamp (date.getTime()));
             ps.setString(6, updatedUser.getEmail());
             System.out.println("prepared statement: " + ps.toString());
             return ps.executeUpdate();
@@ -227,6 +227,34 @@ public class UserRepo {
             DBUtil.closePreparedStatement(ps);
             pool.freeConnection(connection);
         }
+        return null;
+    }
+    public static User some(Long id) {
+        ResultSet rs;
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        
+        String query = "SELECT * FROM users WHERE id = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setLong(1, id);
+
+            System.out.println("prepared statement: " + ps.toString());
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                System.out.println("rs has next ");
+                return buildUserFromResult(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+        System.out.println("returning null");
         return null;
     }
     

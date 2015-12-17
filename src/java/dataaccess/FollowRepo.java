@@ -76,31 +76,7 @@ public class FollowRepo {
         }
         return null;
     }
-    /*
-    public static ArrayList<Follow> getNotFollowing(long id) {
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
-        PreparedStatement ps = null;
-        ArrayList<Follow> followList = new ArrayList<>();
-        String query = "SELECT * FROM followers WHERE id != ?";
-        try {
-            ps = connection.prepareStatement(query);
-            ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Follow follow = new Follow(rs.getLong("id"), rs.getLong("followed"), rs.getDate("date"));
-                followList.add(follow);
-            }
-            return followList;
-        } catch(SQLException e) {
-            System.err.println(e);
-        } finally {
-            DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
-        }
-        return null;
-    }
-    */
+    
     public static ArrayList<Follow> all(Long id) {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
@@ -133,7 +109,7 @@ public class FollowRepo {
         try {
             ps = connection.prepareStatement(query);
             ps.setLong(1, id);
-            //ps.setDate(2, date);
+            ps.setTimestamp(2, new Timestamp(date.getTime()));
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Follow follow = new Follow(rs.getLong("id"), rs.getLong("followed"), rs.getDate("date"));

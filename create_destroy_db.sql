@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `mytwitter`.`users` (
   `email` VARCHAR(45) NOT NULL,
   `birthdate` VARCHAR(45) NOT NULL,
   `nickname` VARCHAR(45) NOT NULL,
-  `lastlogin` VARCHAR(45) NULL DEFAULT NULL,
+  `lastlogin` DATETIME NULL DEFAULT NULL,
   `password` VARCHAR(200) NOT NULL,
   `password_salt` VARCHAR(200) NOT NULL,
   `profile_picture` VARCHAR(200) NULL DEFAULT NULL,
@@ -144,7 +144,7 @@ DROP TABLE IF EXISTS `mytwitter`.`followers` ;
 CREATE TABLE IF NOT EXISTS `mytwitter`.`followers` (
   `id` INT(11) NOT NULL,
   `followed` INT(11) NOT NULL,
-  `date` VARCHAR(45) NOT NULL);
+  `date` DATETIME NULL DEFAULT NULL);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
