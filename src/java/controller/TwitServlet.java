@@ -46,6 +46,7 @@ public class TwitServlet extends HttpServlet {
         
         User user = (User) session.getAttribute("user");
         String email = user.getEmail();
+        ArrayList<Follow> followingList = FollowRepo.getFollwing(user.getId());
 
         if (action == null) {
             if(queryString != null) {
@@ -71,6 +72,7 @@ public class TwitServlet extends HttpServlet {
                 }
 
             }
+            twits = TwitViewRepo.all(user, followingList);
         } else if(action.equals("Delete")) {
             System.out.println("action equals DELETE");
             long twitId = Long.parseLong(request.getParameter("twitId"));
@@ -79,11 +81,9 @@ public class TwitServlet extends HttpServlet {
             if(authorId == user.getId()) {
                 TwitRepo.delete(twitId);
             }
+            twits = TwitViewRepo.all(user, followingList);
         }
 
-        //ArrayList<Follow> notFollowingList = FollowRepo.getNotFollowing(user.getId());
-        ArrayList<Follow> followingList = FollowRepo.getFollwing(user.getId());
-        twits = TwitViewRepo.all(user, followingList);
         ArrayList<Hashtag> hashtagList = HashtagRepo.getTrending();
         if(hashtagList != null) {
             System.out.println("hashtag list: " + hashtagList.size());

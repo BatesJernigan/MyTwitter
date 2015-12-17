@@ -24,7 +24,7 @@ public class User implements Serializable {
 
     public User(String fullName, String email, String password, String nickname, Date birthdate, String profilePicture, String passwordSalt) {
         this.id = new Random().nextInt(1000000000);
-        this.lastlogin = new Date();
+        this.lastlogin = new Timestamp(System.currentTimeMillis());
         this.fullName = fullName;
         this.email = email;
         this.password = password;
