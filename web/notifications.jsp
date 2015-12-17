@@ -10,10 +10,9 @@
     <c:import url="/includes/header.jsp" />
     <c:import url="/includes/sidebar.jsp" />
     <c:import url="/includes/whoToFollow.jsp" />
-     
-    <p> </p>
+    
     <c:forEach var = "twit" items="${twits}">
-        <c:if test ="${twit.postedDate}.after(${lastlogin})">
+        <c:if test ="${twit.postedDate}.equal(${lastlogin})">
             <form action="twit" method="post" class="twits">
                 <input type="hidden" name="twitId" value="${twit.twitId}">
                 <input type="hidden" name="userId" value="${twit.userId}">

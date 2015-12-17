@@ -88,13 +88,7 @@ DROP TABLE IF EXISTS `mytwitter`.`twit_hashtags` ;
 CREATE TABLE IF NOT EXISTS `mytwitter`.`twit_hashtags` (
   `hashtag_id` INT(11) NOT NULL,
   `twit_id` INT(11) NOT NULL,
-  PRIMARY KEY (hashtag_id, twit_id),
-  FOREIGN KEY (`hashtag_id`) REFERENCES hashtags(id)
-	ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  FOREIGN KEY (`twit_id`) REFERENCES twits(id)
-	ON DELETE CASCADE
-    ON UPDATE CASCADE
+  PRIMARY KEY (hashtag_id, twit_id)
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;

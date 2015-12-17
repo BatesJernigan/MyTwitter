@@ -5,8 +5,12 @@
  */
 package business;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -98,6 +102,12 @@ public class User implements Serializable {
     }
 
     public Date getLastLogin(){
+//        try {
+//            return new SimpleDateFormat("HH:mm:ss DD-MM-YYYY").parse("00:00:00 "+ lastlogin.getMonth() + "-"+ lastlogin.getDate() + "-" + lastlogin.getYear());
+//        } catch (ParseException ex) {
+//            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
         return lastlogin;
     }
 

@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,8 +36,8 @@ public class UserRepo {
         System.out.println("user in insert method: " + user.toString());
 
         String query
-                = "INSERT INTO users (email, password, full_name, nickname, id, birthdate, profile_picture, password_salt)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                = "INSERT INTO users (email, password, full_name, nickname, id, birthdate, profile_picture, password_salt, lastlogin)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(query);
             System.out.println(user.toString());
@@ -48,6 +49,8 @@ public class UserRepo {
             ps.setTimestamp(6, new Timestamp (user.getBirthdate().getTime()));
             ps.setString(7, user.getProfilePicture());
             ps.setString(8, user.getPasswordSalt());
+            Date date = new Date();
+            ps.setTimestamp(9, new Timestamp(date.getTime()));
 
             System.out.println("ps: " + ps.toString());
             return ps.executeUpdate();
@@ -93,23 +96,24 @@ public class UserRepo {
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         User dbUser = search(email);
-        System.out.println("db user: " + dbUser);
-        
-        try {
-            String dbHashedPassword = dbUser.getPassword();
-            String passwordSalt = dbUser.getPasswordSalt();
-            System.out.println("password salt: " + passwordSalt);
-            String inputHashedPassword = PasswordUtil.hashPassword(passwordSalt + password);
-            System.out.println("db hashed password: " + dbHashedPassword);
-            System.out.println("input hashed password: " + inputHashedPassword);
-            if(dbHashedPassword.equals(inputHashedPassword)) {
-                return dbUser;
+        if(dbUser != null) {
+            System.out.println("db user: " + dbUser);
+            try {
+                String dbHashedPassword = dbUser.getPassword();
+                String passwordSalt = dbUser.getPasswordSalt();
+                System.out.println("password salt: " + passwordSalt);
+                String inputHashedPassword = PasswordUtil.hashPassword(passwordSalt + password);
+                System.out.println("db hashed password: " + dbHashedPassword);
+                System.out.println("input hashed password: " + inputHashedPassword);
+                if(dbHashedPassword.equals(inputHashedPassword)) {
+                    return dbUser;
+                }
+            } catch(NoSuchAlgorithmException e) {
+                System.err.println(e);
+            } finally {
+                DBUtil.closePreparedStatement(ps);
+                pool.freeConnection(connection);
             }
-        } catch(NoSuchAlgorithmException e) {
-            System.err.println(e);
-        } finally {
-            DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
         }
         return null;
     }
@@ -182,7 +186,7 @@ public class UserRepo {
                 + "nickname = ?, "
                 + "birthdate = ?, "
                 + "lastlogin = ? "
-                + "WHERE email = ?";
+                + "WHERE email =  ?";
         
         try {
             System.out.println("update user is being called");
@@ -190,9 +194,9 @@ public class UserRepo {
             ps.setString(1, updatedUser.getFullName());
             ps.setString(2, updatedUser.getPassword());
             ps.setString(3, updatedUser.getNickname());
-            ps.setDate(4, new java.sql.Date(updatedUser.getBirthdate().getTime()));
+            ps.setTimestamp(4, new Timestamp(updatedUser.getBirthdate().getTime()));
             Date date = new Date();
-            ps.setDate(5, new java.sql.Date(date.getTime()));
+            ps.setTimestamp(5, new Timestamp(date.getTime()));
             ps.setString(6, updatedUser.getEmail());
             System.out.println("prepared statement: " + ps.toString());
             return ps.executeUpdate();
@@ -315,7 +319,7 @@ public class UserRepo {
             rs.getString("password"),
             rs.getString("nickname"),
             rs.getDate("birthdate"),
-            rs.getDate("lastlogin"),
+            rs.getTimestamp("lastlogin"),
             rs.getString("profile_picture"),
             rs.getString("password_salt"));
     }

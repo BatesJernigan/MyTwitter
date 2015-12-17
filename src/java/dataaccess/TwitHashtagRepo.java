@@ -53,6 +53,36 @@ public class TwitHashtagRepo {
         return null;
     }
     
+    public static ArrayList<Hashtag> getHashtagsByTwitId(long twitId) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ArrayList<Hashtag> hashtags = new ArrayList<>();
+        
+        String query = "SELECT h.* FROM hashtags h " +
+                "INNER JOIN twit_hashtags th " +
+                "ON th.hashtag_id = h.id " +
+                " INNER JOIN twits t " + 
+                " ON th.twit_id = t.id " +
+                " WHERE t.id = ? ";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setLong(1, twitId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                hashtags.add(HashtagRepo.buildHashtagFromResult(rs));
+            }
+            return hashtags;
+        } catch(SQLException e) {
+            System.err.println(e);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+        return null;
+    }
+    
     public static ArrayList<Twit> getTrending() {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();

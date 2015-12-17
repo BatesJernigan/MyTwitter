@@ -26,17 +26,6 @@ public class TwitRepo {
 //            System.out.println("word from content: " + wordFromContent + " end");
             if(wordFromContent.indexOf("#") == 0) {
                 String hashtagContent = wordFromContent.substring(1);
-
-//                Hashtag existingHashtag = HashtagRepo.get(hashtagContent);
-//                System.out.println("existing hashtag from twit repo: " + existingHashtag);
-//                if(existingHashtag == null) {
-////                    Hashtag newHashtag = new Hashtag(1, hashtagContent);
-////                    HashtagRepo.insert(newHashtag);
-//                } else {
-//                    HashtagRepo.update(new Hashtag(existingHashtag.getId(),
-//                            existingHashtag.getCount()+1, hashtagContent));
-//                }
-                
                 wordFromContent = "<a href=\"/MyTwitter/twit?q=" + hashtagContent +
                     "\" style=\"color:blue\">" + wordFromContent + "</a>";
             }
@@ -101,7 +90,6 @@ public class TwitRepo {
     }
 
     public static long delete(long twitId) {
-
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
@@ -125,6 +113,6 @@ public class TwitRepo {
             rs.getLong("user_id"),
             rs.getLong("mentioned_user_id"),
             rs.getString("content"),
-            rs.getDate("posted_date"));
+            rs.getTimestamp("posted_date"));
     }
 }

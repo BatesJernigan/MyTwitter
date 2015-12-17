@@ -40,7 +40,7 @@ public class FollowRepo {
             ps.setLong(2, follow.getFollowed());
             ps.setTimestamp(3, new Timestamp(follow.getDate().getTime()));
 
-            System.out.println("ps: " + ps.toString());
+            System.out.println("ps in follow repo: " + ps.toString());
             return ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("there was a sql exception! " + e);

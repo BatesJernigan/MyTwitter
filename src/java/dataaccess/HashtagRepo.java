@@ -124,7 +124,6 @@ public class HashtagRepo {
     }
     
     public static Hashtag get(String content) {
-        
         System.out.println("content in get: " + content);
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
@@ -196,7 +195,7 @@ public class HashtagRepo {
         return 0;
     }
     
-    private static Hashtag buildHashtagFromResult(ResultSet rs) throws SQLException {
+    public static Hashtag buildHashtagFromResult(ResultSet rs) throws SQLException {
         return new Hashtag(
                 rs.getLong("id"),
                 rs.getLong("count"),

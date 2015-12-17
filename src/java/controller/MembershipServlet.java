@@ -23,7 +23,9 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +50,7 @@ import javax.servlet.http.Part;
                  maxRequestSize=1024*1024*50)   // 50MB
 public class MembershipServlet extends HttpServlet {
     private static final String SAVE_DIR = "uploadFiles";     
-    final static String DATE_FORMAT = "M/d/yyyy";
+    final static String DATE_FORMAT = "M/d/yyyy HH:mm:ss";
     final static String EMAIL_COOKIE_NAME = "email_cookie";
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -123,15 +125,13 @@ public class MembershipServlet extends HttpServlet {
     }
     
     // formats the date
-    public static Date validatedDate(String date) {
+    public static Date validatedDate(int year, int month, int date) {
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-            dateFormat.setLenient(false);
-            return dateFormat.parse(date);
-        } catch (ParseException | IllegalArgumentException e) {
-            System.out.println("date is not valid " + e);
-            return null;
+            return new SimpleDateFormat("HH:mm:ss DD-MM-YYYY").parse("00:00:00 "+ date + "-"+ month + "-" + year);
+        } catch (ParseException ex) {
+            Logger.getLogger(MembershipServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
     
     // checks database to ensure user did not submit a duplicate email
@@ -236,6 +236,7 @@ public class MembershipServlet extends HttpServlet {
         session.setAttribute("follows", followList);
         
         // updates last login time
+        System.out.println("lastlogin: " + currentUser.getLastLogin());
         session.setAttribute("lastlogin", currentUser.getLastLogin());
         UserRepo.update(currentUser);
         
@@ -289,6 +290,7 @@ public class MembershipServlet extends HttpServlet {
             throws ServletException, IOException {
         String url = "/login.jsp";
         HttpSession session = request.getSession();
+        session.removeAttribute(EMAIL_COOKIE_NAME);
         session.invalidate(); 
         
         getServletContext()
@@ -336,8 +338,11 @@ public class MembershipServlet extends HttpServlet {
         }
  
         request.setAttribute("uploadMessage", "Upload has been done successfully!");
-
-        Date birthdate = validatedDate(month + "/" + day + "/"  + year);
+        Date birthdate = null;
+        if(!year.isEmpty() && !month.isEmpty() && !day.isEmpty()) {
+             birthdate = validatedDate(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
+        }
+        
         System.out.println("fullname: " + fullName); 
         System.out.println("email: " + email); 
         System.out.println("nickname: " + nickname); 

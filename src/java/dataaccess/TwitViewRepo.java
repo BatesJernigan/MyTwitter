@@ -136,8 +136,6 @@ public class TwitViewRepo {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
-
-        System.out.println("hastag content2: " + hashtagContent);
         ArrayList<Twit> twitList = TwitHashtagRepo.getAllTwitByHashtagContent(hashtagContent);
         System.out.println("twit list size in get by hashtag content: " +twitList.size());
         ArrayList<TwitView> twitViewList = new ArrayList<>();

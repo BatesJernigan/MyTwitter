@@ -18,6 +18,7 @@ import business.Follow;
 import dataaccess.FollowRepo;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,13 +40,18 @@ public class TwitServlet extends HttpServlet {
         ArrayList<TwitView> twits = null;
         String queryString = request.getQueryString();
         HttpSession session = request.getSession();
+        Date lastLogin = (Date) session.getAttribute("lastlogin");
+        
 
         String action = request.getParameter("action");
+        System.out.println("action: " + action);
         String url = "/home.jsp";
         String content = request.getParameter("content");
         
         User user = (User) session.getAttribute("user");
         String email = user.getEmail();
+        ArrayList<Follow> followingList = FollowRepo.getFollwing(user.getId());
+        ArrayList<Hashtag> hashtagList = HashtagRepo.getTrending();
 
         if (action == null) {
             if(queryString != null) {
@@ -71,27 +77,37 @@ public class TwitServlet extends HttpServlet {
                 }
 
             }
+            twits = TwitViewRepo.all(user, followingList);
         } else if(action.equals("Delete")) {
             System.out.println("action equals DELETE");
             long twitId = Long.parseLong(request.getParameter("twitId"));
             long authorId = Long.parseLong(request.getParameter("userId"));
+            ArrayList<Hashtag> hashtags = TwitHashtagRepo.getHashtagsByTwitId(twitId);
             System.out.println("twitId: " + twitId + "end");
             if(authorId == user.getId()) {
+                if(hashtags != null) {
+                    for(Hashtag hashtag : hashtags) {
+                        if(hashtag.getCount() == 1) {
+                            HashtagRepo.delete(hashtag.getId());
+                        } else {
+                            hashtag.setCount(hashtag.getCount() - 1);
+                            HashtagRepo.update(new Hashtag());
+                        }
+                    }
+                }
                 TwitRepo.delete(twitId);
+                TwitHashtagRepo.deleteByTwitId(twitId);
             }
+            twits = TwitViewRepo.all(user, followingList);
         }
 
-        //ArrayList<Follow> notFollowingList = FollowRepo.getNotFollowing(user.getId());
-        ArrayList<Follow> followingList = FollowRepo.getFollwing(user.getId());
-        twits = TwitViewRepo.all(user, followingList);
-        ArrayList<Hashtag> hashtagList = HashtagRepo.getTrending();
         if(hashtagList != null) {
             System.out.println("hashtag list: " + hashtagList.size());
             session.setAttribute("trendingHashtags", hashtagList);
         }
         session.setAttribute("twits", twits);
         session.setAttribute(email, url);
-
+        
         getServletContext()
             .getRequestDispatcher(url)
             .forward(request, response);
