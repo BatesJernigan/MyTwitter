@@ -243,8 +243,15 @@ public class MembershipServlet extends HttpServlet {
         for( int i = 0; i < newfollowstemp.size(); i++){
             newfollows.add(UserRepo.some(newfollowstemp.get(i).getID()));
         }
-        
         session.setAttribute("newfollows", newfollows);
+        System.out.println("find me");
+        ArrayList<TwitView> newTwits = TwitViewRepo.newTwits(currentUser, followList);
+        if(newTwits != null){
+            System.out.println("huzah its not this");
+            
+        }
+        session.setAttribute("newTwits", newTwits);
+        
         // updates last login time
         session.setAttribute("lastlogin", currentUser.getLastLogin());
         UserRepo.update(currentUser);

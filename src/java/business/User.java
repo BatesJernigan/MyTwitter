@@ -31,6 +31,8 @@ public class User implements Serializable {
         this.birthdate = birthdate;
         this.profilePicture = profilePicture;
         this.passwordSalt = passwordSalt;
+        Date date = new Date();
+        this.lastlogin = new Timestamp(date.getTime());
     }
 
     public User(long id, String fullName, String email, String password, String nickname, Date birthdate, Timestamp lastlogin, String profilePicture, String passwordSalt) {
@@ -100,7 +102,7 @@ public class User implements Serializable {
         this.birthdate = birthdate;
     }
 
-    public Date getLastLogin(){
+    public Timestamp getLastLogin(){
         return lastlogin;
     }
 

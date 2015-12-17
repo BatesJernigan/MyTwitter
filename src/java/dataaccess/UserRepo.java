@@ -94,22 +94,23 @@ public class UserRepo {
         PreparedStatement ps = null;
         User dbUser = search(email);
         System.out.println("db user: " + dbUser);
-        
-        try {
-            String dbHashedPassword = dbUser.getPassword();
-            String passwordSalt = dbUser.getPasswordSalt();
-            System.out.println("password salt: " + passwordSalt);
-            String inputHashedPassword = PasswordUtil.hashPassword(passwordSalt + password);
-            System.out.println("db hashed password: " + dbHashedPassword);
-            System.out.println("input hashed password: " + inputHashedPassword);
-            if(dbHashedPassword.equals(inputHashedPassword)) {
-                return dbUser;
+        if(dbUser != null){
+            try {
+                String dbHashedPassword = dbUser.getPassword();
+                String passwordSalt = dbUser.getPasswordSalt();
+                System.out.println("password salt: " + passwordSalt);
+                String inputHashedPassword = PasswordUtil.hashPassword(passwordSalt + password);
+                System.out.println("db hashed password: " + dbHashedPassword);
+                System.out.println("input hashed password: " + inputHashedPassword);
+                if(dbHashedPassword.equals(inputHashedPassword)) {
+                    return dbUser;
+                }
+            } catch(NoSuchAlgorithmException e) {
+                System.err.println(e);
+            } finally {
+                DBUtil.closePreparedStatement(ps);
+                pool.freeConnection(connection);
             }
-        } catch(NoSuchAlgorithmException e) {
-            System.err.println(e);
-        } finally {
-            DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
         }
         return null;
     }

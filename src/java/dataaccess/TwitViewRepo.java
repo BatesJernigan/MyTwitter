@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -41,6 +42,45 @@ public class TwitViewRepo {
             ps = connection.prepareStatement(query);
             ps.setLong(1, currentUser.getId());
             ps.setLong(2, currentUser.getId());
+            System.out.println(ps);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                TwitView currentTwit = buildTwitViewFromResult(rs);
+                
+                twitList.add(currentTwit);
+            }
+
+            return twitList;
+        } catch(SQLException e) {
+            System.err.println(e);
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+        return null;
+    }
+    
+    public static ArrayList<TwitView> newTwits(User currentUser, ArrayList<Follow> followlist) {
+        System.out.println("In twit view repo all currentUser: " + currentUser);
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ArrayList<TwitView> twitList = new ArrayList<>();
+        String follows = "";
+        for(int i = 0; i < followlist.size(); i++ ){
+            follows = follows + "OR user_id = " + followlist.get(i).getFollowed() + " ";
+            
+        }
+        String query = "SELECT * FROM v_twits "
+                + "WHERE user_id = ? OR mentioned_user_id = ? "
+                + follows
+                + "AND posted_date >= ?";
+            
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setLong(1, currentUser.getId());
+            ps.setLong(2, currentUser.getId());
+            ps.setTimestamp(3, currentUser.getLastLogin());
             System.out.println(ps);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
