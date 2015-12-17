@@ -3,15 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Garrick/Documents/GitHub/MyTwitter/src/java/dataaccess/FollowRepo.java</file>
-            <file>file:/C:/Users/Garrick/Documents/GitHub/MyTwitter/web/includes/whoToFollow.jsp</file>
-            <file>file:/C:/Users/Garrick/Documents/GitHub/MyTwitter/web/notifications.jsp</file>
-            <file>file:/C:/Users/Garrick/Documents/GitHub/MyTwitter/src/java/controller/MembershipServlet.java</file>
-            <file>file:/C:/Users/Garrick/Documents/GitHub/MyTwitter/src/java/dataaccess/UserRepo.java</file>
-            <file>file:/C:/Users/Garrick/Documents/GitHub/MyTwitter/src/java/business/Follow.java</file>
-            <file>file:/C:/Users/Garrick/Documents/GitHub/MyTwitter/src/java/business/User.java</file>
-            <file>file:/C:/Users/Garrick/Documents/GitHub/MyTwitter/src/java/business/Twit.java</file>
-            <file>file:/C:/Users/Garrick/Documents/GitHub/MyTwitter/src/java/dataaccess/TwitRepo.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/UserRepo.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/controller/MembershipServlet.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/HashtagRepo.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/web/notifications.jsp</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/business/User.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/web/login.jsp</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/controller/TwitServlet.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/TwitHashtagRepo.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/business/Twit.java</file>
+            <file>file:/Users/batesjernigan/Desktop/code/Java/web_java/MyTwitter/src/java/dataaccess/FollowRepo.java</file>
         </group>
     </open-files>
 </project-private>
