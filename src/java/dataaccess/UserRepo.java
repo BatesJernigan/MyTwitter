@@ -343,7 +343,7 @@ public class UserRepo {
             rs.getString("password"),
             rs.getString("nickname"),
             rs.getDate("birthdate"),
-            rs.getDate("lastlogin"),
+            rs.getTimestamp("lastlogin"),
             rs.getString("profile_picture"),
             rs.getString("password_salt"));
     }

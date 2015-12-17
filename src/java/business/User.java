@@ -5,16 +5,19 @@
  */
 package business;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Random;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 /**
  *
  * @javabean for User Entity
  */
 public class User implements Serializable {
     private long id;
-    private Date birthdate, lastlogin;
+    private Date birthdate;
+    private Timestamp lastlogin;
     private String fullName, email, password, nickname, profilePicture, passwordSalt;
 
     public User() {}
@@ -30,7 +33,7 @@ public class User implements Serializable {
         this.passwordSalt = passwordSalt;
     }
 
-    public User(long id, String fullName, String email, String password, String nickname, Date birthdate, Date lastlogin, String profilePicture, String passwordSalt) {
+    public User(long id, String fullName, String email, String password, String nickname, Date birthdate, Timestamp lastlogin, String profilePicture, String passwordSalt) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;

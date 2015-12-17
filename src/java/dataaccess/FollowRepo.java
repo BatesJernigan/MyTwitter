@@ -100,7 +100,7 @@ public class FollowRepo {
         }
         return null;
     }
-     public static ArrayList<Follow> newfollows(Long id, Date date) {
+    public static ArrayList<Follow> newfollows(Long id, Date date) {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
@@ -115,6 +115,7 @@ public class FollowRepo {
                 Follow follow = new Follow(rs.getLong("id"), rs.getLong("followed"), rs.getDate("date"));
                 followList.add(follow);
             }
+            System.out.println("ps in get newfollowing follow repo: " +ps);
             return followList;
         } catch(SQLException e) {
             System.err.println(e);
